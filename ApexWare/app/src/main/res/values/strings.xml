@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Apex Ware</string>
+    <string name="webview_dicreption_listitem">View video fro youtube links</string>
+    <string name="image_view_discreption_listitem">View images from url given by user</string>
+    <string name="imageicon_apexcom">thisIsImageForApexcom</string>
+    <string name="savepost">Save</string>
+    <string name="hidepost">Hide</string>
+    <string name="report">Report</string>
+    <string name="upvote">↑</string>
+    <string name="downvote">↓</string>
+    <string name="votecounter">-1</string>
+    <string name="commentd">Comments</string>
+</resources>
