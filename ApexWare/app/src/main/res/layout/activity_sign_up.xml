@@ -7,7 +7,7 @@
     tools:context=".activity_sign_up">
 
     <ImageView
-        android:id="@+id/redlogo"
+        android:id="@+id/logo"
         android:layout_width="240dp"
         android:layout_height="120dp"
         android:layout_marginTop="16dp"
@@ -23,14 +23,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif"
-        android:text="Create an account"
         android:textSize="24sp"
+        android:text="Create an account"
         app:layout_constraintBottom_toTopOf="@+id/e-mail_text_input"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/redlogo" />
+        app:layout_constraintTop_toBottomOf="@id/logo" />
     <EditText
         android:id="@+id/e-mail_text_input"
         android:layout_width="match_parent"
@@ -75,7 +74,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="5dp"
         android:background="@android:color/white"
         android:fontFamily="sans-serif"
