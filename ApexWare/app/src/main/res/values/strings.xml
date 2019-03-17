@@ -10,4 +10,13 @@
     <string name="downvote">↓</string>
     <string name="votecounter">-1</string>
     <string name="commentd">Comments</string>
+    <string name="password_hint">Password</string>
+    <string name="signup_btn_txt">SIGN UP</string>
+    <string name="login_btn_txt">LOG IN</string>
+    <string name="create_acc_btn_txt">CREATE ACCOUNT</string>
+    <string name="forgot_pass_btn_txt">FORGOT PASSWORD</string>
+    <string name="username_hint">Username</string>
+    <string name="email_hint">E-mail</string>
+    <string name="login_instead_btn_txt">LOG IN INSTEAD</string>
+    <string name="logo_description">main logo of the application</string>
 </resources>
