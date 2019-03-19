@@ -3,7 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F5F5F5"
+        android:background="@color/colorPrimary"
         android:orientation="vertical" >
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="#ffff">
+        android:background="@color/colorPrimaryDark">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
             android:layout_weight="1"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="#C0C0C0"
+            android:textColor="@color/light_grey"
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/upvote" />
 
@@ -120,14 +120,11 @@
             android:id="@+id/votecounter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
             android:layout_weight="1"
-            android:paddingBottom="0dp"
             android:text="@string/votecounter"
-            android:textAlignment="center"
-            android:textColor="#C0C0C0"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:textColor="@color/light_grey"
+            android:textSize="20sp" />
         <Button
             android:text="@string/downvote"
             android:id="@+id/downvote"
@@ -136,14 +133,14 @@
             android:layout_width="0dp"
             android:background="?android:attr/selectableItemBackground"
             android:layout_height="match_parent"
-            android:textColor="#C0C0C0"
+            android:textColor="@color/light_grey"
             android:layout_weight="1"/>
         <Button
             android:text="@string/commentd"
             android:id="@+id/comments"
             android:layout_width="0dp"
-            android:textColor="#C0C0C0"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/light_grey"
             android:background="?android:attr/selectableItemBackground"
             android:layout_weight="3"/>
     </LinearLayout>
