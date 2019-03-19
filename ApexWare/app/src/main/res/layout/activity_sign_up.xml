@@ -61,13 +61,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/username_text_input"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="48dp"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username_text_input"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_pass_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/toggle_off"
+        android:textOff="@string/empty_string"
+        android:textOn="@string/empty_string"
+        android:onClick="onToggleClick"
+        app:layout_constraintBottom_toBottomOf="@+id/password_text_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/password_text_input"
+        app:layout_constraintTop_toTopOf="@+id/password_text_input" />
 
     <Button
         android:id="@+id/login_instead_btn"
