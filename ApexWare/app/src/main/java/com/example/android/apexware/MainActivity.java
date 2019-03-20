@@ -56,24 +56,21 @@ public class MainActivity extends AppCompatActivity {
             openActivity_sign_up();
           }
         });
-
-    final DepandantClass finalRestClient = restClient;
-    login.setOnClickListener(
+      final DepandantClass finalRestClient = restClient;
+      login.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (finalRestClient.login(
-                username_et.getText().toString(), pass_et.getText().toString())) {
-              Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT)
-                  .show();
-              open_home_activity();
-            } else {
-              Toast.makeText(
-                      getApplicationContext(),
-                      "Login unsuccessful .. try again",
-                      Toast.LENGTH_SHORT)
-                  .show();
-            }
+              if(finalRestClient.login(username_et.getText().toString(),pass_et.getText().toString()))
+              {
+                  Toast.makeText(getApplicationContext(),"Login successful",Toast.LENGTH_SHORT).show();
+                  open_home_activity();
+              }
+              else
+              {
+                  Toast.makeText(getApplicationContext(),"Login unsuccessful .. try again",Toast.LENGTH_SHORT).show();
+              }
+
           }
         });
   }
