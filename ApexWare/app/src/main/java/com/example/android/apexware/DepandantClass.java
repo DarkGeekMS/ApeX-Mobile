@@ -2,16 +2,19 @@ package com.example.android.apexware;
 
 public class DepandantClass {
 
-    private final DataSupplier mSupplier;
+  private final DataSupplier mSupplier;
 
-    public DepandantClass(DataSupplier dataSupplier) {
-        mSupplier = dataSupplier;
-    }
-    boolean login (String username ,String password)
-    {
-        return mSupplier.login_interface(username,password);
+  public DepandantClass(DataSupplier dataSupplier) {
+    mSupplier = dataSupplier;
+  }
 
-    }
-    // msupplier can be used at this point to call any function there in a generic use
+  boolean login(String username, String password) {
+    return mSupplier.login_interface(username, password);
+  }
+
+  boolean signup(String username, String email, String password) {
+    return mSupplier.signup_interface(username, email, password);
+  }
+  // msupplier can be used at this point to call any function there in a generic use
 
 }
