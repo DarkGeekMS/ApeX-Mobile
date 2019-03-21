@@ -19,5 +19,9 @@
     <string name="email_hint">E-mail</string>
     <string name="login_instead_btn_txt">LOG IN INSTEAD</string>
     <string name="logo_description">main logo of the application</string>
-    <string name="empty_string" />
+    <string name="myprofie">My Profile</string>
+    <string name="save">Save</string>
+    <string name="history">History</string>
+    <string name="setting">Setting</string>
+    <string name="karma">Karma</string>
 </resources>
