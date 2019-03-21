@@ -12,6 +12,12 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+/**
+ * first activity in the program and contains login form which the user fill with his data to enter
+ * th app
+ *
+ * @author mostafa
+ */
 public class MainActivity extends AppCompatActivity {
 
   Button login;
@@ -26,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    /*
-     * use either mock service or back end service
-     * */
+    /* use either mock service or back end service */
     boolean debug = true;
     DepandantClass restClient = null;
     if (debug) {
@@ -38,15 +42,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     login = (Button) findViewById(R.id.login_btn);
-
     signup = (Button) findViewById(R.id.signup_btn);
-
     forgot_pass = (Button) findViewById(R.id.forgot_pass_btn);
-
     toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
-
     pass_et = (EditText) findViewById(R.id.password_text_input);
-
     username_et = (EditText) findViewById(R.id.username_text_input);
 
     signup.setOnClickListener(
@@ -56,43 +55,40 @@ public class MainActivity extends AppCompatActivity {
             openActivity_sign_up();
           }
         });
-      final DepandantClass finalRestClient = restClient;
-      login.setOnClickListener(
+
+    final DepandantClass finalRestClient = restClient;
+    login.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              if(finalRestClient.login(username_et.getText().toString(),pass_et.getText().toString()))
-              {
-                  Toast.makeText(getApplicationContext(),"Login successful",Toast.LENGTH_SHORT).show();
-                  open_home_activity();
-              }
-              else
-              {
-                  Toast.makeText(getApplicationContext(),"Login unsuccessful .. try again",Toast.LENGTH_SHORT).show();
-              }
-
+            if (finalRestClient.login(
+                username_et.getText().toString(), pass_et.getText().toString())) {
+              Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT)
+                  .show();
+              open_home_activity();
+            } else {
+              Toast.makeText(
+                      getApplicationContext(),
+                      "Login unsuccessful .. try again",
+                      Toast.LENGTH_SHORT)
+                  .show();
+            }
           }
         });
   }
-  /*
-   * opens the activity sign up on pressing the button sign up
-   */
+  /** opens the activity sign up on pressing the button sign up to create a new account */
   public void openActivity_sign_up() {
     Intent intent = new Intent(this, activity_sign_up.class);
     startActivity(intent);
   }
 
-  /*
-   * opens the activity home on pressing the log in button
-   */
+  /** opens the activity home on successful login occurs */
   public void open_home_activity() {
     Intent intent = new Intent(this, listOfPostsClass.class);
     startActivity(intent);
   }
 
-  /*
-   * toggle button affect viewing password as text or as dots
-   * */
+  /** toggle button affect viewing password as text or as dots */
   public void onToggleClick(View v) {
     if (toggle_btn.isChecked()) {
       pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
