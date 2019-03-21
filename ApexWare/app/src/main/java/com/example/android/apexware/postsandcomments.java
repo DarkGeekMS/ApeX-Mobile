@@ -60,34 +60,44 @@ public class postsandcomments extends AppCompatActivity {
     comName.setText(post1.apexcomName);
     /*creator name and date created*/
     TextView postOwnerAndCreatedTime = (TextView) findViewById(R.id.apexcomOwnerNameAndTimeCreated);
-    postOwnerAndCreatedTime.setText("comment by " + post1.postOwner + "." + post1.postCreateDate);
-
+    postOwnerAndCreatedTime.setText("posted by " + post1.postOwner + "." + post1.postCreateDate);
+TextView Title=findViewById(R.id.PostTitle);
+Title.setText(post1.postTitle);
     /* handling which view will be shown */
     /*setting 1 view to be shown*/
     TextView textPost = (TextView) findViewById(R.id.TextPostBody);
     WebView videoLinkView = (WebView) findViewById(R.id.videoWebView);
     ImageView uploadedImageView = (ImageView) findViewById(R.id.imageUploadedView);
+    textPost.setText(post1.getTextPostcontent());
     if (post1.getPostType() == 0) {
       textPost.setVisibility(View.VISIBLE);
+      textPost.setText(post1.getTextPostcontent());
       videoLinkView.setVisibility(GONE);
       uploadedImageView.setVisibility(GONE);
     } else if (post1.getPostType() == 1) {
       textPost.setVisibility(GONE);
       videoLinkView.setVisibility(GONE);
       uploadedImageView.setVisibility(View.VISIBLE);
+      Picasso.get().load(post1.getImageURL()).into(uploadedImageView);
+
     } else if (post1.getPostType() == 2) {
       textPost.setVisibility(GONE);
       uploadedImageView.setVisibility(GONE);
       videoLinkView.setVisibility(View.VISIBLE);
+      setuoVideoSetting(videoLinkView, post1.videoURL);
+
     }
     /**/
 
     /**/
 
-    if (post1.getPostType() == 0) {
+   if (post1.getPostType() == 0) {
       // set body of the post
       TextView postBody = findViewById(R.id.TextPostBody);
-      postBody.setText(post1.getTextPostTitle());
+      postBody.setText(post1.getTextPostcontent() );
+      postBody.getText();
+
+
     } else if (post1.getPostType() == 1) {
       // set image of the post
       ImageView uploadedImage = (ImageView) findViewById(R.id.imageUploadedView);
@@ -121,7 +131,7 @@ public class postsandcomments extends AppCompatActivity {
     commentArrayList.add(comment2);
 
     Comment rply1 = new Comment(1);
-    rply1.Id = 1;
+    rply1.Id = 3;
     rply1.commentCreateDate = 12665;
     rply1.commentOwner = "bla bla";
     rply1.commentContent =
@@ -129,7 +139,7 @@ public class postsandcomments extends AppCompatActivity {
     repliesArrayList.add(rply1);
 
     Comment rply2 = new Comment(1);
-    rply2.Id = 1;
+    rply2.Id = 4 ;
     rply2.commentCreateDate = 12665;
     rply2.commentOwner = "bla bla bllllla";
     rply2.commentContent =
@@ -171,6 +181,7 @@ public class postsandcomments extends AppCompatActivity {
   }
 
   public void upvotecomment(View v) {
+
     TextView counter =findViewById(R.id.votecounterforcomment);
     int i=Integer.parseInt(counter.getText().toString()) ;
     Button up = findViewById(R.id.upvotecomment);

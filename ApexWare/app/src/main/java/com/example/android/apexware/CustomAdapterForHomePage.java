@@ -147,7 +147,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
       case 0:
         // set body of the post
         TextView postBody = listView.findViewById(R.id.TextPostBody);
-        postBody.setText(tempPost.textPostTitle);
+        postBody.setText(tempPost.textPostcontent);
         // break;
       case 1:
         // set image of the post

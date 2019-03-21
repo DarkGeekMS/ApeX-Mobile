@@ -16,7 +16,7 @@ public class Post implements Parcelable {
     postTitle = in.readString();
     videoURL = in.readString();
     ImageURL = in.readString();
-    textPostTitle = in.readString();
+    textPostcontent = in.readString();
   }
 
   public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -47,7 +47,7 @@ public class Post implements Parcelable {
     dest.writeString(postTitle);
     dest.writeString(videoURL);
     dest.writeString(ImageURL);
-    dest.writeString(textPostTitle);
+    dest.writeString(textPostcontent);
   }
 
   public void setPostId(int postId) {
@@ -77,7 +77,7 @@ public class Post implements Parcelable {
   public String postTitle = null;
   public String videoURL = null;
   public String ImageURL = null;
-  public String textPostTitle = null;
+  public String textPostcontent = null;
   /** this is default constructor to create post */
   public Post() {}
   /** this is method to get path of apexcomlogo attribute */
@@ -117,8 +117,8 @@ public class Post implements Parcelable {
     return postTitle;
   }
   /** this method return string contaon text of post */
-  public String getTextPostTitle() {
-    return textPostTitle;
+  public String getTextPostcontent() {
+    return textPostcontent;
   }
   /**
    * this method set image path for apexcomlogo
@@ -192,7 +192,7 @@ public class Post implements Parcelable {
    * @param textPostTitle String contain text for the post
    */
   public void setTextPostTitle(String textPostTitle) {
-    this.textPostTitle = textPostTitle;
+    this.textPostcontent = textPostTitle;
   }
   /**
    *

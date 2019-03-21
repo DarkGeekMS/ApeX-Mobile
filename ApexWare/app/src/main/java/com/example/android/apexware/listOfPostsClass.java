@@ -46,7 +46,7 @@ public class listOfPostsClass extends AppCompatActivity {
       testpost.ApexcomLogo = "https://i.imgur.com/S7USWRb.jpg";
       testpost.apexcomName = "AndroidTeam";
       testpost.postTitle = "Test this pot";
-      testpost.textPostTitle="Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU";
+      testpost.textPostcontent="Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU";
       // uo&down vote and comment ";
       //testpost.ImageURL = "https://i.imgur.com/S7USWRb.jpg";
       // testpost.videoURL="https://www.youtube.com/watch?v=mWRsgZuwf_8&list=RDL3wKzyIN1yk&index=23";
@@ -78,19 +78,26 @@ public class listOfPostsClass extends AppCompatActivity {
       adapter = new CustomAdapterForHomePage(this, postArrayList);
       list.setAdapter(adapter);
 
+
     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+
         Intent intent=new Intent(listOfPostsClass.this,postsandcomments.class);
         Object current=parent.getItemAtPosition(position);
         Post p1=(Post)current;
         Gson gson = new Gson();
         String postAsString = gson.toJson(p1);
-        intent.putExtra("postToDisplay",postAsString);//sending the id of the post to next activity
+        intent.putExtra("postToDisplay",postAsString);//sending the post to next activity
         startActivity(intent);
       }
     });
   }
+
+
+
 
   public void upvote(View v) {
 

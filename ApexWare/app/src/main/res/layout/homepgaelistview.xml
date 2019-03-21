@@ -91,13 +91,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:focusable="false">
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false">
                 <WebView
                     android:id="@+id/videoWebView"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
                     android:contentDescription="@string/webview_dicreption_listitem"
-                    android:focusable="false">
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false" >
                 </WebView>
                 <ImageView
                     android:id="@+id/imageUploadedView"
@@ -105,7 +109,9 @@
                     android:layout_height="400dp"
                     android:contentDescription="@string/image_view_discreption_listitem"
                     android:scaleType="fitCenter"
-                    android:focusable="false"/>
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
                 <TextView
                     android:id="@+id/TextPostBody"
                     android:layout_width="wrap_content"
@@ -113,7 +119,9 @@
                     android:maxLines="4"
                     android:textColor="#D3D3D3"
                     android:textSize="16sp"
-                    android:focusable="false"/>
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
                 </RelativeLayout>
         </LinearLayout>
     <LinearLayout
@@ -132,7 +140,8 @@
             android:textColor="@color/light_grey"
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/upvote"
-            android:focusable="false"/>
+            android:focusable="false"
+            />
 
         <TextView
             android:id="@+id/votecounter"
@@ -155,7 +164,8 @@
             android:gravity="center"
             android:textColor="@color/light_grey"
             android:layout_weight="1"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:onClick="downvote"/>
         <Button
             android:text="@string/commentd"
             android:id="@+id/comments"
