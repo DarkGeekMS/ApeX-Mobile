@@ -13,7 +13,7 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <ScrollView
+       <!-- <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/scrollView">
@@ -190,15 +190,15 @@
 
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-        </ScrollView>
+        </ScrollView>-->
         <ExpandableListView
             android:id="@+id/listofcomments"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/scrollView"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:groupIndicator="@null">
+            android:groupIndicator="@null"
+            >
         </ExpandableListView>
     </RelativeLayout>
 </LinearLayout>

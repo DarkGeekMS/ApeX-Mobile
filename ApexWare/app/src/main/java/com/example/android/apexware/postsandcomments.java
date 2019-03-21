@@ -53,18 +53,18 @@ public class postsandcomments extends AppCompatActivity {
     */
     /*put the data on the views*/
     /*logo*/
-    ImageView logo = findViewById(R.id.apexcomlogo);
+   /* ImageView logo = findViewById(R.id.apexcomlogo);
     Picasso.get().load(post1.ApexcomLogo).resize(50, 50).into(logo);
-    /*apex community name*/
+    *//*apex community name*//*
     TextView comName = findViewById(R.id.apexcomName);
     comName.setText(post1.apexcomName);
-    /*creator name and date created*/
+    *//*creator name and date created*//*
     TextView postOwnerAndCreatedTime = (TextView) findViewById(R.id.apexcomOwnerNameAndTimeCreated);
     postOwnerAndCreatedTime.setText("posted by " + post1.postOwner + "." + post1.postCreateDate);
 TextView Title=findViewById(R.id.PostTitle);
 Title.setText(post1.postTitle);
-    /* handling which view will be shown */
-    /*setting 1 view to be shown*/
+    *//* handling which view will be shown *//*
+    *//*setting 1 view to be shown*//*
     TextView textPost = (TextView) findViewById(R.id.TextPostBody);
     WebView videoLinkView = (WebView) findViewById(R.id.videoWebView);
     ImageView uploadedImageView = (ImageView) findViewById(R.id.imageUploadedView);
@@ -87,9 +87,9 @@ Title.setText(post1.postTitle);
       setuoVideoSetting(videoLinkView, post1.videoURL);
 
     }
-    /**/
+    *//**//*
 
-    /**/
+    *//**//*
 
    if (post1.getPostType() == 0) {
       // set body of the post
@@ -112,9 +112,9 @@ Title.setText(post1.postTitle);
     // TextView postTitle = (TextView) findViewById(R.id.PostTitle);
     // postTitle.setText(post1.postTitle);
 
-    /* */
+    *//* *//*
 
-    Comment comment1 = new Comment(1);
+   */ Comment comment1 = new Comment(1);
     comment1.Id = 1;
     comment1.commentCreateDate = 125;
     comment1.commentOwner = "Omar229";
@@ -149,6 +149,75 @@ Title.setText(post1.postTitle);
     listHashMap.put(commentArrayList.get(1), repliesArrayList);
     adapter = new CustomAdapterForComments(this, repliesArrayList, listHashMap, commentArrayList);
     commentsList.setAdapter(adapter);
+    View po=getLayoutInflater().inflate(R.layout.homepgaelistview,null);
+    commentsList.addHeaderView(po);
+
+
+    post1.setPostId(getIntent().getIntExtra("id",0));
+
+    /*put the data on the views*/
+    /*logo*/
+   ImageView logo = findViewById(R.id.apexcomlogo);
+    Picasso.get().load(post1.ApexcomLogo).resize(50, 50).into(logo);
+    //*apex community name*//*
+    TextView comName = findViewById(R.id.apexcomName);
+    comName.setText(post1.apexcomName);
+    //*creator name and date created*//*
+    TextView postOwnerAndCreatedTime = (TextView) findViewById(R.id.apexcomOwnerNameAndTimeCreated);
+    postOwnerAndCreatedTime.setText("posted by " + post1.postOwner + "." + post1.postCreateDate);
+TextView Title=findViewById(R.id.PostTitle);
+Title.setText(post1.postTitle);
+    //* handling which view will be shown *//*
+     //*setting 1 view to be shown*//*
+    TextView textPost = (TextView) findViewById(R.id.TextPostBody);
+    WebView videoLinkView = (WebView) findViewById(R.id.videoWebView);
+    ImageView uploadedImageView = (ImageView) findViewById(R.id.imageUploadedView);
+    textPost.setText(post1.getTextPostcontent());
+    if (post1.getPostType() == 0) {
+      textPost.setVisibility(View.VISIBLE);
+      textPost.setText(post1.getTextPostcontent());
+      videoLinkView.setVisibility(GONE);
+      uploadedImageView.setVisibility(GONE);
+    } else if (post1.getPostType() == 1) {
+      textPost.setVisibility(GONE);
+      videoLinkView.setVisibility(GONE);
+      uploadedImageView.setVisibility(View.VISIBLE);
+      Picasso.get().load(post1.getImageURL()).into(uploadedImageView);
+
+    } else if (post1.getPostType() == 2) {
+      textPost.setVisibility(GONE);
+      uploadedImageView.setVisibility(GONE);
+      videoLinkView.setVisibility(View.VISIBLE);
+      setuoVideoSetting(videoLinkView, post1.videoURL);
+
+    }
+
+
+
+
+   if (post1.getPostType() == 0) {
+      // set body of the post
+      TextView postBody = findViewById(R.id.TextPostBody);
+      postBody.setText(post1.getTextPostcontent() );
+      postBody.getText();
+
+
+    } else if (post1.getPostType() == 1) {
+      // set image of the post
+      ImageView uploadedImage = (ImageView) findViewById(R.id.imageUploadedView);
+      Picasso.get().load(post1.getImageURL()).into(uploadedImage);
+    } else if (post1.getPostType() == 2) {
+      // set VideoLinks
+      WebView viewVideoLinks = (WebView) findViewById(R.id.videoWebView);
+      setuoVideoSetting(viewVideoLinks, post1.videoURL);
+    }
+
+    // set Title psot
+    // TextView postTitle = (TextView) findViewById(R.id.PostTitle);
+    // postTitle.setText(post1.postTitle);
+
+
+
   }
 
   public void upvote(View v) {
