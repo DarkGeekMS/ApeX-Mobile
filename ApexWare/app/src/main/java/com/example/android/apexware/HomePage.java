@@ -2,9 +2,12 @@ package com.example.android.apexware;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -29,22 +34,31 @@ import java.util.ArrayList;
 //import android.widget.Toolbar;
 
 public class HomePage extends AppCompatActivity {
-
-    public Toolbar toolbar;
-    public TabLayout tabLayout;
-    public ViewPager viewPager;
     private DrawerLayout drawerLayout;
     ListView list;
     CustomAdapterForHomePage adapter;
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        Window window = this.getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        // finally change the color
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.myblue));
+
+
         //default bar is no action bar but this is custom for bar for every layout
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
         BottomNavigationViewEx bnve =  findViewById(R.id.bnve);
 
 
@@ -61,17 +75,15 @@ public class HomePage extends AppCompatActivity {
         testpost.postTitle = "Test this pot";
         testpost.textPostcontent="Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU";
         // uo&down vote and comment ";
-        //testpost.ImageURL = "https://i.imgur.com/S7USWRb.jpg";
-        // testpost.videoURL="https://www.youtube.com/watch?v=mWRsgZuwf_8&list=RDL3wKzyIN1yk&index=23";
         postArrayList.add(testpost);
         Post testpost1=new Post();
         testpost1.postType = 1;
         testpost1.postOwner = "Mazen";
         testpost1.postCreateDate = 19;
-        testpost1.ApexcomLogo = "https://i.imgur.com/S7USWRb.jpg";
+        testpost1.ApexcomLogo = "https://i.imgur.com/7cWUnve.jpg";
         testpost1.apexcomName = "AndroidTeam";
         testpost1.postTitle = "Test this pot";
-        testpost1.ImageURL = "https://i.imgur.com/S7USWRb.jpg";
+        testpost1.ImageURL = "https://i.imgur.com/7cWUnve.jpg";
         postArrayList.add(testpost1);
         Post testpost2=new Post();
         testpost2.postType = 2;
@@ -80,8 +92,8 @@ public class HomePage extends AppCompatActivity {
         testpost2.ApexcomLogo = "https://i.imgur.com/S7USWRb.jpg";
         testpost2.apexcomName = "AndroidTeam";
         testpost2.postTitle = "Test this pot";
-        testpost2.ImageURL = "https://i.imgur.com/S7USWRb.jpg";
-        testpost2.videoURL =testpost2.getVideoId("https://www.youtube.com/watch?v=mWRsgZuwf_8");
+        testpost2.ImageURL = "https://i.imgur.com/7cWUnve.jpg";
+        testpost2.videoURL =testpost2.getVideoId("https://www.youtube.com/watch?v=4Q46xYqUwZQ");
         postArrayList.add(testpost2);
         postArrayList.add(testpost);
         postArrayList.add(testpost1);

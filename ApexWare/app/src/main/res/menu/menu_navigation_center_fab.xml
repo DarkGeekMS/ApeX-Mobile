@@ -4,22 +4,22 @@
         android:id="@+id/i_music"
         android:checked="true"
         android:icon="@drawable/ic_audiotrack_black_24dp"
-        android:title="apexhome" />
+        android:title="" />
 
     <item
         android:id="@+id/i_backup"
         android:icon="@drawable/ic_backup_black_24dp"
-        android:title="apexcomlist" />
+        android:title="" />
     <!--must set the item title to empty-->
     <item
         android:id="@+id/i_empty"
-        android:title="createpost" />
+        android:title="" />
     <item
         android:id="@+id/i_favor"
         android:icon="@drawable/ic_favorite_black_24dp"
-        android:title="messages" />
+        android:title="" />
     <item
         android:id="@+id/i_visibility"
         android:icon="@drawable/ic_visibility_black_24dp"
-        android:title="notification" />
+        android:title="" />
 </menu>

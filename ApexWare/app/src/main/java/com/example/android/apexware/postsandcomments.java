@@ -1,9 +1,14 @@
 package com.example.android.apexware;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,10 +28,22 @@ import static android.view.View.GONE;
 
 public class postsandcomments extends AppCompatActivity {
   CustomAdapterForComments adapter; // adapter for the data in the list
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_postsndcomments);
+    Window window = this.getWindow();
+
+    // clear FLAG_TRANSLUCENT_STATUS flag:
+    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+    // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+    // finally change the color
+    window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorGray));
+
     ExpandableListView commentsList = (ExpandableListView) findViewById(R.id.listofcomments);
     ArrayList<Comment> commentArrayList = new ArrayList();
     ArrayList<Comment> repliesArrayList = new ArrayList();

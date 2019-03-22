@@ -189,6 +189,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     webSettings.setJavaScriptEnabled(true);
     displayYoutubeVideo.loadData(frameVideo, "text/html", "utf-8");
     displayYoutubeVideo.getSettings().setLoadWithOverviewMode(true);
-    displayYoutubeVideo.getSettings().setUseWideViewPort(true);
+    //displayYoutubeVideo.getSettings().setUseWideViewPort(true);
   }
 }
