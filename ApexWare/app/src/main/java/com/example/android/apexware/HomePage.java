@@ -67,33 +67,33 @@ public class HomePage extends AppCompatActivity {
         //create array adapter list for the view
         ArrayList<Post> postArrayList = new ArrayList();
         Post testpost = new Post();
-        testpost.postType = 0;
-        testpost.postOwner = "Mazen";
-        testpost.postCreateDate = 19;
-        testpost.ApexcomLogo = "https://i.imgur.com/S7USWRb.jpg";
-        testpost.apexcomName = "AndroidTeam";
-        testpost.postTitle = "Test this pot";
-        testpost.textPostcontent="Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU";
+        testpost.setPostType(0);
+        testpost.setPostOwner("Mazen");
+        testpost.setPostCreateDate(19);
+        testpost.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
+        testpost.setApexcomName("AndroidTeam");
+        testpost.setPostTitle("Test this post");
+        testpost.setTextPostcontent("Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
         // uo&down vote and comment ";
         postArrayList.add(testpost);
         Post testpost1=new Post();
-        testpost1.postType = 1;
-        testpost1.postOwner = "Mazen";
-        testpost1.postCreateDate = 19;
-        testpost1.ApexcomLogo = "https://i.imgur.com/7cWUnve.jpg";
-        testpost1.apexcomName = "AndroidTeam";
-        testpost1.postTitle = "Test this pot";
-        testpost1.ImageURL = "https://i.imgur.com/7cWUnve.jpg";
+        testpost1.setPostType(1);
+        testpost1.setPostOwner("Mazen") ;
+        testpost1.setPostCreateDate(19);
+        testpost1.setApexcomLogo("https://i.imgur.com/7cWUnve.jpg");
+        testpost1.setApexcomName("AndroidTeam");
+        testpost1.setPostTitle("Test this post");
+        testpost1.setImageURL("https://i.imgur.com/7cWUnve.jpg");
         postArrayList.add(testpost1);
         Post testpost2=new Post();
-        testpost2.postType = 2;
-        testpost2.postOwner = "Mazen";
-        testpost2.postCreateDate = 19;
-        testpost2.ApexcomLogo = "https://i.imgur.com/S7USWRb.jpg";
-        testpost2.apexcomName = "AndroidTeam";
-        testpost2.postTitle = "Test this pot";
-        testpost2.ImageURL = "https://i.imgur.com/7cWUnve.jpg";
-        testpost2.videoURL =testpost2.getVideoId("https://www.youtube.com/watch?v=4Q46xYqUwZQ");
+        testpost2.setPostType(2);
+        testpost2.setPostOwner("Mazen");
+        testpost2.setPostCreateDate(19);
+        testpost2.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
+        testpost2.setApexcomName("AndroidTeam");
+        testpost2.setPostTitle("Test this post");
+        testpost2.setImageURL("https://i.imgur.com/7cWUnve.jpg");
+        testpost2.setVideoURL("https://www.youtube.com/watch?v=C6hq5cziIHc");
         postArrayList.add(testpost2);
         postArrayList.add(testpost);
         postArrayList.add(testpost1);
@@ -192,35 +192,6 @@ public class HomePage extends AppCompatActivity {
     }
 
 
-    public void upvote(View v) {
-
-        TextView counter =findViewById(R.id.votecounter);
-        int i=Integer.parseInt(counter.getText().toString()) ;
-        Button up = findViewById(R.id.upvote);
-        Button down =findViewById(R.id.downvote);
-        if(down.getCurrentTextColor()==Color.RED)
-        {
-            down.setTextColor(Color.GRAY);
-        }
-        up.setTextColor(Color.BLUE);
-        i++;
-        counter.setText(Integer.toString(i));
-    }
-
-    public void downvote(View v) {
-        TextView counter =findViewById(R.id.votecounter);
-        int i=Integer.parseInt(counter.getText().toString()) ;
-        Button down = findViewById(R.id.downvote);
-        Button up =findViewById(R.id.upvote);
-        if(up.getCurrentTextColor()== Color.BLUE)
-        {
-            up.setTextColor(Color.GRAY);
-        }
-        down.setTextColor(Color.RED);
-        i--;
-        counter.setText(Integer.toString(i));
-
-    }
 
 
 }

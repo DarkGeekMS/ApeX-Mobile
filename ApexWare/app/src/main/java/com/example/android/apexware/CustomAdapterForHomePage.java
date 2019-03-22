@@ -1,6 +1,7 @@
 package com.example.android.apexware;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Movie;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -54,7 +55,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     View listItem = view;
     if (listItem == null)
       listItem = LayoutInflater.from(context).inflate(R.layout.homepgaelistview, parent, false);
-    Post currentPost = potsList.get(position);
+  final  Post currentPost = potsList.get(position);
 
     // button event for this button
     final Button button = (Button) listItem.findViewById(R.id.popupmeu);
@@ -80,27 +81,96 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
 
     // set apexcom logo
     ImageView apexcomLogo = (ImageView) listItem.findViewById(R.id.apexcomlogo);
-    Picasso.get().load(currentPost.ApexcomLogo).resize(50, 50).into(apexcomLogo);
+    Picasso.get().load(currentPost.getApexcomLogo()).resize(50, 50).into(apexcomLogo);
 
     // set apexcom name
     TextView apexcomName = (TextView) listItem.findViewById(R.id.apexcomName);
-    apexcomName.setText(currentPost.apexcomName);
+    apexcomName.setText(currentPost.getApexcomName());
 
     // set post owner and time of created post
     TextView postOwnerAndCreatedTime =
         (TextView) listItem.findViewById(R.id.apexcomOwnerNameAndTimeCreated);
     postOwnerAndCreatedTime.setText(
-        "Posted by " + currentPost.postOwner + "." + currentPost.postCreateDate);
+        "Posted by " + currentPost.getPostOwner() + "." + currentPost.getPostCreateDate());
 
     // set Title psot
     TextView postTitle = (TextView) listItem.findViewById(R.id.PostTitle);
-    postTitle.setText(currentPost.postTitle);
+    postTitle.setText(currentPost.getPostTitle());
 
     // check the type of the post and disable remaining post types
     View tempView = listItem;
-    setViewGone(currentPost.postType, tempView);
+    setViewGone(currentPost.getPostType(), tempView);
     // only activate the proper view
     assignRightType(listItem, currentPost);
+/*up and down vote*/
+    final Button up=listItem.findViewById(R.id.upvote);
+    final Button down=listItem.findViewById(R.id.downvote);
+    final TextView counter=listItem.findViewById(R.id.votecounter);
+//upvote
+    up.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (currentPost.isUpvoted() == false) {
+          if (currentPost.isDownvoted() == false) // was not up or down (default case)
+          { up.setTextColor(Color.BLUE);
+            int i = Integer.parseInt(counter.getText().toString());
+            i++;
+            counter.setText(Integer.toString(i));
+            currentPost.setUpvoted(true);
+          } else if (currentPost.isDownvoted() == true) // was down voted and up vote was clicked
+          {
+            down.setTextColor(Color.GRAY);
+            up.setTextColor(Color.BLUE);
+            int i = Integer.parseInt(counter.getText().toString());
+            i += 2;
+            counter.setText(Integer.toString(i));
+            currentPost.setUpvoted(true);
+            currentPost.setDownvoted(false);
+          }
+        } else if (currentPost.isUpvoted() == true)//was upvoted and upvote was clicked
+        {
+          up.setTextColor(Color.GRAY);
+          int i = Integer.parseInt(counter.getText().toString());
+          i--;
+          counter.setText(Integer.toString(i));
+          currentPost.setUpvoted(false);
+        }
+      }
+    });
+//downVote
+    down.setOnClickListener(
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                if (currentPost.isDownvoted() == false) {
+                  if (currentPost.isUpvoted() == false) // was not up or down (default case)
+                  {
+                    down.setTextColor(Color.RED);
+                    int i = Integer.parseInt(counter.getText().toString());
+                    i--;
+                    counter.setText(Integer.toString(i));
+                    currentPost.setDownvoted(true);
+                  } else if (currentPost.isUpvoted() == true) // was up voted and down vote was clicked
+                  {
+                    down.setTextColor(Color.RED);
+                    up.setTextColor(Color.GRAY);
+                    int i = Integer.parseInt(counter.getText().toString());
+                    i -= 2;
+                    counter.setText(Integer.toString(i));
+                    currentPost.setUpvoted(false);
+                    currentPost.setDownvoted(true);
+                  }
+                } else if (currentPost.isDownvoted() == true) // was down voted and down vote was clicked
+                {
+                  down.setTextColor(Color.GRAY);
+                  int i = Integer.parseInt(counter.getText().toString());
+                  i++;
+                  counter.setText(Integer.toString(i));
+                  currentPost.setDownvoted(false);
+                }
+              }
+            });
+
 
     return listItem;
   };
@@ -143,21 +213,21 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
    * @param tempPost it take post to activtae the current post correctly in the item list
    */
   private void assignRightType(View listView, Post tempPost) {
-    switch (tempPost.postType) {
+    switch (tempPost.getPostType()) {
       case 0:
         // set body of the post
         TextView postBody = listView.findViewById(R.id.TextPostBody);
-        postBody.setText(tempPost.textPostcontent);
+        postBody.setText(tempPost.getTextPostcontent());
         // break;
       case 1:
         // set image of the post
         ImageView uploadedImage = (ImageView) listView.findViewById(R.id.imageUploadedView);
-        Picasso.get().load(tempPost.ImageURL).into(uploadedImage);
+        Picasso.get().load(tempPost.getImageURL()).into(uploadedImage);
         // break;
       case 2:
         // set VideoLinks
         WebView viewVideoLinks = (WebView) listView.findViewById(R.id.videoWebView);
-        setuoVideoSetting(viewVideoLinks, tempPost.videoURL);
+        setuoVideoSetting(viewVideoLinks, tempPost.getVideoURL());
         // break;
     }
   }

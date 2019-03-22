@@ -63,9 +63,9 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.commentview, parent, false);
         Comment currentComment = commentList.get(groupPosition);
         TextView commentOwnerandDte= (TextView)convertView.findViewById(R.id.commentOwnerNameAndTimeCreated);
-        commentOwnerandDte.setText(currentComment.commentOwner+"/"+currentComment.commentCreateDate);
+        commentOwnerandDte.setText(currentComment.getCommentOwner()+"/"+currentComment.getCommentCreateDate());
         TextView commentContent= convertView.findViewById(R.id.commentContents);
-        commentContent.setText(currentComment.commentContent);
+        commentContent.setText(currentComment.getCommentContent());
         View tempView = convertView;
 
         return  convertView;
@@ -78,9 +78,9 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.replyview, parent, false);
         Comment currentComment = replies.get(childPosition);
         TextView commentOwnerandDte= (TextView)convertView.findViewById(R.id.replyOwnerNameAndTimeCreated);
-        commentOwnerandDte.setText(currentComment.commentOwner+"/"+currentComment.commentCreateDate);
+        commentOwnerandDte.setText(currentComment.getCommentOwner()+"/"+currentComment.getCommentCreateDate());
         TextView commentContent= convertView.findViewById(R.id.replyContents);
-        commentContent.setText(currentComment.commentContent);
+        commentContent.setText(currentComment.getCommentContent());
         View tempView = convertView;
         return  convertView;    }
 

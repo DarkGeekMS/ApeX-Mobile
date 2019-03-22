@@ -141,7 +141,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/upvote"
             android:focusable="false"
-            android:onClick="upvote"
+
             />
 
         <TextView
@@ -166,7 +166,7 @@
             android:textColor="@color/light_grey"
             android:layout_weight="1"
             android:focusable="false"
-            android:onClick="downvote"/>
+            />
         <Button
             android:text="@string/commentd"
             android:id="@+id/comments"

@@ -2,17 +2,18 @@ package com.example.android.apexware;
 
 public class Comment {
 
-
-
-    public int Id;
-    public int postId;
-    public String commentOwner=null;
-    public String commentContent;
-    public int commentCreateDate = 0;
+    /**
+     * data members
+     */
+    private int Id;
+    private int postId;
+    private String commentOwner=null;
+    private String commentContent;
+    private int commentCreateDate = 0;
 
     /**
      * default constructor*/
-    public Comment(int postId){}
+    public Comment(int postId){this.postId=postId;}
 
     /**get functions*/
     /**
@@ -22,7 +23,6 @@ public class Comment {
     public int getId() {
         return Id;
     }
-
     /**
      *this method is to get post id for postId
      *
@@ -37,7 +37,6 @@ public class Comment {
     public String getCommentOwner() {
         return commentOwner;
     }
-
     /**
      *this method is to get comment content/text name for commentContent
      *
@@ -59,8 +58,6 @@ public class Comment {
  * this method is to set comment id
  * @param id
  * */
-
-
     public void setId(int id) {
         Id = id;
     }
@@ -89,8 +86,5 @@ public class Comment {
      * this method is to set comment date
      * @param commentCreateDate
      * */
-    public void setCommentCreateDate(int commentCreateDate) {
-        this.commentCreateDate = commentCreateDate;
-    }
-
+    public void setCommentCreateDate(int commentCreateDate) { this.commentCreateDate = commentCreateDate; }
 }

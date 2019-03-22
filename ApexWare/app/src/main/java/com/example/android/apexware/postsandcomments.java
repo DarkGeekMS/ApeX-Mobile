@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,7 +16,9 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -132,35 +135,30 @@ Title.setText(post1.postTitle);
     *//* *//*
 
    */ Comment comment1 = new Comment(1);
-    comment1.Id = 1;
-    comment1.commentCreateDate = 125;
-    comment1.commentOwner = "Omar229";
-    comment1.commentContent =
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ";
+    comment1.setId(1);
+    comment1.setCommentCreateDate(125);
+    comment1.setCommentOwner("Omar229");
+    comment1.setCommentContent("lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     commentArrayList.add(comment1);
 
     Comment comment2 = new Comment(1);
-    comment2.Id = 2;
-    comment2.commentCreateDate = 2132;
-    comment2.commentOwner = "mostafa";
-    comment2.commentContent =
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ";
+    comment2.setId(2);
+    comment2.setCommentCreateDate(2132);
+    comment2.setCommentOwner("mostafa");
+    comment2.setCommentContent("lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     commentArrayList.add(comment2);
 
     Comment rply1 = new Comment(1);
-    rply1.Id = 3;
-    rply1.commentCreateDate = 12665;
-    rply1.commentOwner = "bla bla";
-    rply1.commentContent =
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ";
+    rply1.setId(3);
+    rply1.setCommentCreateDate(12665);
+    rply1.setCommentOwner("bla7");
+    rply1.setCommentContent("lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     repliesArrayList.add(rply1);
-
     Comment rply2 = new Comment(1);
-    rply2.Id = 4 ;
-    rply2.commentCreateDate = 12665;
-    rply2.commentOwner = "bla bla bllllla";
-    rply2.commentContent =
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ";
+    rply2.setId(4);
+    rply2.setCommentCreateDate(12665);
+    rply2.setCommentOwner("bla bla bllllla");
+    rply2.setCommentContent("lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     repliesArrayList.add(rply2);
     listHashMap.put(commentArrayList.get(0), repliesArrayList);
     listHashMap.put(commentArrayList.get(1), repliesArrayList);
@@ -169,21 +167,42 @@ Title.setText(post1.postTitle);
     View po=getLayoutInflater().inflate(R.layout.homepgaelistview,null);
     commentsList.addHeaderView(po);
 
+    final Button button=findViewById(R.id.popupmeu);
+    button.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        PopupMenu popup = new PopupMenu(postsandcomments.this, button);
+        popup.getMenuInflater().inflate(R.menu.option_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(
+                new PopupMenu.OnMenuItemClickListener() {
+                  @Override
+                  public boolean onMenuItemClick(MenuItem item) {
+                    Toast.makeText(postsandcomments.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT)
+                            .show();
+                    // we can use item name to make intent for the new responces
+                    return true;
+                  }
+                });
+        popup.show(); // showing popup menu
+
+
+      }
+    });
 
     post1.setPostId(getIntent().getIntExtra("id",0));
 
     /*put the data on the views*/
     /*logo*/
    ImageView logo = findViewById(R.id.apexcomlogo);
-    Picasso.get().load(post1.ApexcomLogo).resize(50, 50).into(logo);
+    Picasso.get().load(post1.getApexcomLogo()).resize(50, 50).into(logo);
     //*apex community name*//*
     TextView comName = findViewById(R.id.apexcomName);
-    comName.setText(post1.apexcomName);
+    comName.setText(post1.getApexcomName());
     //*creator name and date created*//*
     TextView postOwnerAndCreatedTime = (TextView) findViewById(R.id.apexcomOwnerNameAndTimeCreated);
-    postOwnerAndCreatedTime.setText("posted by " + post1.postOwner + "." + post1.postCreateDate);
+    postOwnerAndCreatedTime.setText("posted by " + post1.getPostOwner() + "." + post1.getPostCreateDate());
 TextView Title=findViewById(R.id.PostTitle);
-Title.setText(post1.postTitle);
+Title.setText(post1.getPostTitle());
     //* handling which view will be shown *//*
      //*setting 1 view to be shown*//*
     TextView textPost = (TextView) findViewById(R.id.TextPostBody);
@@ -205,7 +224,7 @@ Title.setText(post1.postTitle);
       textPost.setVisibility(GONE);
       uploadedImageView.setVisibility(GONE);
       videoLinkView.setVisibility(View.VISIBLE);
-      setuoVideoSetting(videoLinkView, post1.videoURL);
+      setuoVideoSetting(videoLinkView, post1.getVideoURL());
 
     }
 
@@ -226,7 +245,7 @@ Title.setText(post1.postTitle);
     } else if (post1.getPostType() == 2) {
       // set VideoLinks
       WebView viewVideoLinks = (WebView) findViewById(R.id.videoWebView);
-      setuoVideoSetting(viewVideoLinks, post1.videoURL);
+      setuoVideoSetting(viewVideoLinks, post1.getVideoURL());
     }
 
     // set Title psot

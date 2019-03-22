@@ -39,7 +39,7 @@ public class listOfPostsClass extends AppCompatActivity {
       1-remove all public statment from post attributes and deal only with setters abd getters
       2-remove testpost view and test with real data
       * */
-      Post testpost = new Post();
+     /* Post testpost = new Post();
       testpost.postType = 0;
       testpost.postOwner = "Mazen";
       testpost.postCreateDate = 19;
@@ -74,7 +74,7 @@ public class listOfPostsClass extends AppCompatActivity {
         postArrayList.add(testpost1);
         postArrayList.add(testpost2);
         postArrayList.add(testpost);
-         // to do creat instances of posts
+     */    // to do creat instances of posts
       adapter = new CustomAdapterForHomePage(this, postArrayList);
       list.setAdapter(adapter);
 
