@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/savepost"
+        android:title="@string/savepost"
+        android:icon="@mipmap/ic_launcher_foregound"/>
+    <item android:id="@+id/hidepost"
+        android:title="@string/hidepost"
+        android:icon="@mipmap/ic_launcher_foregound"/>
+    <item android:id="@+id/reportpost"
+        android:title="@string/report"
+        android:icon="@mipmap/ic_launcher_foregound"/>
+
+</menu>
