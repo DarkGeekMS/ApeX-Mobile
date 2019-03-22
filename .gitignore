@@ -1,11 +1,5 @@
 
 *.html
-<<<<<<< HEAD
 package-list
 *.js
 *.css
-=======
-*.js
-*.css
-package-list
->>>>>>> parent of 98e1a89... Revert "[update] git ignore file"

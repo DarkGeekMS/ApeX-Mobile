@@ -1,5 +1,6 @@
 package com.example.android.apexware;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,10 +13,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class VolleyConnection extends AppCompatActivity {
     @Override
@@ -27,44 +32,44 @@ public class VolleyConnection extends AppCompatActivity {
         setContentView(R.layout.testconnection);
        final TextView textView = (TextView) findViewById(R.id.testconnection);
 // ...
-
+        String fget="monda";
     // Instantiate the RequestQueue.
-    RequestQueue queue = Volley.newRequestQueue(this);
-    // Request a string response from the provided URL.
-        String url = "http://127.0.0.1:8000/api/review_reports";
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e("login.java response", response.toString());
-
-                        int l=  response.length();
-                        try {
-                            if(l>1){
-
-                                Toast.makeText(getApplicationContext(), response.getString("valid"), Toast.LENGTH_LONG).show();
-                            }
-
-                            else{
-
-                            }
-                        } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+        try {
+            RequestQueue queue = Volley.newRequestQueue(this);
+            // Request a string response from the provided URL.
+            String url = "http://localhost:8000/api/" +
+                    "Hide";
+            StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response) {
+                            // response
+                            Log.d("Response", response);
+                        }
+                    },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                           // Log.d("Error.Response", response);
                         }
                     }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyLog.d("error", "Error: " + error.getMessage());
-                        // hide the progress dialog
-                        Toast.makeText(getApplicationContext(), "Server Error, try again", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        // Adding request to request queue
-        queue.add(jsonObjReq);
+            ) {
+                @Override
+                protected Map<String, String> getParams()
+                {
+                    Map<String, String>  params = new HashMap<String, String>();
+                    params.put("name", "t3_3");
+                    return params;
+                }
+            };
+            queue.add(postRequest);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

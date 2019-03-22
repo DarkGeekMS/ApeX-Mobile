@@ -52,17 +52,6 @@ public class Comment {
     public int getCommentCreateDate() {
         return commentCreateDate;
     }
-
-
-
-
-
-
-
-
-
-
-
     /**
      * set functions
      * */

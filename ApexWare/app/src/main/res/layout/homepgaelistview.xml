@@ -3,10 +3,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:background="#F5F5F5"
-        android:orientation="vertical" >
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:focusable="false">
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -14,16 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="#ffff"
-        >
+        android:background="@color/colorPrimaryDark"
+        android:focusable="false">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:focusable="false">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusable="false">
             <ImageView
                 android:id="@+id/apexcomlogo"
                 android:layout_width="0dp"
@@ -31,7 +32,8 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
-                android:contentDescription="@string/imageicon_apexcom" />
+                android:contentDescription="@string/imageicon_apexcom"
+                android:focusable="false"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -39,20 +41,23 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginLeft="6dp"
                 android:layout_weight="5"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:focusable="false">
 
                 <TextView
                     android:id="@+id/apexcomName"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:focusable="false"/>
 
                 <TextView
                     android:id="@+id/apexcomOwnerNameAndTimeCreated"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
-                    android:textColor="#D3D3D3" />
+                    android:textColor="#D3D3D3"
+                    android:focusable="false"/>
             </LinearLayout>
             <Button
                 android:id="@+id/popupmeu"
@@ -64,14 +69,16 @@
                 android:textAlignment="center"
                 android:textColor="#D3D3D3"
                 android:textStyle="bold"
-                tools:text=":" />
+                tools:text=":"
+                android:focusable="false"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginStart="3dp"
-            android:layout_marginLeft="3dp">
+            android:layout_marginLeft="3dp"
+            android:focusable="false">
             <TextView
                 android:id="@+id/PostTitle"
                 android:layout_width="match_parent"
@@ -79,36 +86,49 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
-                android:onClick="cardSelection"/>
+                android:focusable="false"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false">
                 <WebView
                     android:id="@+id/videoWebView"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
-                    android:contentDescription="@string/webview_dicreption_listitem">
+                    android:contentDescription="@string/webview_dicreption_listitem"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false" >
                 </WebView>
                 <ImageView
                     android:id="@+id/imageUploadedView"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
                     android:contentDescription="@string/image_view_discreption_listitem"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
                 <TextView
                     android:id="@+id/TextPostBody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="4"
                     android:textColor="#D3D3D3"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
                 </RelativeLayout>
         </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="false">
         <Button
             android:id="@+id/upvote"
             android:layout_width="0dp"
@@ -116,22 +136,24 @@
             android:layout_weight="1"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="#C0C0C0"
+            android:gravity="center"
+            android:textColor="@color/light_grey"
             android:background="?android:attr/selectableItemBackground"
-            android:text="@string/upvote" />
+            android:text="@string/upvote"
+            android:focusable="false"
+            android:onClick="upvote"
+            />
 
         <TextView
             android:id="@+id/votecounter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
             android:layout_weight="1"
-            android:paddingBottom="0dp"
             android:text="@string/votecounter"
-            android:textAlignment="center"
-            android:textColor="#C0C0C0"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:textColor="@color/light_grey"
+            android:textSize="23sp"
+            android:focusable="false"/>
         <Button
             android:text="@string/downvote"
             android:id="@+id/downvote"
@@ -140,16 +162,21 @@
             android:layout_width="0dp"
             android:background="?android:attr/selectableItemBackground"
             android:layout_height="match_parent"
-            android:textColor="#C0C0C0"
-            android:layout_weight="1"/>
+            android:gravity="center"
+            android:textColor="@color/light_grey"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:onClick="downvote"/>
         <Button
             android:text="@string/commentd"
             android:id="@+id/comments"
             android:layout_width="0dp"
-            android:textColor="#C0C0C0"
-            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_height="match_parent"
+            android:textColor="@color/light_grey"
             android:background="?android:attr/selectableItemBackground"
-            android:layout_weight="3"/>
+            android:layout_weight="5"
+            android:focusable="false"/>
     </LinearLayout>
     </LinearLayout>
     </android.support.v7.widget.CardView>

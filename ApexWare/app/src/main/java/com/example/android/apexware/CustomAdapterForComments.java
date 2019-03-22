@@ -22,20 +22,6 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
         this.commentList=commentList;
     }
 
-   /* public  View getView(int position, View view, ViewGroup parent) {
-        View listItem = view;
-        if (listItem == null)
-            listItem = LayoutInflater.from(context).inflate(R.layout.commentview, parent, false);
-        Comment currentComment = commentList.get(position);
-        TextView commentOwnerandDte= (TextView)listItem.findViewById(R.id.commentOwnerNameAndTimeCreated);
-        commentOwnerandDte.setText(currentComment.commentOwner+"/"+currentComment.commentCreateDate);
-
-        TextView commentContent= listItem.findViewById(R.id.commentContents);
-        commentContent.setText(currentComment.commentContent);
-        View tempView = listItem;
-        return  listItem;
-
-    }*/
     @Override
     public int getGroupCount() {
         return commentList.size();
