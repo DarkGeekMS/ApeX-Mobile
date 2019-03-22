@@ -1,10 +1,11 @@
 package com.example.android.apexware;
 
+import android.app.DownloadManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Pair;
 
-public class Post implements Parcelable {
+public class Post  implements Parcelable {
 
   protected Post(Parcel in) {
     postType = in.readInt();

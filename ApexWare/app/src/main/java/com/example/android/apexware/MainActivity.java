@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,7 +18,19 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class MainActivity extends AppCompatActivity {
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainActivity  extends AppCompatActivity  {
 
   Button login;
   Button signup;
@@ -42,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
       // finally change the color
       window.setStatusBarColor(ContextCompat.getColor(this,R.color.ic_launcher_background));
 
+      if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
+          finish();
+          startActivity(new Intent(this, HomePage.class));
+          return;
+      }
 
       /*
      * use either mock service or back end service
@@ -80,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
           public void onClick(View v) {
               if(finalRestClient.login(username_et.getText().toString(),pass_et.getText().toString()))
               {
-                  Toast.makeText(getApplicationContext(),"Login successful",Toast.LENGTH_SHORT).show();
+                  //Toast.makeText(getApplicationContext(),"Login successful",Toast.LENGTH_SHORT).show();
                   open_home_activity();
               }
               else
@@ -98,22 +116,21 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent(this, activity_sign_up.class);
     startActivity(intent);
   }
-
   /*
    * opens the activity home on pressing the log in button
    */
-
   public void open_home_activity() {
 
-      try {
+      /*try {
 
-          Intent intent = new Intent(this, HomePage.class);
+          Intent intent = new Intent(this, VolleyConnection.class);
           startActivity(intent);
       }
       catch (Exception e)
       {
           e.printStackTrace();
-      }
+      }*/
+      userLogin();
   }
 
   /*
@@ -136,4 +153,71 @@ public class MainActivity extends AppCompatActivity {
       toggle_btn.setBackground(img);
     }
   }
+    private void userLogin() {
+        EditText editTextUsername = (EditText) findViewById(R.id.username_text_input);
+        EditText editTextPassword = (EditText) findViewById(R.id.password_text_input);
+        //first getting the values
+        final String username = editTextUsername.getText().toString();
+        final String password = editTextPassword.getText().toString();
+
+        //validating inputs
+        if (TextUtils.isEmpty(username)) {
+            editTextUsername.setError("Please enter your username");
+            editTextUsername.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            editTextPassword.setError("Please enter your password");
+            editTextPassword.requestFocus();
+            return;
+        }
+        String url = "http://localhost:8000/api/Sign_in?";
+        //if everything is fine
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //converting response to json object
+                            JSONObject obj = new JSONObject(response);
+                            //if no error in response
+                            if (response!=null) {
+                                Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                //getting the user from the response
+                                //-----------JSONObject userJson = obj.getJSONObject("token");
+                                //creating a new user object
+                                User user = new User(
+                                        obj.getString("token")
+                                );
+                                //storing the user in shared preferences
+                                SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                                //starting the profile activity
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), HomePage.class));
+                          //  } else {
+                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Username or Password maybe incorrect", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
 }
+
