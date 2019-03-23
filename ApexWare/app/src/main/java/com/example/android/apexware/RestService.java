@@ -23,29 +23,26 @@ public class RestService extends AppCompatActivity implements DataSupplier {
         String url = "http://localhost:8000/api/Sign_in?";
         // prepare the Request
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
+                new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // response
                         Log.d("Response", response);
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
-                        int x=0;
+                        int x = 0;
                         Log.d("Error.Response", String.valueOf(error));
                     }
                 }
         ) {
             @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("username","Monda Talaat");
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", "Monda Talaat");
                 params.put("password", "monda21");
                 //params.put("email","mazen9030@hotmail.com");
                 return params;

@@ -31,37 +31,28 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-//import android.widget.Toolbar;
-
 public class HomePage extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     ListView list;
     CustomAdapterForHomePage adapter;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-
         Window window = this.getWindow();
-
         // clear FLAG_TRANSLUCENT_STATUS flag:
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
         // finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.myblue));
-
-
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
         //default bar is no action bar but this is custom for bar for every layout
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-        BottomNavigationViewEx bnve =  findViewById(R.id.bnve);
-
-
+        BottomNavigationViewEx bnve = findViewById(R.id.bnve);
         //create list view object to handele given array adapter
         list = (ListView) findViewById(R.id.postslist);
         //create array adapter list for the view
@@ -74,18 +65,17 @@ public class HomePage extends AppCompatActivity {
         testpost.setApexcomName("AndroidTeam");
         testpost.setPostTitle("Test this post");
         testpost.setTextPostcontent("Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
-        // uo&down vote and comment ";
         postArrayList.add(testpost);
-        Post testpost1=new Post();
+        Post testpost1 = new Post();
         testpost1.setPostType(1);
-        testpost1.setPostOwner("Mazen") ;
+        testpost1.setPostOwner("Mazen");
         testpost1.setPostCreateDate(19);
         testpost1.setApexcomLogo("https://i.imgur.com/7cWUnve.jpg");
         testpost1.setApexcomName("AndroidTeam");
         testpost1.setPostTitle("Test this post");
         testpost1.setImageURL("https://i.imgur.com/7cWUnve.jpg");
         postArrayList.add(testpost1);
-        Post testpost2=new Post();
+        Post testpost2 = new Post();
         testpost2.setPostType(2);
         testpost2.setPostOwner("Mazen");
         testpost2.setPostCreateDate(19);
@@ -106,12 +96,12 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent=new Intent(HomePage.this,postsandcomments.class);
-                Object current=parent.getItemAtPosition(position);
-                Post p1=(Post)current;
+                Intent intent = new Intent(HomePage.this, postsandcomments.class);
+                Object current = parent.getItemAtPosition(position);
+                Post p1 = (Post) current;
                 Gson gson = new Gson();
                 String postAsString = gson.toJson(p1);
-                intent.putExtra("postToDisplay",postAsString);//sending the post to next activity
+                intent.putExtra("postToDisplay", postAsString);//sending the post to next activity
                 startActivity(intent);
             }
         });
@@ -129,14 +119,14 @@ public class HomePage extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         // set item as selected to persist highlight
                         menuItem.setChecked(true);
-                        if(menuItem.getItemId()== R.id.history)
-                            Toast.makeText( getApplicationContext(),"History has been choosed",Toast.LENGTH_LONG).show();
-                        if(menuItem.getItemId()== R.id.save)
-                            Toast.makeText( getApplicationContext(),"Save has been choosed",Toast.LENGTH_LONG).show();
-                        if(menuItem.getItemId()== R.id.myProfile)
-                            Toast.makeText( getApplicationContext(),"Myprofile has been choosed",Toast.LENGTH_LONG).show();
-                        if(menuItem.getItemId()== R.id.setting)
-                            Toast.makeText( getApplicationContext(),"Setting has been choosed",Toast.LENGTH_LONG).show();
+                        if (menuItem.getItemId() == R.id.history)
+                            Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG).show();
+                        if (menuItem.getItemId() == R.id.save)
+                            Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG).show();
+                        if (menuItem.getItemId() == R.id.myProfile)
+                            Toast.makeText(getApplicationContext(), "Myprofile has been choosed", Toast.LENGTH_LONG).show();
+                        if (menuItem.getItemId() == R.id.setting)
+                            Toast.makeText(getApplicationContext(), "Setting has been choosed", Toast.LENGTH_LONG).show();
                         // close drawer when item is tapped
                         drawerLayout.closeDrawers();
 
@@ -148,6 +138,7 @@ public class HomePage extends AppCompatActivity {
                 });
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -157,6 +148,7 @@ public class HomePage extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
@@ -166,7 +158,7 @@ public class HomePage extends AppCompatActivity {
             mSearchView.setOnSearchClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "you type" , Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "you type", Toast.LENGTH_LONG).show();
                 }
             });
             mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
@@ -182,16 +174,10 @@ public class HomePage extends AppCompatActivity {
                     return false;
                 }
             });
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return super.onCreateOptionsMenu(menu);
 
     }
-
-
-
-
 }

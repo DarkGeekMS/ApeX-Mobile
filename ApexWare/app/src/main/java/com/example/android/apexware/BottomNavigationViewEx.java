@@ -304,9 +304,9 @@ public class BottomNavigationViewEx extends BottomNavigationView {
     }
 
     /**
+     * @param enable It will has a shift animation if true. Otherwise all items are the same width.
      * @Deprecated use {@link #setLabelVisibilityMode }
      * enable the shifting mode for navigation
-     *@param enable It will has a shift animation if true. Otherwise all items are the same width.
      */
     @Deprecated
     public BottomNavigationViewEx enableShiftingMode(boolean enable) {
@@ -327,9 +327,9 @@ public class BottomNavigationViewEx extends BottomNavigationView {
     }
 
     /**
+     * @param enable It will has a shift animation for item if true. Otherwise the item text always be shown.
      * @Deprecated use {@link #setItemHorizontalTranslationEnabled(boolean)}
      * enable the shifting mode for each item
-     *@param enable It will has a shift animation for item if true. Otherwise the item text always be shown.
      */
     @Deprecated
     public BottomNavigationViewEx enableItemShiftingMode(boolean enable) {
@@ -595,7 +595,8 @@ public class BottomNavigationViewEx extends BottomNavigationView {
 
     /**
      * set item ImageView size which at position
-     *  @param position position start from 0
+     *
+     * @param position position start from 0
      * @param width    in dp
      * @param height   in dp
      */
@@ -614,7 +615,8 @@ public class BottomNavigationViewEx extends BottomNavigationView {
 
     /**
      * set all item ImageView size
-     *  @param width  in dp
+     *
+     * @param width  in dp
      * @param height in dp
      */
     public BottomNavigationViewEx setIconSize(float width, float height) {
@@ -628,10 +630,10 @@ public class BottomNavigationViewEx extends BottomNavigationView {
     /**
      * set all item ImageView size
      *
-     * @param dpSize  in dp
+     * @param dpSize in dp
      */
     public BottomNavigationViewEx setIconSize(float dpSize) {
-        setItemIconSize(dp2px(getContext(),dpSize));
+        setItemIconSize(dp2px(getContext(), dpSize));
         return this;
     }
 
@@ -765,7 +767,8 @@ public class BottomNavigationViewEx extends BottomNavigationView {
      * This method will link the given ViewPager and this BottomNavigationViewEx together so that
      * changes in one are automatically reflected in the other. This includes scroll state changes
      * and clicks.
-     *  @param viewPager
+     *
+     * @param viewPager
      * @param smoothScroll whether ViewPager changed with smooth scroll animation
      */
     public BottomNavigationViewEx setupWithViewPager(final ViewPager viewPager, boolean smoothScroll) {
@@ -860,7 +863,6 @@ public class BottomNavigationViewEx extends BottomNavigationView {
         }
 
 
-
         public void setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener listener) {
             this.listener = listener;
         }
@@ -937,7 +939,8 @@ public class BottomNavigationViewEx extends BottomNavigationView {
 
     /**
      * set margin top for icon
-     *  @param position
+     *
+     * @param position
      * @param marginTop in px
      */
     @SuppressLint("RestrictedApi")

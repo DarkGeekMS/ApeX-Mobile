@@ -26,78 +26,78 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class activity_sign_up extends AppCompatActivity {
-  Button login;
-  Button create_acc;
-  ToggleButton toggle_btn;
-  EditText pass_et;
+    Button login;
+    Button create_acc;
+    ToggleButton toggle_btn;
+    EditText pass_et;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_sign_up);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sign_up);
 
-    login = (Button) findViewById(R.id.login_instead_btn);
+        login = (Button) findViewById(R.id.login_instead_btn);
 
-    create_acc = (Button) findViewById(R.id.create_acc_btn);
+        create_acc = (Button) findViewById(R.id.create_acc_btn);
 
-    toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
+        toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
 
-    pass_et = (EditText) findViewById(R.id.password_text_input);
-    try {
+        pass_et = (EditText) findViewById(R.id.password_text_input);
+        try {
 
-        create_acc.setOnClickListener(
+            create_acc.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            createAcoount();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        login.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        createAcoount();
+                        openActivity_login();
                     }
                 });
     }
-    catch (Exception e)
-    {
-        e.printStackTrace();
-    }
-    login.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              openActivity_login();
-          }
-        });
-  }
-  /*
-   * opens the activity login on pressing the button log in instead
-   */
-  public void openActivity_login() {
-    Intent intent = new Intent(this, MainActivity.class);
-    startActivity(intent);
-  }
-  public void createAcoount()
-  {
-      registerUser();
-  }
 
-  public void onToggleClick(View v) {
-    if (toggle_btn.isChecked()) {
-      pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-      Drawable img = null;
-      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-        img = getDrawable(R.drawable.toggle_on);
-      }
-      toggle_btn.setBackground(img);
-    } else {
-      pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-      Drawable img = null;
-      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-        img = getDrawable(R.drawable.toggle_off);
-      }
-      toggle_btn.setBackground(img);
+    /*
+     * opens the activity login on pressing the button log in instead
+     */
+    public void openActivity_login() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
-  }
+
+    public void createAcoount() {
+        registerUser();
+    }
+
+    public void onToggleClick(View v) {
+        if (toggle_btn.isChecked()) {
+            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+            Drawable img = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                img = getDrawable(R.drawable.toggle_on);
+            }
+            toggle_btn.setBackground(img);
+        } else {
+            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            Drawable img = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                img = getDrawable(R.drawable.toggle_off);
+            }
+            toggle_btn.setBackground(img);
+        }
+    }
+
     private void registerUser() {
-      EditText editTextEmail=(EditText)findViewById(R.id.email_text_input);
-      EditText editTextUsername=(EditText) findViewById(R.id.username_text_input);
-      EditText editTextPassword=(EditText) findViewById(R.id.password_text_input);
+        EditText editTextEmail = (EditText) findViewById(R.id.email_text_input);
+        EditText editTextUsername = (EditText) findViewById(R.id.username_text_input);
+        EditText editTextPassword = (EditText) findViewById(R.id.password_text_input);
         final String username = editTextUsername.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
@@ -135,7 +135,7 @@ public class activity_sign_up extends AppCompatActivity {
                             JSONObject obj = new JSONObject(response);
 
                             //if no error in response
-                            if (response!=null) {
+                            if (response != null) {
                                 Toast.makeText(getApplicationContext(), "SignUp Successfully", Toast.LENGTH_SHORT).show();
 
                                 //getting the user from the response

@@ -5,7 +5,7 @@ public class MockRestService implements DataSupplier {
 
     @Override
     public boolean login_interface(String username, String password) {
-        if (username.equals("")&& password.equals(""))
+        if (username.equals("") && password.equals(""))
             return false;
         return true;
     }

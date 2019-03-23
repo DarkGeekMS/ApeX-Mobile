@@ -5,12 +5,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Pair;
 
-public class Post  implements Parcelable {
+public class Post implements Parcelable {
     /**
      * data members
      */
-    private boolean upvoted=false;
-    private boolean downvoted=false;
+    private boolean upvoted = false;
+    private boolean downvoted = false;
     private int postType;
     private int postId;
     private String ApexcomLogo = null;
@@ -21,16 +21,18 @@ public class Post  implements Parcelable {
     private String videoURL = null;
     private String ImageURL = null;
     private String textPostcontent = null;
+
     /**
      * these method returns post state whether was up or down voted
      */
 
-  public boolean isUpvoted() {
-    return upvoted;
-  }
-  public boolean isDownvoted() {
-    return downvoted;
-  }
+    public boolean isUpvoted() {
+        return upvoted;
+    }
+
+    public boolean isDownvoted() {
+        return downvoted;
+    }
 
     /**
      * setters
@@ -43,6 +45,7 @@ public class Post  implements Parcelable {
     public void setApexcomName(String apexcomName) {
         this.apexcomName = apexcomName;
     }
+
     /**
      * this method set path of the uploaded photo
      *
@@ -51,15 +54,17 @@ public class Post  implements Parcelable {
     public void setImageURL(String imageURL) {
         ImageURL = imageURL;
     }
+
     /**
      * this method set date of creation post
      *
      * @param postCreateDate int (0~23) to set the date if the param isnot within range it wont be
-     *     assigned
+     *                       assigned
      */
     public void setPostCreateDate(int postCreateDate) {
         if (postCreateDate >= 0 && postCreateDate <= 23) this.postCreateDate = postCreateDate;
     }
+
     /**
      * this method to set the name of post creator
      *
@@ -68,6 +73,7 @@ public class Post  implements Parcelable {
     public void setPostOwner(String postOwner) {
         this.postOwner = postOwner;
     }
+
     /**
      * this method set titlte of the post
      *
@@ -76,6 +82,7 @@ public class Post  implements Parcelable {
     public void setPostTitle(String postTitle) {
         this.postTitle = postTitle;
     }
+
     /**
      * this method set type of the post the param must be within correct range otherwise ot wont be
      * assigned
@@ -85,6 +92,7 @@ public class Post  implements Parcelable {
     public void setPostType(int postType) {
         if (postType == 1 || postType == 2 || postType == 0) this.postType = postType;
     }
+
     /**
      * this method set url for video links
      *
@@ -94,6 +102,7 @@ public class Post  implements Parcelable {
 
         this.videoURL = videoURL;
     }
+
     /**
      * this method set text for type textpost typr
      *
@@ -112,120 +121,145 @@ public class Post  implements Parcelable {
         ApexcomLogo = apexcomLogo;
     }
 
-  public void setUpvoted(boolean upvoted) {
-    this.upvoted = upvoted;
-  }
-  public void setDownvoted(boolean downvoted) {
-    this.downvoted = downvoted;
-  }
-  public void setTextPostcontent(String textPostcontent) {
-    this.textPostcontent = textPostcontent;
-  }
-  public void setPostId(int postId) {
+    public void setUpvoted(boolean upvoted) {
+        this.upvoted = upvoted;
+    }
+
+    public void setDownvoted(boolean downvoted) {
+        this.downvoted = downvoted;
+    }
+
+    public void setTextPostcontent(String textPostcontent) {
+        this.textPostcontent = textPostcontent;
+    }
+
+    public void setPostId(int postId) {
         this.postId = postId;
     }
 /**
-* getters*/
+ * getters*/
 
 
+    /**
+     * <h1>Post Class</h1>
+     * <p>
+     * This class hold all post attributes and function of setters and getters and other function to
+     * deal with them
+     */
+    public int getPostId() {
+        return postId;
+    }
 
+    /**
+     * this is default constructor to create post
+     */
+    public Post() {
+    }
 
-   /**
-   *
-   *
-   * <h1>Post Class</h1>
-   *
-   * This class hold all post attributes and function of setters and getters and other function to
-   * deal with them
-   */
-  public int getPostId() {
-    return postId;
-  }
-  /** this is default constructor to create post */
-  public Post() {}
-  /** this is method to get path of apexcomlogo attribute */
-  public String getApexcomLogo() {
-    return ApexcomLogo;
-  }
-  /** this method return apexcom name */
-  public String getApexcomName() {
-    return apexcomName;
-  }
-  /** this method return uploaded image url */
-  public String getImageURL() {
-    return ImageURL;
-  }
-  /**
-   * \ this method return intger aas indication for post type type=0 means text post type=1 means
-   * image post type=2 means link of video
-   */
-  public int getPostType() {
-    return postType;
-  }
-  /** this method return post creation date as intger with 24 Hr format */
-  public int getPostCreateDate() {
-    return postCreateDate;
-  }
-  /** this method return the link (URL) of the video */
-  public String getVideoURL() {
+    /**
+     * this is method to get path of apexcomlogo attribute
+     */
+    public String getApexcomLogo() {
+        return ApexcomLogo;
+    }
 
-    return videoURL;
-  }
-  /** this method return name of post creator */
-  public String getPostOwner() {
-    return postOwner;
-  }
-  /** thid method return string with title of the post */
-  public String getPostTitle() {
-    return postTitle;
-  }
-  /** this method return string contaon text of post */
-  public String getTextPostcontent() {
-    return textPostcontent;
-  }
+    /**
+     * this method return apexcom name
+     */
+    public String getApexcomName() {
+        return apexcomName;
+    }
 
-  /**
-   *
-   *
-   * <h1>Return the id's of videos </h1>
-   *
-   * This is a public function that return the id of video from given links either that video in
-   * playlist or not
-   *
-   * @param url is the pased url in string form to this function
-   * @author Mazen Amr Fawzy @Version 1.0 @Date 16/3/2019
-   */
-  public String getVideoId(String url) {
-    String id;
-    int startIndex = getCharacterIndex(url, '=');
-    int endIndex = getCharacterIndex(url, '&');
-    if (endIndex == -1) id = url.substring(startIndex, url.length());
-    else id = url.substring(startIndex, endIndex - 1);
-    return id;
-  }
-  /**
-   *
-   *
-   * <h1>This function return index of char</h1>
-   *
-   * this function returns index of the char after the given char
-   *
-   * @param url this is the string to search into
-   * @param toFind given char to search for the it
-   * @author Mazen Amr Fawzy
-   * @version 1.0 @Date 16/3/2019
-   */
-  private int getCharacterIndex(String url, char toFind) {
-    for (int i = 0; i < url.length(); i++) if (url.charAt(i) == toFind) return i + 1;
-    return -1;
-  }
+    /**
+     * this method return uploaded image url
+     */
+    public String getImageURL() {
+        return ImageURL;
+    }
+
+    /**
+     * \ this method return intger aas indication for post type type=0 means text post type=1 means
+     * image post type=2 means link of video
+     */
+    public int getPostType() {
+        return postType;
+    }
+
+    /**
+     * this method return post creation date as intger with 24 Hr format
+     */
+    public int getPostCreateDate() {
+        return postCreateDate;
+    }
+
+    /**
+     * this method return the link (URL) of the video
+     */
+    public String getVideoURL() {
+
+        return videoURL;
+    }
+
+    /**
+     * this method return name of post creator
+     */
+    public String getPostOwner() {
+        return postOwner;
+    }
+
+    /**
+     * thid method return string with title of the post
+     */
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    /**
+     * this method return string contaon text of post
+     */
+    public String getTextPostcontent() {
+        return textPostcontent;
+    }
+
+    /**
+     * <h1>Return the id's of videos </h1>
+     * <p>
+     * This is a public function that return the id of video from given links either that video in
+     * playlist or not
+     *
+     * @param url is the pased url in string form to this function
+     * @author Mazen Amr Fawzy @Version 1.0 @Date 16/3/2019
+     */
+    public String getVideoId(String url) {
+        String id;
+        int startIndex = getCharacterIndex(url, '=');
+        int endIndex = getCharacterIndex(url, '&');
+        if (endIndex == -1) id = url.substring(startIndex, url.length());
+        else id = url.substring(startIndex, endIndex - 1);
+        return id;
+    }
+
+    /**
+     * <h1>This function return index of char</h1>
+     * <p>
+     * this function returns index of the char after the given char
+     *
+     * @param url    this is the string to search into
+     * @param toFind given char to search for the it
+     * @author Mazen Amr Fawzy
+     * @version 1.0 @Date 16/3/2019
+     */
+    private int getCharacterIndex(String url, char toFind) {
+        for (int i = 0; i < url.length(); i++) if (url.charAt(i) == toFind) return i + 1;
+        return -1;
+    }
 
     /**
      * auto ganarated funcs
      */
 
 
-  protected Post(Parcel in) {
+    protected Post(Parcel in) {
         postType = in.readInt();
         postId = in.readInt();
         ApexcomLogo = in.readString();
@@ -237,6 +271,7 @@ public class Post  implements Parcelable {
         ImageURL = in.readString();
         textPostcontent = in.readString();
     }
+
     public static final Creator<Post> CREATOR = new Creator<Post>() {
         @Override
         public Post createFromParcel(Parcel in) {
@@ -248,10 +283,12 @@ public class Post  implements Parcelable {
             return new Post[size];
         }
     };
+
     @Override
     public int describeContents() {
         return 0;
     }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(postType);

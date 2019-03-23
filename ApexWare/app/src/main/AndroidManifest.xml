@@ -17,7 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity_sign_up"/>
-        <activity android:name=".listOfPostsClass" />
         <activity android:name=".postsandcomments"></activity>
         <activity android:name=".HomePage"/>
         <activity android:name=".VolleyConnection"/>

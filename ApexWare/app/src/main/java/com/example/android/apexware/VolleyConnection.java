@@ -25,7 +25,8 @@ import java.util.Map;
 
 public class VolleyConnection extends AppCompatActivity {
     final String[] s = new String[1];
-    final static Post post=new Post();
+    final static Post post = new Post();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /**
@@ -33,7 +34,7 @@ public class VolleyConnection extends AppCompatActivity {
          */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.testconnection);
-       final TextView textView = (TextView) findViewById(R.id.testconnection);
+        final TextView textView = (TextView) findViewById(R.id.testconnection);
         // ...
         // Instantiate the RequestQueue.
         try {
@@ -42,8 +43,7 @@ public class VolleyConnection extends AppCompatActivity {
             String url = "http://localhost:8000/api/Sign_in?";
             // prepare the Request
             StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>()
-                    {
+                    new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             // response
@@ -57,31 +57,27 @@ public class VolleyConnection extends AppCompatActivity {
                             }
                         }
                     },
-                    new Response.ErrorListener()
-                    {
+                    new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // error
-                            int x=0;
+                            int x = 0;
                             Log.d("Error.Response", String.valueOf(error));
                         }
                     }
             ) {
                 @Override
-                protected Map<String, String> getParams()
-                {
-                    Map<String, String>  params = new HashMap<String, String>();
-                    params.put("username","Monda Talaat");
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("username", "Monda Talaat");
                     params.put("password", "monda21");
                     //params.put("email","mazen9030@hotmail.com");
                     return params;
                 }
             };
             queue.add(postRequest);
-            Toast.makeText(this,post.getApexcomLogo(),Toast.LENGTH_LONG).show();
-        }
-        catch (Exception e)
-        {
+            Toast.makeText(this, post.getApexcomLogo(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
