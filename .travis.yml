@@ -1,0 +1,41 @@
+language: android
+git: 
+  lfs_skip_smudge: true
+
+notifications:
+  slack:
+    secure: FkErdZ8QuZg0P0MzMYyyeoDDPZVScaatclMrehzKDNNUcZbSkvZgT7uuLPX0R7kM3E9EqbCQeB0GYixfGL76CY7ectbPVZJ5iuFkbE6tX19ZkywzIZ1kwyTGZdiXjm4ynNlIEO3Movcv3iXLXV4WsGUPzabkNXGzkV3GRlYwx2BUFMcZJ29TvnY8YV1PRU5inVkeo+VExXuKj8DPS+zOpikE2U8jJen4fu97+6gJDhuzedaIVkrBn8Qv63uVFpofx87zEjMHuZLvozicA/3DM154Y/yblS7bWHyMtN4jOJc6zxD7/ttv9FL7Ii/JPebYfSmAmvjDuqXfQYNcolSB0hEKpdx68/e063Y+1Vs6W4IIdlvpZgBbj6kU+dKAPg1HuZ7toH0GmT1a4JXwE1qYG07NDWYxqq5kPSI69Y1PO0j6Bv8Iut/p1+b4At1Q3TQr1rSe3i8qynEDkRZNgDu2fPRUZlnCLOjM0IO49lSogZsQ6FS2F99s5zXhWTWuYF+L1Bq3DI7dBeyH4q0hSx7d8SBFDvmXr1Xt6E3Y0EGoKS9p/J7hlcHhgZzysC4w8BZuc/u23U23MJU7hgmP+CXLM1FLlefmORvkU1PBMC2mAOW8EJU/domn9lOHQqSSkpeWc8omseFaIQZKoMsZDiuSHxnkWn39/+lJ94g9gAZt4EM=
+  on_success: change
+  on_failure: always
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+
+tags: true
+branches:
+  only: 
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+/
+
+install:
+  - yes | sdkmanager "build-tools;28.0.3" "platforms;android-28"
+before_script:
+  - cd ApexWare
+  - ./gradlew --version --console=plain
+script:
+  - ./gradlew test --console=plain
+
+# TODO: uncomment when google play account is available
+# before_deploy:
+# deploy:
+#   skip_cleanup: true
+#   provider: script
+#   script: bash scripts/deploy.sh
+#   on:
+#     tags: true

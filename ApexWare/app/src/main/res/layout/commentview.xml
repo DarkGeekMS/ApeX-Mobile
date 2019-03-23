@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="false">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:focusable="false">
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+        android:id="@+id/commentOwnerNameAndTimeCreated"
+        android:focusable="false"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/commentContents"
+        android:focusable="false"/>
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="50dp"
+android:orientation="horizontal"
+    android:focusable="false">
+
+<Button
+    android:id="@+id/upvotecomment"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="?android:attr/selectableItemBackground"
+    android:text="@string/upvote"
+    android:textColor="#C0C0C0"
+    android:textSize="25sp"
+    android:textStyle="bold"
+    android:focusable="false"
+    android:onClick="upvotecomment"/>
+
+<TextView
+    android:id="@+id/votecounterforcomment"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_marginTop="2dp"
+    android:layout_weight="1"
+    android:paddingBottom="0dp"
+    android:text="@string/votecounter"
+    android:textAlignment="center"
+    android:textColor="#C0C0C0"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    android:focusable="false"/>
+
+<Button
+    android:id="@+id/downvotecomment"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="?android:attr/selectableItemBackground"
+    android:text="@string/downvote"
+    android:textColor="#C0C0C0"
+    android:textSize="25sp"
+    android:textStyle="bold"
+    android:focusable="false"
+    android:onClick="downvotecomment"/>
+
+<Button
+    android:id="@+id/commentreplys"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="3"
+    android:background="?android:attr/selectableItemBackground"
+    android:text="replays"
+    android:textColor="#C0C0C0"
+    android:focusable="false"/>
+</LinearLayout>
+
+</LinearLayout>
+</android.support.constraint.ConstraintLayout>

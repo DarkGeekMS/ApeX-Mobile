@@ -1,32 +1,223 @@
 package com.example.android.apexware;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
-/**
- * wkeldkwdoiejdpweijdowiedjoiewdoiewdoi
- * @author  shaer
- */
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-  }
-    /**
-     * The HelloWorld program implements an application that
-     * simply displays "Hello World!" to the standard output.
-     *
-     * @author  Zara Ali
-     * @version 1.0
-     * @since   2014-03-31
-     */
-    public void goHome(View view) {
-      Intent dummyLogin = new Intent(this,listOfPostsClass.class);
-      startActivity(dummyLogin);
+    Button login;
+    Button signup;
+    Button forgot_pass;
+    ToggleButton toggle_btn;
+    EditText pass_et;
+    EditText username_et;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Window window = this.getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        // finally change the color
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.ic_launcher_background));
+
+        if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
+            finish();
+            startActivity(new Intent(this, HomePage.class));
+            return;
+        }
+
+        /*
+         * use either mock service or back end service
+         * */
+        boolean debug = true;
+        DepandantClass restClient = null;
+        if (debug) {
+            restClient = new DepandantClass(new MockRestService());
+        } else {
+            restClient = new DepandantClass(new RestService());
+        }
+
+        login = (Button) findViewById(R.id.login_btn);
+
+        signup = (Button) findViewById(R.id.signup_btn);
+
+        forgot_pass = (Button) findViewById(R.id.forgot_pass_btn);
+
+        toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
+
+        pass_et = (EditText) findViewById(R.id.password_text_input);
+
+        username_et = (EditText) findViewById(R.id.username_text_input);
+
+        signup.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openActivity_sign_up();
+                    }
+                });
+        final DepandantClass finalRestClient = restClient;
+        login.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (finalRestClient.login(username_et.getText().toString(), pass_et.getText().toString())) {
+                            //Toast.makeText(getApplicationContext(),"Login successful",Toast.LENGTH_SHORT).show();
+                            open_home_activity();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Login unsuccessful .. try again", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
     }
 
+    /*
+     * opens the activity sign up on pressing the button sign up
+     */
+    public void openActivity_sign_up() {
+        Intent intent = new Intent(this, activity_sign_up.class);
+        startActivity(intent);
+    }
+
+    /*
+     * opens the activity home on pressing the log in button
+     */
+    public void open_home_activity() {
+
+      /*try {
+
+          Intent intent = new Intent(this, VolleyConnection.class);
+          startActivity(intent);
+      }
+      catch (Exception e)
+      {
+          e.printStackTrace();
+      }*/
+        userLogin();
+    }
+
+    /*
+     * toggle button affect viewing password as text or as dots
+     * */
+    public void onToggleClick(View v) {
+        if (toggle_btn.isChecked()) {
+            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+            Drawable img = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                img = getDrawable(R.drawable.toggle_on);
+            }
+            toggle_btn.setBackground(img);
+        } else {
+            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            Drawable img = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                img = getDrawable(R.drawable.toggle_off);
+            }
+            toggle_btn.setBackground(img);
+        }
+    }
+
+    private void userLogin() {
+        EditText editTextUsername = (EditText) findViewById(R.id.username_text_input);
+        EditText editTextPassword = (EditText) findViewById(R.id.password_text_input);
+        //first getting the values
+        final String username = editTextUsername.getText().toString();
+        final String password = editTextPassword.getText().toString();
+
+        //validating inputs
+        if (TextUtils.isEmpty(username)) {
+            editTextUsername.setError("Please enter your username");
+            editTextUsername.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            editTextPassword.setError("Please enter your password");
+            editTextPassword.requestFocus();
+            return;
+        }
+        String url = "http://localhost:8000/api/Sign_in?";
+        //if everything is fine
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //converting response to json object
+                            JSONObject obj = new JSONObject(response);
+                            //if no error in response
+                            if (response != null) {
+                                Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                //getting the user from the response
+                                //-----------JSONObject userJson = obj.getJSONObject("token");
+                                //creating a new user object
+                                User user = new User(
+                                        obj.getString("token")
+                                );
+                                //storing the user in shared preferences
+                                SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                                //starting the profile activity
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), HomePage.class));
+                                //  } else {
+                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Username or Password maybe incorrect", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
 }
+
