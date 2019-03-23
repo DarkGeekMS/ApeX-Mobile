@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -25,11 +24,18 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * where user can create a new account if he can't login or using the app for first time
+ *
+ * @author mostafa
+ */
 public class activity_sign_up extends AppCompatActivity {
     Button login;
     Button create_acc;
     ToggleButton toggle_btn;
-    EditText pass_et;
+    EditText editTextEmail;
+    EditText editTextUsername;
+    EditText editTextPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +43,19 @@ public class activity_sign_up extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         login = (Button) findViewById(R.id.login_instead_btn);
-
         create_acc = (Button) findViewById(R.id.create_acc_btn);
-
         toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
+        editTextEmail = (EditText) findViewById(R.id.email_text_input);
+        editTextUsername = (EditText) findViewById(R.id.username_text_input);
+        editTextPassword = (EditText) findViewById(R.id.password_text_input);
 
-        pass_et = (EditText) findViewById(R.id.password_text_input);
         try {
 
             create_acc.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            createAcoount();
+                            registerUser();
                         }
                     });
         } catch (Exception e) {
@@ -64,28 +70,25 @@ public class activity_sign_up extends AppCompatActivity {
                 });
     }
 
-    /*
-     * opens the activity login on pressing the button log in instead
-     */
+    /**open login form again*/
     public void openActivity_login() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    public void createAcoount() {
-        registerUser();
-    }
-
+    /**
+     * toggle button affect viewing password as text or as dots
+     */
     public void onToggleClick(View v) {
         if (toggle_btn.isChecked()) {
-            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
             Drawable img = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 img = getDrawable(R.drawable.toggle_on);
             }
             toggle_btn.setBackground(img);
         } else {
-            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             Drawable img = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 img = getDrawable(R.drawable.toggle_off);
@@ -94,10 +97,13 @@ public class activity_sign_up extends AppCompatActivity {
         }
     }
 
+    /**
+     * check all fields are filled with data , connect to server ,
+     * fill jason and send the request to the server with all data needed
+     *
+     * @author mazen
+     */
     private void registerUser() {
-        EditText editTextEmail = (EditText) findViewById(R.id.email_text_input);
-        EditText editTextUsername = (EditText) findViewById(R.id.username_text_input);
-        EditText editTextPassword = (EditText) findViewById(R.id.password_text_input);
         final String username = editTextUsername.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();

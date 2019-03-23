@@ -29,15 +29,20 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * first activity in the program and contains login form which the user fill with his data to enter
+ * th app
+ *
+ * @author mostafa
+ */
 public class MainActivity extends AppCompatActivity {
 
     Button login;
     Button signup;
     Button forgot_pass;
     ToggleButton toggle_btn;
-    EditText pass_et;
-    EditText username_et;
+    EditText editTextPassword;
+    EditText editTextUsername;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -73,16 +78,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         login = (Button) findViewById(R.id.login_btn);
-
         signup = (Button) findViewById(R.id.signup_btn);
-
         forgot_pass = (Button) findViewById(R.id.forgot_pass_btn);
-
         toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
-
-        pass_et = (EditText) findViewById(R.id.password_text_input);
-
-        username_et = (EditText) findViewById(R.id.username_text_input);
+        editTextPassword = (EditText) findViewById(R.id.password_text_input);
+        editTextUsername = (EditText) findViewById(R.id.username_text_input);
 
         signup.setOnClickListener(
                 new View.OnClickListener() {
@@ -91,14 +91,15 @@ public class MainActivity extends AppCompatActivity {
                         openActivity_sign_up();
                     }
                 });
+
         final DepandantClass finalRestClient = restClient;
         login.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (finalRestClient.login(username_et.getText().toString(), pass_et.getText().toString())) {
+                        if (finalRestClient.login(editTextUsername.getText().toString(), editTextPassword.getText().toString())) {
                             //Toast.makeText(getApplicationContext(),"Login successful",Toast.LENGTH_SHORT).show();
-                            open_home_activity();
+                            userLogin();
                         } else {
                             Toast.makeText(getApplicationContext(), "Login unsuccessful .. try again", Toast.LENGTH_SHORT).show();
                         }
@@ -115,36 +116,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /*
-     * opens the activity home on pressing the log in button
-     */
-    public void open_home_activity() {
-
-      /*try {
-
-          Intent intent = new Intent(this, VolleyConnection.class);
-          startActivity(intent);
-      }
-      catch (Exception e)
-      {
-          e.printStackTrace();
-      }*/
-        userLogin();
-    }
-
-    /*
-     * toggle button affect viewing password as text or as dots
-     * */
+    /** toggle button affect viewing password as text or as dots*/
     public void onToggleClick(View v) {
         if (toggle_btn.isChecked()) {
-            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
             Drawable img = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 img = getDrawable(R.drawable.toggle_on);
             }
             toggle_btn.setBackground(img);
         } else {
-            pass_et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             Drawable img = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 img = getDrawable(R.drawable.toggle_off);
@@ -153,9 +135,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * check all fields are filled with data , connect to server ,
+     * fill jason and send the request to the server with all data needed
+     *
+     * @author mazen
+     */
     private void userLogin() {
-        EditText editTextUsername = (EditText) findViewById(R.id.username_text_input);
-        EditText editTextPassword = (EditText) findViewById(R.id.password_text_input);
         //first getting the values
         final String username = editTextUsername.getText().toString();
         final String password = editTextPassword.getText().toString();
