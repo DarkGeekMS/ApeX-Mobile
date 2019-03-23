@@ -11,6 +11,9 @@ public class Comment {
     private String commentContent;
     private int commentCreateDate = 0;
 
+
+
+    private  int votesCount;
     /**
      * default constructor
      */
@@ -45,6 +48,10 @@ public class Comment {
      */
     public String getCommentContent() {
         return commentContent;
+    }
+
+    public int getVotesCount() {
+        return votesCount;
     }
 
     /**
@@ -100,4 +107,8 @@ public class Comment {
     public void setCommentCreateDate(int commentCreateDate) {
         this.commentCreateDate = commentCreateDate;
     }
+    public void setVotesCount(int votesCount) {
+        this.votesCount = votesCount;
+    }
+
 }

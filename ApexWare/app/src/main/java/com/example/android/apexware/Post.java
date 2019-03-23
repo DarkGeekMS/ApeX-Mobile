@@ -22,6 +22,10 @@ public class Post implements Parcelable {
     private String ImageURL = null;
     private String textPostcontent = null;
 
+
+
+
+    private int votesCount;
     /**
      * these method returns post state whether was up or down voted
      */
@@ -55,6 +59,9 @@ public class Post implements Parcelable {
         ImageURL = imageURL;
     }
 
+    public void setVotesCount(int votesCount) {
+        this.votesCount = votesCount;
+    }
     /**
      * this method set date of creation post
      *
@@ -155,7 +162,9 @@ public class Post implements Parcelable {
      */
     public Post() {
     }
-
+    public int getVotesCount() {
+        return votesCount;
+    }
     /**
      * this is method to get path of apexcomlogo attribute
      */
