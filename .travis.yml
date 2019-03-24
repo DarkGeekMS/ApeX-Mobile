@@ -27,6 +27,7 @@ install:
   - yes | sdkmanager "build-tools;28.0.3" "platforms;android-28"
 before_script:
   - cd ApexWare
+  - chmod +x gradlew
   - ./gradlew --version --console=plain
 script:
   - ./gradlew test --console=plain
