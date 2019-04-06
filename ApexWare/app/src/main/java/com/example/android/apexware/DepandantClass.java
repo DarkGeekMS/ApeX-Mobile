@@ -7,31 +7,28 @@ package com.example.android.apexware;
  */
 public class DepandantClass {
 
-    private final DataSupplier mSupplier;
-    /**
-     * constructor of the class with one of its inherited class objects
-     *
-     * @param dataSupplier : the type of supplier that will use the virtual functions in this class
-     */
+  private final DataSupplier mSupplier;
+  /**
+   * constructor of the class with one of its inherited class objects
+   *
+   * @param dataSupplier : the type of supplier that will use the virtual functions in this class
+   */
+  public DepandantClass(DataSupplier dataSupplier) {
+    mSupplier = dataSupplier;
+  }
 
-    public DepandantClass(DataSupplier dataSupplier) {
-        mSupplier = dataSupplier;
-    }
-
-    /**
-     * @return : return true if login successful and user exists
-     */
-    boolean login(String username, String password) {
-        return mSupplier.login_interface(username, password);
-
-    }
-    /**
-     * send string of all details to create a new user
-     * @return : return true if it is successful
-     */
-    boolean signup(String username, String email, String password) {
-        return mSupplier.signup_interface(username, email, password);
-    }
-    // msupplier can be used at this point to call any function there in a generic use
+  /** @return : return true if login successful and user exists */
+  boolean login(String username, String password) {
+    return mSupplier.login_interface(username, password);
+  }
+  /**
+   * send string of all details to create a new user
+   *
+   * @return : return true if it is successful
+   */
+  boolean signup(String username, String email, String password) {
+    return mSupplier.signup_interface(username, email, password);
+  }
+  // msupplier can be used at this point to call any function there in a generic use
 
 }

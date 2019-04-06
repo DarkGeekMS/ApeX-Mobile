@@ -26,66 +26,66 @@ import java.util.Map;
  * @author mostafa, mazen
  */
 public class RestService extends AppCompatActivity implements DataSupplier {
-    /**
-     * @param username : the user name field in the form
-     * @param password : the password field in the form
-     * @return true if login successful
-     */
-    @Override
-    public boolean login_interface(final String username, final String password) {
-       /*
-        String url = "http://localhost:8000/api/Sign_in?";
-        //if everything is fine
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            //converting response to json object
-                            JSONObject obj = new JSONObject(response);
-                            //if no error in response
-                            if (response != null) {
-                                Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                                //getting the user from the response
-                                //-----------JSONObject userJson = obj.getJSONObject("token");
-                                //creating a new user object
-                                User user = new User(
-                                        obj.getString("token")
-                                );
-                                //storing the user in shared preferences
-                                SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
-                                //starting the profile activity
-                                finish();
-                                startActivity(new Intent(getApplicationContext(), HomePage.class));
-                                //  } else {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+  /**
+   * @param username : the user name field in the form
+   * @param password : the password field in the form
+   * @return true if login successful
+   */
+  @Override
+  public boolean login_interface(final String username, final String password) {
+    /*
+    String url = "http://localhost:8000/api/Sign_in?";
+    //if everything is fine
+    StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+                        //if no error in response
+                        if (response != null) {
+                            Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                            //getting the user from the response
+                            //-----------JSONObject userJson = obj.getJSONObject("token");
+                            //creating a new user object
+                            User user = new User(
+                                    obj.getString("token")
+                            );
+                            //storing the user in shared preferences
+                            SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                            //starting the profile activity
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), HomePage.class));
+                            //  } else {
+                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Username or Password maybe incorrect", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-                return params;
-            }
-        };
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
-        */
-        return false ; // for debug
-    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Username or Password maybe incorrect", Toast.LENGTH_SHORT).show();
+                }
+            }) {
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("username", username);
+            params.put("password", password);
+            return params;
+        }
+    };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    */
+    return true; // for debug
+  }
 
-    @Override
-    public boolean signup_interface(String username, String email, String password) {
-        return true; // for debug
-    }
+  @Override
+  public boolean signup_interface(String username, String email, String password) {
+    return true; // for debug
+  }
 }

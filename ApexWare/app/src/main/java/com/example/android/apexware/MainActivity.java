@@ -37,173 +37,190 @@ import java.util.Map;
  */
 public class MainActivity extends AppCompatActivity {
 
-    Button login;
-    Button signup;
-    Button forgot_pass;
-    ToggleButton toggle_btn;
-    EditText editTextPassword;
-    EditText editTextUsername;
+  Button login;
+  Button signup;
+  Button forgot_pass;
+  ToggleButton toggle_btn;
+  EditText editTextPassword;
+  EditText editTextUsername;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Window window = this.getWindow();
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    Window window = this.getWindow();
 
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    // clear FLAG_TRANSLUCENT_STATUS flag:
+    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+    // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-        // finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.ic_launcher_background));
+    // finally change the color
+    window.setStatusBarColor(ContextCompat.getColor(this, R.color.ic_launcher_background));
 
-        if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
-            finish();
-            startActivity(new Intent(this, HomePage.class));
-            return;
-        }
-
-        /*
-         * use either mock service or back end service
-         * */
-        boolean debug = true;
-        DepandantClass restClient = null;
-        if (debug) {
-            restClient = new DepandantClass(new MockRestService());
-        } else {
-            restClient = new DepandantClass(new RestService());
-        }
-
-        login = (Button) findViewById(R.id.login_btn);
-        signup = (Button) findViewById(R.id.signup_btn);
-        forgot_pass = (Button) findViewById(R.id.forgot_pass_btn);
-        toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
-        editTextPassword = (EditText) findViewById(R.id.password_text_input);
-        editTextUsername = (EditText) findViewById(R.id.username_text_input);
-
-        signup.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openActivity_sign_up();
-                    }
-                });
-
-        final DepandantClass finalRestClient = restClient;
-        login.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (finalRestClient.login(editTextUsername.getText().toString(), editTextPassword.getText().toString())) {
-                            //Toast.makeText(getApplicationContext(),"Login successful",Toast.LENGTH_SHORT).show();
-                            userLogin();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Login unsuccessful .. try again", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-    }
+    // if the token is saved
+    /*if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
+        finish();
+        startActivity(new Intent(this, HomePage.class));
+        return;
+    }*/
 
     /*
-     * opens the activity sign up on pressing the button sign up
-     */
-    public void openActivity_sign_up() {
-        Intent intent = new Intent(this, activity_sign_up.class);
-        startActivity(intent);
+     * use either mock service or back end service
+     * */
+    boolean debug = true;
+    DepandantClass restClient = null;
+    if (debug) {
+      restClient = new DepandantClass(new MockRestService());
+    } else {
+      restClient = new DepandantClass(new RestService());
     }
 
-    /** toggle button affect viewing password as text or as dots*/
-    public void onToggleClick(View v) {
-        if (toggle_btn.isChecked()) {
-            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-            Drawable img = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                img = getDrawable(R.drawable.toggle_on);
+    login = (Button) findViewById(R.id.login_btn);
+    signup = (Button) findViewById(R.id.signup_btn);
+    forgot_pass = (Button) findViewById(R.id.forgot_pass_btn);
+    toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
+    editTextPassword = (EditText) findViewById(R.id.password_text_input);
+    editTextUsername = (EditText) findViewById(R.id.username_text_input);
+
+    signup.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            openActivity_sign_up();
+          }
+        });
+
+    final DepandantClass finalRestClient = restClient;
+    login.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            if (finalRestClient.login(
+                editTextUsername.getText().toString(), editTextPassword.getText().toString())) {
+              // Toast.makeText(getApplicationContext(),"Login
+              // successful",Toast.LENGTH_SHORT).show();
+              userLogin();
+            } else {
+              Toast.makeText(
+                      getApplicationContext(),
+                      "Login unsuccessful .. try again",
+                      Toast.LENGTH_SHORT)
+                  .show();
             }
-            toggle_btn.setBackground(img);
-        } else {
-            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            Drawable img = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                img = getDrawable(R.drawable.toggle_off);
-            }
-            toggle_btn.setBackground(img);
-        }
+          }
+        });
+  }
+
+  /*
+   * opens the activity sign up on pressing the button sign up
+   */
+  public void openActivity_sign_up() {
+    Intent intent = new Intent(this, activity_sign_up.class);
+    startActivity(intent);
+  }
+
+  /** toggle button affect viewing password as text or as dots */
+  public void onToggleClick(View v) {
+    if (toggle_btn.isChecked()) {
+      editTextPassword.setInputType(
+          InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+      Drawable img = null;
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        img = getDrawable(R.drawable.toggle_on);
+      }
+      toggle_btn.setBackground(img);
+    } else {
+      editTextPassword.setInputType(
+          InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+      Drawable img = null;
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        img = getDrawable(R.drawable.toggle_off);
+      }
+      toggle_btn.setBackground(img);
+    }
+  }
+
+  /**
+   * check all fields are filled with data , connect to server , fill jason and send the request to
+   * the server with all data needed
+   *
+   * @author mazen
+   */
+  private void userLogin() {
+    // first getting the values
+    final String username = editTextUsername.getText().toString();
+    final String password = editTextPassword.getText().toString();
+
+    // validating inputs
+    if (TextUtils.isEmpty(username)) {
+      editTextUsername.setError("Please enter your username");
+      editTextUsername.requestFocus();
+      return;
     }
 
-    /**
-     * check all fields are filled with data , connect to server ,
-     * fill jason and send the request to the server with all data needed
-     *
-     * @author mazen
-     */
-    private void userLogin() {
-        //first getting the values
-        final String username = editTextUsername.getText().toString();
-        final String password = editTextPassword.getText().toString();
-
-        //validating inputs
-        if (TextUtils.isEmpty(username)) {
-            editTextUsername.setError("Please enter your username");
-            editTextUsername.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Please enter your password");
-            editTextPassword.requestFocus();
-            return;
-        }
-        String url = "http://localhost:8000/api/Sign_in?";
-        //if everything is fine
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            //converting response to json object
-                            JSONObject obj = new JSONObject(response);
-                            //if no error in response
-                            if (response != null) {
-                                Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                                //getting the user from the response
-                                //-----------JSONObject userJson = obj.getJSONObject("token");
-                                //creating a new user object
-                                User user = new User(
-                                        obj.getString("token")
-                                );
-                                //storing the user in shared preferences
-                                SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
-                                //starting the profile activity
-                                finish();
-                                startActivity(new Intent(getApplicationContext(), HomePage.class));
-                                //  } else {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Username or Password maybe incorrect", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-                return params;
-            }
+    if (TextUtils.isEmpty(password)) {
+      editTextPassword.setError("Please enter your password");
+      editTextPassword.requestFocus();
+      return;
+    }
+    String url = "http://localhost:8000/api/Sign_in?";
+    // if everything is fine
+    StringRequest stringRequest =
+        new StringRequest(
+            Request.Method.POST,
+            url,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                try {
+                  // converting response to json object
+                  JSONObject obj = new JSONObject(response);
+                  // if no error in response
+                  if (response != null) {
+                    Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT)
+                        .show();
+                    // getting the user from the response
+                    // -----------JSONObject userJson = obj.getJSONObject("token");
+                    // creating a new user object
+                    User user = new User(obj.getString("token"));
+                    // storing the user in shared preferences
+                    SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                    // starting the profile activity
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), HomePage.class));
+                  } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Login unsuccessful .. try again",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                  }
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Username or Password maybe incorrect",
+                        Toast.LENGTH_SHORT)
+                    .show();
+              }
+            }) {
+          @Override
+          protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("username", username);
+            params.put("password", password);
+            return params;
+          }
         };
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
-    }
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+  }
 }
-

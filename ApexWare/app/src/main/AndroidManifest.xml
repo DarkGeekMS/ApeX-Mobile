@@ -19,7 +19,6 @@
         <activity android:name=".activity_sign_up"/>
         <activity android:name=".postsandcomments"></activity>
         <activity android:name=".HomePage"/>
-        <activity android:name=".VolleyConnection"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
