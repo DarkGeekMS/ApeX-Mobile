@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
    * opens the activity sign up on pressing the button sign up
    */
   public void openActivity_sign_up() {
-    Intent intent = new Intent(this, activity_sign_up.class);
+    Intent intent = new Intent(this, Profile.class);
     startActivity(intent);
   }
 
