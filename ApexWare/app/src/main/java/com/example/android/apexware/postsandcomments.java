@@ -1,6 +1,7 @@
 package com.example.android.apexware;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,12 +21,21 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.View.GONE;
 
@@ -34,8 +44,8 @@ import static android.view.View.GONE;
  * @author Omar
  */
 public class postsandcomments extends AppCompatActivity {
+   String value;
   CustomAdapterForComments adapter; // adapter for the data in the list
-
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,34 +69,34 @@ public class postsandcomments extends AppCompatActivity {
     String postAsString = getIntent().getStringExtra("postToDisplay");
     final Post post1 = gson.fromJson(postAsString, Post.class);
     /** some comments */
-    Comment comment1 = new Comment(1);
+    Comment comment1 = new Comment("1");
     comment1.setId(1);
     comment1.setCommentCreateDate(125);
     comment1.setCommentOwner("Omar229");
     comment1.setCommentContent(
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
+            "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     commentArrayList.add(comment1);
-    Comment comment2 = new Comment(1);
+    Comment comment2 = new Comment("1");
     comment2.setId(2);
     comment2.setCommentCreateDate(2132);
     comment2.setCommentOwner("mostafa");
     comment2.setCommentContent(
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
+            "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     commentArrayList.add(comment2);
-    Comment rply1 = new Comment(1);
+    Comment rply1 = new Comment("1");
     /** some replys */
     rply1.setId(3);
     rply1.setCommentCreateDate(12665);
     rply1.setCommentOwner("bla7");
     rply1.setCommentContent(
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
+            "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     repliesArrayList.add(rply1);
-    Comment rply2 = new Comment(1);
+    Comment rply2 = new Comment("1");
     rply2.setId(4);
     rply2.setCommentCreateDate(12665);
     rply2.setCommentOwner("bla bla bllllla");
     rply2.setCommentContent(
-        "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
+            "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     repliesArrayList.add(rply2);
     listHashMap.put(commentArrayList.get(0), repliesArrayList);
     listHashMap.put(commentArrayList.get(1), repliesArrayList);
@@ -102,29 +112,57 @@ public class postsandcomments extends AppCompatActivity {
     /** popup menu action */
     final Button button = findViewById(R.id.popupmeu);
     button.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            PopupMenu popup = new PopupMenu(postsandcomments.this, button);
-            popup.getMenuInflater().inflate(R.menu.option_menu, popup.getMenu());
-            popup.setOnMenuItemClickListener(
-                new PopupMenu.OnMenuItemClickListener() {
-                  @Override
-                  public boolean onMenuItemClick(MenuItem item) {
-                    Toast.makeText(
-                            postsandcomments.this,
-                            "You Clicked : " + item.getTitle(),
-                            Toast.LENGTH_SHORT)
-                        .show();
-                    // we can use item name to make intent for the new responces
-                    return true;
-                  }
-                });
-            popup.show(); // showing popup menu
-          }
-        });
-
-    post1.setPostId(getIntent().getIntExtra("id", 0));
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(postsandcomments.this, button);
+                popup.getMenuInflater().inflate(R.menu.option_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(
+                        new PopupMenu.OnMenuItemClickListener() {
+                          @Override
+                          public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getOrder()==0){
+                              savePost(post1.getPostId(),Request.Method.GET, null,
+                                      new  VolleyCallback(){
+                                        @Override
+                                        public void onSuccessResponse(String result) {
+                                          try {
+                                            JSONObject response = new JSONObject(result);
+                                            value=response.toString();
+                                            Toast.makeText(getApplicationContext(),value,Toast.LENGTH_SHORT).show();
+                                          } catch (JSONException e) {
+                                            e.printStackTrace();
+                                          }
+                                        }
+                                      });}
+                            // we can use item name to make intent for the new responces
+                            if(item.getTitle()=="Hide"){
+                              hidePost(post1.getPostId(),Request.Method.GET, null,
+                                      new  VolleyCallback(){
+                                        @Override
+                                        public void onSuccessResponse(String result) {
+                                          try {
+                                            JSONObject response = new JSONObject(result);
+                                            value=response.toString();
+                                            Toast.makeText(getApplicationContext(),value,Toast.LENGTH_SHORT).show();
+                                            // creating a new user object
+                                            User user = new User(response.getString("token"));
+                                            // storing the user in shared preferences
+                                            SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                                          } catch (JSONException e) {
+                                            e.printStackTrace();
+                                          }
+                                        }
+                                      });
+                            }
+                            return true;
+                          }
+                        });
+                popup.show(); // showing popup menu
+              }
+            });
+    /*int id=getIntent().getIntExtra("id", 0);
+    post1.setPostId(String.valueOf(id));*/
     /*put the data on the views*/
     /*logo*/
     ImageView logo = findViewById(R.id.apexcomlogo);
@@ -135,10 +173,9 @@ public class postsandcomments extends AppCompatActivity {
     // *creator name and date created*//*
     TextView postOwnerAndCreatedTime = (TextView) findViewById(R.id.apexcomOwnerNameAndTimeCreated);
     postOwnerAndCreatedTime.setText(
-        "posted by " + post1.getPostOwner() + "." + post1.getPostCreateDate());
+            "posted by " + post1.getPostOwner() + "." + post1.getPostCreateDate());
     TextView Title = findViewById(R.id.PostTitle);
     Title.setText(post1.getPostTitle());
-
     TextView textPost = (TextView) findViewById(R.id.TextPostBody);
     WebView videoLinkView = (WebView) findViewById(R.id.videoWebView);
     ImageView uploadedImageView = (ImageView) findViewById(R.id.imageUploadedView);
@@ -181,99 +218,103 @@ public class postsandcomments extends AppCompatActivity {
     final TextView counter = findViewById(R.id.votecounter);
     /** up vote */
     up.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (post1.isUpvoted() == false) {
-              if (post1.isDownvoted() == false) // was not up or down (default case)
-              {
-                up.setTextColor(Color.BLUE);
-                int i = Integer.parseInt(counter.getText().toString());
-                i++;
-                counter.setText(Integer.toString(i));
-                post1.setUpvoted(true);
-              } else if (post1.isDownvoted() == true) // was down voted and up vote was clicked
-              {
-                down.setTextColor(Color.GRAY);
-                up.setTextColor(Color.BLUE);
-                int i = Integer.parseInt(counter.getText().toString());
-                i += 2;
-                counter.setText(Integer.toString(i));
-                post1.setUpvoted(true);
-                post1.setDownvoted(false);
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+
+                if (post1.isUpvoted() == false) {
+                  if (post1.isDownvoted() == false) // was not up or down (default case)
+                  { int oldvotes = Integer.parseInt(counter.getText().toString());
+                    //int newvotes=Integer.parseInt
+
+                    upvotePost(post1.getPostId(),oldvotes,Request.Method.POST, null,
+                            new  VolleyCallback(){
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                try {
+                                  JSONObject response = new JSONObject(result);
+                                  value=response.getString("value");
+                                  Toast.makeText(getApplicationContext(),value,Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                  e.printStackTrace();
+                                }
+                              }
+                            });
+                    up.setTextColor(Color.BLUE);
+                    counter.setText(Integer.toString(99));
+                    post1.setUpvoted(true);
+                  } else if (post1.isDownvoted() == true) // was down voted and up vote was clicked
+                  { int oldvotes = Integer.parseInt(counter.getText().toString());
+                    down.setTextColor(Color.GRAY);
+                    up.setTextColor(Color.BLUE);
+                    int i = Integer.parseInt(counter.getText().toString());
+                    i += 2;
+                    counter.setText(Integer.toString(i));
+                    post1.setUpvoted(true);
+                    post1.setDownvoted(false);
+                  }
+                } else if (post1.isUpvoted() == true) // was upvoted and upvote was clicked
+                {
+                  up.setTextColor(Color.GRAY);
+                  int i = Integer.parseInt(counter.getText().toString());
+                  i--;
+                  counter.setText(Integer.toString(i));
+                  post1.setUpvoted(false);
+                }
               }
-            } else if (post1.isUpvoted() == true) // was upvoted and upvote was clicked
-            {
-              up.setTextColor(Color.GRAY);
-              int i = Integer.parseInt(counter.getText().toString());
-              i--;
-              counter.setText(Integer.toString(i));
-              post1.setUpvoted(false);
-            }
-          }
-        });
+            });
 
     /** downVote */
     down.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (post1.isDownvoted() == false) {
-              if (post1.isUpvoted() == false) // was not up or down (default case)
-              {
-                down.setTextColor(Color.RED);
-                int i = Integer.parseInt(counter.getText().toString());
-                i--;
-                counter.setText(Integer.toString(i));
-                post1.setDownvoted(true);
-              } else if (post1.isUpvoted() == true) // was up voted and down vote was clicked
-              {
-                down.setTextColor(Color.RED);
-                up.setTextColor(Color.GRAY);
-                int i = Integer.parseInt(counter.getText().toString());
-                i -= 2;
-                counter.setText(Integer.toString(i));
-                post1.setUpvoted(false);
-                post1.setDownvoted(true);
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {int oldvotes = Integer.parseInt(counter.getText().toString());
+                if (post1.isDownvoted() == false) {
+                  if (post1.isUpvoted() == false) // was not up or down (default case)
+                  {
+                    downvotePost(post1.getPostId(),oldvotes,Request.Method.GET, null,
+                            new  VolleyCallback(){
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                try {
+                                  JSONObject response = new JSONObject(result);
+                                  value=response.getString("value");
+                                  Toast.makeText(getApplicationContext(),value,Toast.LENGTH_SHORT).show();
+                                  // creating a new user object
+                                } catch (JSONException e) {
+                                  e.printStackTrace();
+                                }
+                              }
+                            });
+
+                    down.setTextColor(Color.RED);
+                    int i = Integer.parseInt(counter.getText().toString());
+                    i--;
+                    counter.setText(Integer.toString(i));
+                    post1.setDownvoted(true);
+                  } else if (post1.isUpvoted() == true) // was up voted and down vote was clicked
+                  {
+                    down.setTextColor(Color.RED);
+                    up.setTextColor(Color.GRAY);
+                    int i = Integer.parseInt(counter.getText().toString());
+                    i -= 2;
+                    counter.setText(Integer.toString(i));
+                    post1.setUpvoted(false);
+                    post1.setDownvoted(true);
+                  }
+                } else if (post1.isDownvoted() == true) // was down voted and down vote was clicked
+                {
+                  down.setTextColor(Color.GRAY);
+                  int i = Integer.parseInt(counter.getText().toString());
+                  i++;
+                  counter.setText(Integer.toString(i));
+                  post1.setDownvoted(false);
+                }
               }
-            } else if (post1.isDownvoted() == true) // was down voted and down vote was clicked
-            {
-              down.setTextColor(Color.GRAY);
-              int i = Integer.parseInt(counter.getText().toString());
-              i++;
-              counter.setText(Integer.toString(i));
-              post1.setDownvoted(false);
-            }
-          }
-        });
+            });
   }
 
-  public void upvote(View v) {
-    TextView counter = findViewById(R.id.votecounter);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button up = findViewById(R.id.upvote);
-    Button down = findViewById(R.id.downvote);
-    if (down.getCurrentTextColor() == Color.RED) {
-      down.setTextColor(Color.GRAY);
-    }
-    up.setTextColor(Color.BLUE);
-    i++;
-    counter.setText(Integer.toString(i));
-  }
-
-  public void downvote(View v) {
-    TextView counter = findViewById(R.id.votecounter);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button down = findViewById(R.id.downvote);
-    Button up = findViewById(R.id.upvote);
-    if (up.getCurrentTextColor() == Color.BLUE) {
-      up.setTextColor(Color.GRAY);
-    }
-    down.setTextColor(Color.RED);
-    i--;
-    counter.setText(Integer.toString(i));
-  }
-
+  //to be replaced with the requsets
   public void upvotecomment(View v) {
     TextView counter = findViewById(R.id.votecounterforcomment);
     int i = Integer.parseInt(counter.getText().toString());
@@ -286,7 +327,7 @@ public class postsandcomments extends AppCompatActivity {
     i++;
     counter.setText(Integer.toString(i));
   }
-
+  //to be replaced with the requsets
   public void downvotecomment(View v) {
     TextView counter = findViewById(R.id.votecounterforcomment);
     int i = Integer.parseInt(counter.getText().toString());
@@ -299,7 +340,7 @@ public class postsandcomments extends AppCompatActivity {
     i--;
     counter.setText(Integer.toString(i));
   }
-
+  //to be replaced with the requsets
   public void upvotereply(View v) {
     TextView counter = findViewById(R.id.votecounterforreply);
     int i = Integer.parseInt(counter.getText().toString());
@@ -312,7 +353,7 @@ public class postsandcomments extends AppCompatActivity {
     i++;
     counter.setText(Integer.toString(i));
   }
-
+  //to be replaced with the requsets
   public void downvotereply(View v) {
     TextView counter = findViewById(R.id.votecounterforreply);
     int i = Integer.parseInt(counter.getText().toString());
@@ -328,22 +369,302 @@ public class postsandcomments extends AppCompatActivity {
 
   private void setuoVideoSetting(WebView temp, String url) {
     String frameVideo =
-        "<html><body><br><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"
-            + url
-            + "\" frameborder=\"0\" allowfullscreen></iframe></body></html>";
+            "<html><body><br><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"
+                    + url
+                    + "\" frameborder=\"0\" allowfullscreen></iframe></body></html>";
 
     WebView displayYoutubeVideo = (WebView) temp.findViewById(R.id.videoWebView);
     displayYoutubeVideo.setWebViewClient(
-        new WebViewClient() {
-          @Override
-          public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            return false;
-          }
-        });
+            new WebViewClient() {
+              @Override
+              public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+              }
+            });
     WebSettings webSettings = displayYoutubeVideo.getSettings();
     webSettings.setJavaScriptEnabled(true);
     displayYoutubeVideo.loadData(frameVideo, "text/html", "utf-8");
     displayYoutubeVideo.getSettings().setLoadWithOverviewMode(true);
     displayYoutubeVideo.getSettings().setUseWideViewPort(true);
   }
+  //upvote request 'send 1'
+  public void upvotePost(String postID,int old,int method, JSONObject jsonValue, final VolleyCallback callback){
+    final String postId=postID;
+    final int oldvotes=old;
+    User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
+    final String token=user.getToken();
+    String url = "http://127.0.0.1:8000/api/vote";
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+                          // if no error in response
+                          if (response != null) {
+                            final String receivedResponse = obj.getString("votes");
+                            int newvotes = Integer.parseInt(receivedResponse);
+                            if (newvotes > oldvotes) {
+                              Toast.makeText(getApplicationContext(), "you upvoted the post", Toast.LENGTH_SHORT).show();
+                            }
+                          } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "something went wrong.. try again",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                          }
+                        } catch (JSONException e) {
+                          e.printStackTrace();
+                        }
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "something went wrong with the connection",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                      }
+                    }) {
+              @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", postId);
+                params.put("dir", "1");
+                params.put("token", token);
+                return params;
+              }
+            };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+  }
+  //same as upvote but we send -1 instead of 1
+  public void downvotePost(String postID,int old,int method, JSONObject jsonValue, final VolleyCallback callback){
+    final String postId=postID;
+    User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
+    final String token=user.getToken();
+    final int oldvotes=old;
+    String url = "http://127.0.0.1:8000/api/vote";
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+                          // if no error in response
+                          if (response != null) {
+                            final String receivedResponse = obj.getString("votes");
+                            int newvotes = Integer.parseInt(receivedResponse);
+                            if (newvotes < oldvotes) {
+                              Toast.makeText(getApplicationContext(), "you downvoted the post", Toast.LENGTH_SHORT).show();
+                            }
+                          } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "something went wrong.. try again",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                          }
+                        } catch (JSONException e) {
+                          e.printStackTrace();
+                        }
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "something went wrong with the connection",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                      }
+                    }) {
+              @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", postId);
+                params.put("dir", "-1");
+                params.put("token", token);
+                return params;
+              }
+            };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+  }
+  public void savePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
+    final String postId=postID;
+    User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
+    final String token=user.getToken();
+    String url = "http://127.0.0.1:8000/api/save";
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+                          // if no error in response
+                          if (response != null) {
+                            Toast.makeText(getApplicationContext(), "Post is saved ", Toast.LENGTH_SHORT).show();
+                          } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "something went wrong.. try again",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                          }
+                        } catch (JSONException e) {
+                          e.printStackTrace();
+                        }
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                          String er=error.getMessage();
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "something went wrong with the connection",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                      }
+                    }) {
+              @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("ID", postId);
+                params.put("token", token);
+                return params;
+              }
+            };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+  }
+  public void hidePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
+    final String postId=postID;
+    User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
+    final String token=user.getToken();
+    String url = "http://127.0.0.1:8000/api/Hide";
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+                          // if no error in response
+                          if (response != null) {
+                            Toast.makeText(getApplicationContext(), "Post is hidden", Toast.LENGTH_SHORT).show();
+                          } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "something went wrong.. try again",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                          }
+                        } catch (JSONException e) {
+                          e.printStackTrace();
+                        }
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "something went wrong with the connection",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                      }
+                    }) {
+              @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", postId);
+                params.put("token", token);
+                return params;
+              }
+            };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+  }
+
+  //not in this phase,needs design!
+  public void reportpost(String postID,String token){
+    //change the url towork with upvoting
+    String url = "http://localhost:8000/api/Sign_in?";
+    // if everything is fine
+    StringRequest stringRequest =
+            new StringRequest(Request.Method.POST,url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+                          // if no error in response
+                          if (response != null) {
+                            Toast.makeText(getApplicationContext(), "you upvoted the post", Toast.LENGTH_SHORT).show();
+                            // getting the user from the response
+                            // -----------JSONObject userJson = obj.getJSONObject("token");
+                            // creating a new user object
+                            User user = new User(obj.getString("token"));
+                            // storing the user in shared preferences
+                            SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                            // starting the profile activity
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), HomePage.class));
+                          } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Login unsuccessful .. try again",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                          }
+                        } catch (JSONException e) {
+                          e.printStackTrace();
+                        }
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Username or Password maybe incorrect",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                      }
+                    })
+            {
+             /* @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+              }*/
+            };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+
+  }
 }
+
+
+

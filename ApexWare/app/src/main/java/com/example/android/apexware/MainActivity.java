@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -166,61 +167,88 @@ public class MainActivity extends AppCompatActivity {
       editTextPassword.requestFocus();
       return;
     }
-    String url = "http://localhost:8000/api/Sign_in?";
-    // if everything is fine
-    StringRequest stringRequest =
-        new StringRequest(
-            Request.Method.POST,
-            url,
-            new Response.Listener<String>() {
+    String url = "http://127.0.0.1:8000//api/sign_in?";
+    getResponse(Request.Method.GET, url, null,
+            new  VolleyCallback(){
               @Override
-              public void onResponse(String response) {
+              public void onSuccessResponse(String result) {
                 try {
-                  // converting response to json object
-                  JSONObject obj = new JSONObject(response);
-                  // if no error in response
-                  if (response != null) {
-                    Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT)
-                        .show();
-                    // getting the user from the response
-                    // -----------JSONObject userJson = obj.getJSONObject("token");
+                  JSONObject response = new JSONObject(result);
+                  String token=response.getString("token");
+                  if(token!=null)
+                  {
                     // creating a new user object
-                    User user = new User(obj.getString("token"));
+                    User user = new User(response.getString("token"));
                     // storing the user in shared preferences
                     SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
-                    // starting the profile activity
-                    finish();
                     startActivity(new Intent(getApplicationContext(), HomePage.class));
-                  } else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Login unsuccessful .. try again",
-                            Toast.LENGTH_SHORT)
-                        .show();
                   }
+                  Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
+
                 } catch (JSONException e) {
                   e.printStackTrace();
                 }
               }
-            },
-            new Response.ErrorListener() {
+            },username,password);
+  }
+  public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final String username, final String password) {
+    // if everything is fine
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        // if no error in response
+                        if (response != null) {
+                          callback.onSuccessResponse(response);
+                        }
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Username or Password maybe incorrect",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                      }
+                    }) {
               @Override
-              public void onErrorResponse(VolleyError error) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Username or Password maybe incorrect",
-                        Toast.LENGTH_SHORT)
-                    .show();
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
               }
-            }) {
-          @Override
-          protected Map<String, String> getParams() throws AuthFailureError {
-            Map<String, String> params = new HashMap<>();
-            params.put("username", username);
-            params.put("password", password);
-            return params;
-          }
-        };
+            };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
+
 }
+
+/*
+Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT)
+                              .show();
+                      // getting the user from the response
+                      // -----------JSONObject userJson = obj.getJSONObject("token");
+                      // creating a new user object
+                      User user = new User(obj.getString("token"));
+                      // storing the user in shared preferences
+                            SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                      // starting the profile activity
+                      finish();
+                      startActivity(new Intent(getApplicationContext(), HomePage.class));
+                    } else {
+      Toast.makeText(
+              getApplicationContext(),
+              "Login unsuccessful .. try again",
+              Toast.LENGTH_SHORT)
+              .show();
+    }
+  } catch (JSONException e) {
+    e.printStackTrace();
+  }
+}*/

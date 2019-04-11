@@ -9,14 +9,14 @@ public class Comment {
   /** data members */
   private int Id;
 
-  private int postId;
+  private String postId;
   private String commentOwner = null;
   private String commentContent;
   private int commentCreateDate = 0;
 
   private int votesCount;
   /** default constructor */
-  public Comment(int postId) {
+  public Comment(String postId) {
     this.postId = postId;
   }
 
@@ -27,7 +27,7 @@ public class Comment {
   }
 
   /** this method is to get post id for postId */
-  public int getPostId() {
+  public String getPostId() {
     return postId;
   }
 
@@ -64,7 +64,7 @@ public class Comment {
    *
    * @param postId
    */
-  public void setPostId(int postId) {
+  public void setPostId(String postId) {
     this.postId = postId;
   }
 

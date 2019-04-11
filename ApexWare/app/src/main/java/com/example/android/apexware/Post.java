@@ -18,7 +18,7 @@ public class Post implements Parcelable {
   private boolean upvoted = false;
   private boolean downvoted = false;
   private int postType;
-  private int postId;
+  private String postId;
   private String ApexcomLogo = null;
   private String apexcomName = null;
   private String postOwner = null;
@@ -138,11 +138,11 @@ public class Post implements Parcelable {
     this.textPostcontent = textPostcontent;
   }
 
-  public void setPostId(int postId) {
+  public void setPostId(String postId) {
     this.postId = postId;
   }
   /** getters */
-  public int getPostId() {
+  public String getPostId() {
     return postId;
   }
 
@@ -241,7 +241,7 @@ public class Post implements Parcelable {
   /** auto ganarated funcs */
   protected Post(Parcel in) {
     postType = in.readInt();
-    postId = in.readInt();
+    postId = in.readString();
     ApexcomLogo = in.readString();
     apexcomName = in.readString();
     postOwner = in.readString();
@@ -253,17 +253,16 @@ public class Post implements Parcelable {
   }
 
   public static final Creator<Post> CREATOR =
-      new Creator<Post>() {
-        @Override
-        public Post createFromParcel(Parcel in) {
-          return new Post(in);
-        }
-
-        @Override
-        public Post[] newArray(int size) {
-          return new Post[size];
-        }
-      };
+          new Creator<Post>() {
+            @Override
+            public Post createFromParcel(Parcel in) {
+              return new Post(in);
+            }
+            @Override
+            public Post[] newArray(int size) {
+              return new Post[size];
+            }
+          };
 
   @Override
   public int describeContents() {
@@ -273,7 +272,7 @@ public class Post implements Parcelable {
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeInt(postType);
-    dest.writeInt(postId);
+    dest.writeString(postId);
     dest.writeString(ApexcomLogo);
     dest.writeString(apexcomName);
     dest.writeString(postOwner);

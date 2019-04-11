@@ -35,7 +35,6 @@ public class HomePage extends AppCompatActivity {
   private DrawerLayout drawerLayout;
   ListView list;
   CustomAdapterForHomePage adapter;
-
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +57,7 @@ public class HomePage extends AppCompatActivity {
     // create array adapter list for the view
     ArrayList<Post> postArrayList = new ArrayList();
     Post testpost = new Post();
+    testpost.setPostId("t3_1");
     testpost.setPostType(0);
     testpost.setPostOwner("Mazen");
     testpost.setPostCreateDate(19);
@@ -65,7 +65,7 @@ public class HomePage extends AppCompatActivity {
     testpost.setApexcomName("AndroidTeam");
     testpost.setPostTitle("Test this post");
     testpost.setTextPostcontent(
-        "Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
+            "Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
     postArrayList.add(testpost);
     Post testpost1 = new Post();
     testpost1.setPostType(1);
@@ -94,19 +94,19 @@ public class HomePage extends AppCompatActivity {
     adapter = new CustomAdapterForHomePage(this, postArrayList);
     list.setAdapter(adapter);
     list.setOnItemClickListener(
-        new AdapterView.OnItemClickListener() {
-          @Override
-          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            new AdapterView.OnItemClickListener() {
+              @Override
+              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            Intent intent = new Intent(HomePage.this, postsandcomments.class);
-            Object current = parent.getItemAtPosition(position);
-            Post p1 = (Post) current;
-            Gson gson = new Gson();
-            String postAsString = gson.toJson(p1);
-            intent.putExtra("postToDisplay", postAsString); // sending the post to next activity
-            startActivity(intent);
-          }
-        });
+                Intent intent = new Intent(HomePage.this, postsandcomments.class);
+                Object current = parent.getItemAtPosition(position);
+                Post p1 = (Post) current;
+                Gson gson = new Gson();
+                String postAsString = gson.toJson(p1);
+                intent.putExtra("postToDisplay", postAsString); // sending the post to next activity
+                startActivity(intent);
+              }
+            });
 
     // add image icon to open drawer from it
     ActionBar actionbar = getSupportActionBar();
@@ -116,35 +116,34 @@ public class HomePage extends AppCompatActivity {
     // Enable Navigation bar
     NavigationView navigationView = findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(
-        new NavigationView.OnNavigationItemSelectedListener() {
-          @Override
-          public boolean onNavigationItemSelected(MenuItem menuItem) {
-            // set item as selected to persist highlight
-            menuItem.setChecked(true);
-            if (menuItem.getItemId() == R.id.history)
-              Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            if (menuItem.getItemId() == R.id.save)
-              Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            if (menuItem.getItemId() == R.id.myProfile)
-              Toast.makeText(
-                      getApplicationContext(), "Myprofile has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            if (menuItem.getItemId() == R.id.setting)
-              Toast.makeText(getApplicationContext(), "Setting has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            // close drawer when item is tapped
-            drawerLayout.closeDrawers();
+            new NavigationView.OnNavigationItemSelectedListener() {
+              @Override
+              public boolean onNavigationItemSelected(MenuItem menuItem) {
+                // set item as selected to persist highlight
+                menuItem.setChecked(true);
+                if (menuItem.getItemId() == R.id.history)
+                  Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
+                          .show();
+                if (menuItem.getItemId() == R.id.save)
+                  Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
+                          .show();
+                if (menuItem.getItemId() == R.id.myProfile)
+                  Toast.makeText(
+                          getApplicationContext(), "Myprofile has been choosed", Toast.LENGTH_LONG)
+                          .show();
+                if (menuItem.getItemId() == R.id.setting)
+                  Toast.makeText(getApplicationContext(), "Setting has been choosed", Toast.LENGTH_LONG)
+                          .show();
+                // close drawer when item is tapped
+                drawerLayout.closeDrawers();
 
-            // Add code here to update the UI based on the item selected
-            // For example, swap UI fragments here
+                // Add code here to update the UI based on the item selected
+                // For example, swap UI fragments here
 
-            return true;
-          }
-        });
+                return true;
+              }
+            });
   }
-
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
@@ -154,7 +153,6 @@ public class HomePage extends AppCompatActivity {
     }
     return super.onOptionsItemSelected(item);
   }
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     try {
@@ -162,27 +160,27 @@ public class HomePage extends AppCompatActivity {
       MenuItem mSearch = menu.findItem(R.id.action_search);
       SearchView mSearchView = (SearchView) mSearch.getActionView();
       mSearchView.setOnSearchClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              Toast.makeText(getApplicationContext(), "you type", Toast.LENGTH_LONG).show();
-            }
-          });
+              new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  Toast.makeText(getApplicationContext(), "you type", Toast.LENGTH_LONG).show();
+                }
+              });
       mSearchView.setOnQueryTextListener(
-          new OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-              Toast.makeText(getApplicationContext(), "you type" + query, Toast.LENGTH_LONG).show();
-              return false;
-            }
+              new OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                  Toast.makeText(getApplicationContext(), "you type" + query, Toast.LENGTH_LONG).show();
+                  return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-              Toast.makeText(getApplicationContext(), "you type" + newText, Toast.LENGTH_LONG)
-                  .show();
-              return false;
-            }
-          });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                  Toast.makeText(getApplicationContext(), "you type" + newText, Toast.LENGTH_LONG)
+                          .show();
+                  return false;
+                }
+              });
     } catch (Exception e) {
       e.printStackTrace();
     }

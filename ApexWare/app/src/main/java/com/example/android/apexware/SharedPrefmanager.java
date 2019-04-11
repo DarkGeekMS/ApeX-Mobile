@@ -1,7 +1,6 @@
 package com.example.android.apexware;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 /** here for this class we are using a singleton pattern */
@@ -54,7 +53,11 @@ public class SharedPrefmanager {
   public User getUser() {
     SharedPreferences sharedPreferences =
         mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-    return new User(sharedPreferences.getString(KEY_EMAIL, null));
+    return new User(sharedPreferences.getString(KEY_Token, null));
+  }
+  public String getToken()
+  {
+    return KEY_Token;
   }
 
   /*//this method will logout the user
