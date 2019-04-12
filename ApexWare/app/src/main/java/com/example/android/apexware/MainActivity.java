@@ -32,7 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 /**
  * first activity in the program and contains login form which the user fill with his data to enter
- * the app
+ * th app
+ *
  * @author mostafa
  */
 public class MainActivity extends AppCompatActivity {
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
    * opens the activity sign up on pressing the button sign up
    */
   public void openActivity_sign_up() {
-    Intent intent = new Intent(this, activity_sign_up.class);
+    Intent intent = new Intent(this, Profile.class);
     startActivity(intent);
   }
 
@@ -192,7 +193,10 @@ public class MainActivity extends AppCompatActivity {
   }
   public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final String username, final String password) {
     // if everything is fine
-    StringRequest stringRequest =new StringRequest(Request.Method.POST,url,
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
                     new Response.Listener<String>() {
                       @Override
                       public void onResponse(String response) {
@@ -205,10 +209,13 @@ public class MainActivity extends AppCompatActivity {
                     new Response.ErrorListener() {
                       @Override
                       public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Username or Password maybe incorrect", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Username or Password maybe incorrect",
+                                Toast.LENGTH_SHORT)
+                                .show();
                       }
-                    })
-    {
+                    }) {
               @Override
               protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();

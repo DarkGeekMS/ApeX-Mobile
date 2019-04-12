@@ -27,7 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_camera_black_24dp"
+        app:srcCompat="@drawable/ic_camera_black_24dp"
         android:tint="@color/colorGray"
         app:backgroundTint="@android:color/white"
         app:borderWidth="0dp"

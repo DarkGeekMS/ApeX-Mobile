@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * @author mostafa
  */
-public class activity_sign_up extends AppCompatActivity {
+public class SignUp extends AppCompatActivity {
   Button login;
   Button create_acc;
   ToggleButton toggle_btn;

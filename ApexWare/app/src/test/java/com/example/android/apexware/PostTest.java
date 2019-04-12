@@ -96,7 +96,7 @@ public class PostTest {
 
   @Test
   public void setPostId() {
-      post.setPostId(546);
+      post.setPostId("546");
       Assert.assertEquals(post.getPostId(),546);
   }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".activity_sign_up">
+    tools:context=".SignUp">
 
     <ImageView
         android:id="@+id/logo"
@@ -26,6 +26,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif"
+        android:textColor="@color/light_grey"
         android:textSize="24sp"
         android:text="Create an account"
         app:layout_constraintBottom_toTopOf="@+id/email_text_input"
