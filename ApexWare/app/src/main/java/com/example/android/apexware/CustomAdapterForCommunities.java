@@ -40,7 +40,7 @@ public class CustomAdapterForCommunities extends ArrayAdapter {
 
         //this code sets the values of the objects to values from the arrays
         nameTextField.setText(nameArray[position]);
-        Picasso.get().load("https://i.imgur.com/S7USWRb.jpg").into(imageView);
+        Picasso.get().load(imageLinkArray[position]).into(imageView);
 
         return rowView;
 

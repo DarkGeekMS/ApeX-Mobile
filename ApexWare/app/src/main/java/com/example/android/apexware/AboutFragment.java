@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.srx.widget.TabBarView;
 
 public class AboutFragment extends Fragment {
     View view;

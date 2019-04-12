@@ -33,6 +33,8 @@ public class UserCommunities extends AppCompatActivity {
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
         //nameArray = getUserCommunities(nameArray);
+        nameArray = new String[]{"gggg", "hhhhh", "LLLLLL"};
+        imageLinks = new String[]{"https://i.imgur.com/S7USWRb.jpg", "https://i.imgur.com/S7USWRb.jpg", "https://i.imgur.com/S7USWRb.jpg"};
         CustomAdapterForCommunities adapter = new CustomAdapterForCommunities(this, nameArray, imageLinks);
         listView = (ListView) findViewById(R.id.listcommunitiesid);
         listView.setAdapter(adapter);
