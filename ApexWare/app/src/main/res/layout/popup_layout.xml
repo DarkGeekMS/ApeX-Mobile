@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:id="@+id/popup"
     android:layout_marginTop="525dp"
@@ -10,7 +11,7 @@
         android:id="@+id/createPostEvent"
         android:layout_marginTop="16dp"
         android:textSize="20sp"
-        android:textColor="#000"
+        android:textColor="@android:color/white"
         android:text="@string/createPost"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -30,17 +31,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageButton
                 android:id="@+id/textPostImage"
-                android:src="@drawable/textpost"
+                app:srcCompat="@drawable/text"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:onClick="textClick"
+                android:background="@drawable/button_bg_round"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 />
             <TextView
                 android:id="@+id/textPostTitle"
                 android:text="@string/text_post_title"
-                android:textColor="#000"
+                android:textColor="@android:color/white"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_width="wrap_content"
@@ -54,12 +58,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageButton
                 android:id="@+id/imagePostImage"
-                android:src="@drawable/image"
+                app:srcCompat="@drawable/gallery"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:onClick="imgClick"
+                android:background="@drawable/button_bg_round"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 />
             <TextView
                 android:id="@+id/imagePostTitle"
@@ -68,7 +75,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/image_post_title"
-                android:textColor="#000"
+                android:textColor="@android:color/white"
                 android:layout_gravity="center"/>
         </LinearLayout>
         <LinearLayout
@@ -77,12 +84,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageButton
                 android:id="@+id/linkPostImage"
-                android:src="@drawable/linkpost"
+                app:srcCompat="@drawable/link"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:onClick="linkClick"
+                android:background="@drawable/button_bg_round"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 />
             <TextView
                 android:id="@+id/linkPostTitle"
@@ -91,7 +101,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/link_post_title"
-                android:textColor="#000"
+                android:textColor="@android:color/white"
                 android:layout_gravity="center"/>
         </LinearLayout>
     </LinearLayout>
@@ -99,11 +109,13 @@
         android:id="@+id/cancel_button"
         android:layout_below="@id/horizontalview"
         android:textSize="25sp"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="X"
+        android:textColor="@android:color/white"
         android:focusable="false"
-        android:background="#00FFFFFF"
+        android:background="@color/myblue"
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

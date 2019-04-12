@@ -1,11 +1,16 @@
 package com.example.android.apexware;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,10 +25,21 @@ public class CreatePost extends AppCompatActivity {
   TextView title;
   ConstraintLayout choose_image;
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_create_post);
+    Window window = this.getWindow();
+
+    // clear FLAG_TRANSLUCENT_STATUS flag:
+    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+    // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+    // finally change the color
+    window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
     // Get the transferred data from source activity.
     Intent intent = getIntent();
@@ -69,13 +85,6 @@ public class CreatePost extends AppCompatActivity {
             backToHome();
           }
         });
-    choose_community.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                openUserCommunities();
-              }
-            });
 
   }
 
@@ -84,8 +93,9 @@ public class CreatePost extends AppCompatActivity {
     Intent intent = new Intent(this, HomePage.class);
     startActivity(intent);
   }
+
   /** open communities of this user to choose where to post */
-  public void openUserCommunities() {
+  public void userComunities(View view) {
     Intent intent = new Intent(this, UserCommunities.class);
     startActivity(intent);
   }

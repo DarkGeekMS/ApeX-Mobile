@@ -33,6 +33,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -42,13 +43,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+
 public class HomePage extends AppCompatActivity {
   private DrawerLayout drawerLayout;
   ListView list;
   int first_row, last_row, total_row = 20;
-  //The "x" and "y" position of the "Show Button" on screen.
+  // The "x" and "y" position of the "Show Button" on screen.
   Point p;
   CustomAdapterForHomePage adapter;
+
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -64,28 +67,23 @@ public class HomePage extends AppCompatActivity {
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
-
-      FloatingActionButton btn_show = (FloatingActionButton) findViewById(R.id.fab);
-      btn_show.setOnClickListener(new View.OnClickListener() {
+    FloatingActionButton btn_show = (FloatingActionButton) findViewById(R.id.fab);
+    btn_show.setOnClickListener(
+        new View.OnClickListener() {
           @Override
           public void onClick(View arg0) {
 
-              //Open popup window
-              if (p != null)
-                  showPopup(HomePage.this, p);
+            // Open popup window
+            if (p != null) showPopup(HomePage.this, p);
           }
-      });
+        });
     // default bar is no action bar but this is custom for bar for every layout
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setTitle("");
 
-
-
     BottomNavigationViewEx bnve = findViewById(R.id.bnve);
     bnve.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
 
     // create list view object to handele given array adapter
     list = (ListView) findViewById(R.id.postslist);
@@ -100,7 +98,7 @@ public class HomePage extends AppCompatActivity {
     testpost.setApexcomName("AndroidTeam");
     testpost.setPostTitle("Test this post");
     testpost.setTextPostcontent(
-            "Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
+        "Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
     postArrayList.add(testpost);
     Post testpost1 = new Post();
     testpost1.setPostType(1);
@@ -130,19 +128,19 @@ public class HomePage extends AppCompatActivity {
     adapter = new CustomAdapterForHomePage(this, postArrayList);
     list.setAdapter(adapter);
     list.setOnItemClickListener(
-            new AdapterView.OnItemClickListener() {
-              @Override
-              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(HomePage.this, postsandcomments.class);
-                Object current = parent.getItemAtPosition(position);
-                Post p1 = (Post) current;
-                Gson gson = new Gson();
-                String postAsString = gson.toJson(p1);
-                intent.putExtra("postToDisplay", postAsString); // sending the post to next activity
-                startActivity(intent);
-              }
-            });
+            Intent intent = new Intent(HomePage.this, postsandcomments.class);
+            Object current = parent.getItemAtPosition(position);
+            Post p1 = (Post) current;
+            Gson gson = new Gson();
+            String postAsString = gson.toJson(p1);
+            intent.putExtra("postToDisplay", postAsString); // sending the post to next activity
+            startActivity(intent);
+          }
+        });
 
     // add image icon to open drawer from it
     ActionBar actionbar = getSupportActionBar();
@@ -150,37 +148,36 @@ public class HomePage extends AppCompatActivity {
     actionbar.setHomeAsUpIndicator(R.drawable.ic_audiotrack_black_24dp);
     drawerLayout = findViewById(R.id.drawer_layout);
 
-
-
     // Enable Navigation bar
     NavigationView navigationView = findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(
-            new NavigationView.OnNavigationItemSelectedListener() {
-              @Override
-              public boolean onNavigationItemSelected(MenuItem menuItem) {
-                // set item as selected to persist highlight
-                menuItem.setChecked(true);
-                if (menuItem.getItemId() == R.id.history)
-                  Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
-                          .show();
-                if (menuItem.getItemId() == R.id.save)
-                  Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
-                          .show();
-                if (menuItem.getItemId() == R.id.myProfile)
-                  startActivity(new Intent(getApplicationContext(), Profile.class));
-                if (menuItem.getItemId() == R.id.setting)
-                  Toast.makeText(getApplicationContext(), "Setting has been choosed", Toast.LENGTH_LONG)
-                          .show();
-                // close drawer when item is tapped
-                drawerLayout.closeDrawers();
+        new NavigationView.OnNavigationItemSelectedListener() {
+          @Override
+          public boolean onNavigationItemSelected(MenuItem menuItem) {
+            // set item as selected to persist highlight
+            menuItem.setChecked(true);
+            if (menuItem.getItemId() == R.id.history)
+              Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
+                  .show();
+            if (menuItem.getItemId() == R.id.save)
+              Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
+                  .show();
+            if (menuItem.getItemId() == R.id.myProfile)
+              startActivity(new Intent(getApplicationContext(), Profile.class));
+            if (menuItem.getItemId() == R.id.setting)
+              Toast.makeText(getApplicationContext(), "Setting has been choosed", Toast.LENGTH_LONG)
+                  .show();
+            // close drawer when item is tapped
+            drawerLayout.closeDrawers();
 
-                // Add code here to update the UI based on the item selected
-                // For example, swap UI fragments here
+            // Add code here to update the UI based on the item selected
+            // For example, swap UI fragments here
 
-                return true;
-              }
-            });
+            return true;
+          }
+        });
   }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
@@ -190,6 +187,7 @@ public class HomePage extends AppCompatActivity {
     }
     return super.onOptionsItemSelected(item);
   }
+
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     try {
@@ -197,118 +195,147 @@ public class HomePage extends AppCompatActivity {
       MenuItem mSearch = menu.findItem(R.id.action_search);
       SearchView mSearchView = (SearchView) mSearch.getActionView();
       mSearchView.setOnSearchClickListener(
-              new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  Toast.makeText(getApplicationContext(), "you type", Toast.LENGTH_LONG).show();
-                }
-              });
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              Toast.makeText(getApplicationContext(), "you type", Toast.LENGTH_LONG).show();
+            }
+          });
       mSearchView.setOnQueryTextListener(
-              new OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                  Toast.makeText(getApplicationContext(), "you type" + query, Toast.LENGTH_LONG).show();
-                  return false;
-                }
+          new OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+              Toast.makeText(getApplicationContext(), "you type" + query, Toast.LENGTH_LONG).show();
+              return false;
+            }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                  Toast.makeText(getApplicationContext(), "you type" + newText, Toast.LENGTH_LONG)
-                          .show();
-                  return false;
-                }
-              });
+            @Override
+            public boolean onQueryTextChange(String newText) {
+              Toast.makeText(getApplicationContext(), "you type" + newText, Toast.LENGTH_LONG)
+                  .show();
+              return false;
+            }
+          });
     } catch (Exception e) {
       e.printStackTrace();
     }
     return super.onCreateOptionsMenu(menu);
   }
-    private BottomNavigationViewEx.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationViewEx.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-            switch (item.getItemId()) {
-                case R.id.i_music:
-                    Toast.makeText(getApplicationContext(),"music is selected",Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.i_backup:
-                    Toast.makeText(getApplicationContext(),"backup is selected",Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.i_favor:
-                    Toast.makeText(getApplicationContext(),"favour is selected",Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.i_visibility:
-                    Toast.makeText(getApplicationContext(),"visibility is selected",Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.i_empty:
-                    Toast.makeText(getApplicationContext(),"empty is selected",Toast.LENGTH_SHORT).show();
-                    return true;
-            }
-            return false;
-        }
-    };
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-
-        int[] location = new int[2];
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.fab);
-
-        // Get the x, y location and store it in the location[] array
-        // location[0] = x, location[1] = y.
-        button.getLocationOnScreen(location);
-
-        //Initialize the Point with x, and y positions
-        p = new Point();
-        p.x = location[0];
-        p.y = location[1];
-    }
-
-    // Get the x and y position after the button is draw on screen
-// (It's important to note that we can't get the position in the onCreate(),
-// because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
-
-    // The method that displays the popup.
-    private void showPopup(final Activity context, Point p) {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int popupWidth = size.x;
-        double y=0.28*size.y;
-        int popupHeight = (int)y;
-
-        // Inflate the popup_layout.xml
-        RelativeLayout viewGroup = (RelativeLayout) context.findViewById(R.id.popup);
-        LayoutInflater layoutInflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.popup_layout, viewGroup);
-
-        // Creating the PopupWindow
-        final PopupWindow popup = new PopupWindow(context);
-        popup.setContentView(layout);
-        popup.setWidth(popupWidth);
-        popup.setHeight(popupHeight);
-        popup.setFocusable(true);
-
-        // Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
-        int OFFSET_X = 30;
-        int OFFSET_Y = 30;
-
-        // Clear the default translucent background
-        popup.setBackgroundDrawable(new BitmapDrawable());
-
-        // Displaying the popup at the specified location, + offsets.
-        popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
-
-        // Getting a reference to Close button, and close the popup when clicked.
-        Button close = (Button) layout.findViewById(R.id.cancel_button);
-        close.setOnClickListener(new View.OnClickListener() {
-
+  private BottomNavigationViewEx.OnNavigationItemSelectedListener
+      mOnNavigationItemSelectedListener =
+          new BottomNavigationViewEx.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                popup.dismiss();
-            }
-        });
-    }
-}
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+              switch (item.getItemId()) {
+                case R.id.i_music:
+                  Toast.makeText(getApplicationContext(), "music is selected", Toast.LENGTH_SHORT)
+                      .show();
+                  return true;
+                case R.id.i_backup:
+                  Toast.makeText(getApplicationContext(), "backup is selected", Toast.LENGTH_SHORT)
+                      .show();
+                  return true;
+                case R.id.i_favor:
+                  Toast.makeText(getApplicationContext(), "favour is selected", Toast.LENGTH_SHORT)
+                      .show();
+                  return true;
+                case R.id.i_visibility:
+                  Toast.makeText(
+                          getApplicationContext(), "visibility is selected", Toast.LENGTH_SHORT)
+                      .show();
+                  return true;
+                case R.id.i_empty:
+                  Toast.makeText(getApplicationContext(), "empty is selected", Toast.LENGTH_SHORT)
+                      .show();
+                  return true;
+              }
+              return false;
+            }
+          };
+
+  @Override
+  public void onWindowFocusChanged(boolean hasFocus) {
+
+    int[] location = new int[2];
+    FloatingActionButton button = (FloatingActionButton) findViewById(R.id.fab);
+
+    // Get the x, y location and store it in the location[] array
+    // location[0] = x, location[1] = y.
+    button.getLocationOnScreen(location);
+
+    // Initialize the Point with x, and y positions
+    p = new Point();
+    p.x = location[0];
+    p.y = location[1];
+  }
+
+  // Get the x and y position after the button is draw on screen
+  // (It's important to note that we can't get the position in the onCreate(),
+  // because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
+
+  // The method that displays the popup.
+  private void showPopup(final Activity context, Point p) {
+    Display display = getWindowManager().getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    int popupWidth = size.x;
+    double y = 0.28 * size.y;
+    int popupHeight = (int) y;
+
+    // Inflate the popup_layout.xml
+    RelativeLayout viewGroup = (RelativeLayout) context.findViewById(R.id.popup);
+    LayoutInflater layoutInflater =
+        (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View layout = layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+
+    // Creating the PopupWindow
+    final PopupWindow popup = new PopupWindow(context);
+    popup.setContentView(layout);
+    popup.setWidth(popupWidth);
+    popup.setHeight(popupHeight);
+    popup.setFocusable(true);
+
+    // Some offset to align the popup a bit to the right, and a bit down, relative to button's
+    // position.
+    int OFFSET_X = 30;
+    int OFFSET_Y = 30;
+
+    // Clear the default translucent background
+    popup.setBackgroundDrawable(new BitmapDrawable());
+
+    // Displaying the popup at the specified location, + offsets.
+    popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
+
+    // Getting a reference to Close button, and close the popup when clicked.
+    Button close = (Button) layout.findViewById(R.id.cancel_button);
+    close.setOnClickListener(
+        new View.OnClickListener() {
+
+          @Override
+          public void onClick(View v) {
+            popup.dismiss();
+          }
+        });
+  }
+
+  public void textClick(View view) {
+    Intent intent = new Intent(HomePage.this, CreatePost.class);
+    intent.putExtra("type", "text");
+    startActivity(intent);
+  }
+
+  public void imgClick(View view) {
+    Intent intent = new Intent(HomePage.this, CreatePost.class);
+    intent.putExtra("type", "image");
+    startActivity(intent);
+  }
+
+
+  public void linkClick(View view) {
+    Intent intent = new Intent(HomePage.this, CreatePost.class);
+    intent.putExtra("type", "link");
+    startActivity(intent);
+  }
+}

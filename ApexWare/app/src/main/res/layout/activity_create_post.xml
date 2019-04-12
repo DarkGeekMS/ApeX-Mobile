@@ -76,6 +76,8 @@
         android:layout_marginStart="8dp"
         android:fontFamily="sans-serif"
         android:gravity="center"
+        android:onClick="userComunities"
+        style="?android:attr/borderlessButtonStyle"
         android:background="@android:color/white"
         android:text="@string/choose_community_post"
         android:textColor="@color/light_grey"

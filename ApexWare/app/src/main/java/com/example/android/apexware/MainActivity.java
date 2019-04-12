@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
    * opens the activity sign up on pressing the button sign up
    */
   public void openActivity_sign_up() {
-    Intent intent = new Intent(this, Profile.class);
+    Intent intent = new Intent(this, SignUp.class);
     startActivity(intent);
   }
 
@@ -161,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
       editTextUsername.requestFocus();
       return;
     }
-
     if (TextUtils.isEmpty(password)) {
       editTextPassword.setError("Please enter your password");
       editTextPassword.requestFocus();
@@ -191,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
               }
             },username,password);
   }
+
+
   public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final String username, final String password) {
     // if everything is fine
     StringRequest stringRequest =
