@@ -132,13 +132,12 @@ public class SignUp extends AppCompatActivity {
       return;
     }
     String url = "http://34.66.175.211/api/sign_up";
-    StringRequest stringRequest =
-        new StringRequest(
+    getResponse(
             Request.Method.POST,
-            url,
-            new Response.Listener<String>() {
-              @Override
-              public void onResponse(String response) {
+            url,null,
+            new VolleyCallback(){
+            @Override
+            public void onSuccessResponse(String response) {
                 try {
                   // converting response to json object
                   JSONObject obj = new JSONObject(response);

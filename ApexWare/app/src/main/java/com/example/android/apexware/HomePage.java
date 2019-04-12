@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 public class HomePage extends AppCompatActivity {
   private DrawerLayout drawerLayout;
   ListView list;
+  int first_row, last_row, total_row = 20;
   //The "x" and "y" position of the "Show Button" on screen.
   Point p;
   CustomAdapterForHomePage adapter;
@@ -124,6 +126,7 @@ public class HomePage extends AppCompatActivity {
     postArrayList.add(testpost2);
     postArrayList.add(testpost);
     // to do create instances of posts
+
     adapter = new CustomAdapterForHomePage(this, postArrayList);
     list.setAdapter(adapter);
     list.setOnItemClickListener(
