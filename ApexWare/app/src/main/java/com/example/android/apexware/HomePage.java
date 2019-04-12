@@ -1,11 +1,20 @@
 package com.example.android.apexware;
+
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -13,6 +22,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,23 +33,27 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 public class HomePage extends AppCompatActivity {
   private DrawerLayout drawerLayout;
   ListView list;
+  //The "x" and "y" position of the "Show Button" on screen.
+  Point p;
   CustomAdapterForHomePage adapter;
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
+
+
     Window window = this.getWindow();
     // clear FLAG_TRANSLUCENT_STATUS flag:
     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -45,11 +61,30 @@ public class HomePage extends AppCompatActivity {
     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
+
+
+      FloatingActionButton btn_show = (FloatingActionButton) findViewById(R.id.fab);
+      btn_show.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View arg0) {
+
+              //Open popup window
+              if (p != null)
+                  showPopup(HomePage.this, p);
+          }
+      });
     // default bar is no action bar but this is custom for bar for every layout
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setTitle("");
+
+
+
     BottomNavigationViewEx bnve = findViewById(R.id.bnve);
+    bnve.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+
     // create list view object to handele given array adapter
     list = (ListView) findViewById(R.id.postslist);
     // create array adapter list for the view
@@ -66,7 +101,6 @@ public class HomePage extends AppCompatActivity {
             "Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
     postArrayList.add(testpost);
     Post testpost1 = new Post();
-    testpost1.setPostId("t3_2");
     testpost1.setPostType(1);
     testpost1.setPostOwner("Mazen");
     testpost1.setPostCreateDate(19);
@@ -76,7 +110,6 @@ public class HomePage extends AppCompatActivity {
     testpost1.setImageURL("https://i.imgur.com/7cWUnve.jpg");
     postArrayList.add(testpost1);
     Post testpost2 = new Post();
-    testpost2.setPostId("t3_3");
     testpost2.setPostType(2);
     testpost2.setPostOwner("Mazen");
     testpost2.setPostCreateDate(19);
@@ -90,7 +123,7 @@ public class HomePage extends AppCompatActivity {
     postArrayList.add(testpost1);
     postArrayList.add(testpost2);
     postArrayList.add(testpost);
-    // to do creat instances of posts
+    // to do create instances of posts
     adapter = new CustomAdapterForHomePage(this, postArrayList);
     list.setAdapter(adapter);
     list.setOnItemClickListener(
@@ -113,6 +146,9 @@ public class HomePage extends AppCompatActivity {
     actionbar.setDisplayHomeAsUpEnabled(true);
     actionbar.setHomeAsUpIndicator(R.drawable.ic_audiotrack_black_24dp);
     drawerLayout = findViewById(R.id.drawer_layout);
+
+
+
     // Enable Navigation bar
     NavigationView navigationView = findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(
@@ -128,9 +164,7 @@ public class HomePage extends AppCompatActivity {
                   Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
                           .show();
                 if (menuItem.getItemId() == R.id.myProfile)
-                  Toast.makeText(
-                          getApplicationContext(), "Myprofile has been choosed", Toast.LENGTH_LONG)
-                          .show();
+                  startActivity(new Intent(getApplicationContext(), Profile.class));
                 if (menuItem.getItemId() == R.id.setting)
                   Toast.makeText(getApplicationContext(), "Setting has been choosed", Toast.LENGTH_LONG)
                           .show();
@@ -186,4 +220,92 @@ public class HomePage extends AppCompatActivity {
     }
     return super.onCreateOptionsMenu(menu);
   }
+    private BottomNavigationViewEx.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationViewEx.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+            switch (item.getItemId()) {
+                case R.id.i_music:
+                    Toast.makeText(getApplicationContext(),"music is selected",Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.i_backup:
+                    Toast.makeText(getApplicationContext(),"backup is selected",Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.i_favor:
+                    Toast.makeText(getApplicationContext(),"favour is selected",Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.i_visibility:
+                    Toast.makeText(getApplicationContext(),"visibility is selected",Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.i_empty:
+                    Toast.makeText(getApplicationContext(),"empty is selected",Toast.LENGTH_SHORT).show();
+                    return true;
+            }
+            return false;
+        }
+    };
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+        int[] location = new int[2];
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.fab);
+
+        // Get the x, y location and store it in the location[] array
+        // location[0] = x, location[1] = y.
+        button.getLocationOnScreen(location);
+
+        //Initialize the Point with x, and y positions
+        p = new Point();
+        p.x = location[0];
+        p.y = location[1];
+    }
+
+    // Get the x and y position after the button is draw on screen
+// (It's important to note that we can't get the position in the onCreate(),
+// because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
+
+    // The method that displays the popup.
+    private void showPopup(final Activity context, Point p) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int popupWidth = size.x;
+        double y=0.28*size.y;
+        int popupHeight = (int)y;
+
+        // Inflate the popup_layout.xml
+        RelativeLayout viewGroup = (RelativeLayout) context.findViewById(R.id.popup);
+        LayoutInflater layoutInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+
+        // Creating the PopupWindow
+        final PopupWindow popup = new PopupWindow(context);
+        popup.setContentView(layout);
+        popup.setWidth(popupWidth);
+        popup.setHeight(popupHeight);
+        popup.setFocusable(true);
+
+        // Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
+        int OFFSET_X = 30;
+        int OFFSET_Y = 30;
+
+        // Clear the default translucent background
+        popup.setBackgroundDrawable(new BitmapDrawable());
+
+        // Displaying the popup at the specified location, + offsets.
+        popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
+
+        // Getting a reference to Close button, and close the popup when clicked.
+        Button close = (Button) layout.findViewById(R.id.cancel_button);
+        close.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+            }
+        });
+    }
 }
+

@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.ic_launcher_background));
 
     // if the token is saved
-    /*if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
+    if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
         finish();
         startActivity(new Intent(this, HomePage.class));
         return;
-    }*/
+    }
 
     /*
      * use either mock service or back end service
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
       editTextPassword.requestFocus();
       return;
     }
-    String url = "http://34.66.175.211//api/sign_in";
+    String url = "http://34.66.175.211//api/sign_in?";
     getResponse(Request.Method.GET, url, null,
             new  VolleyCallback(){
               @Override
@@ -229,3 +229,26 @@ public class MainActivity extends AppCompatActivity {
 
 }
 
+/*
+Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT)
+                              .show();
+                      // getting the user from the response
+                      // -----------JSONObject userJson = obj.getJSONObject("token");
+                      // creating a new user object
+                      User user = new User(obj.getString("token"));
+                      // storing the user in shared preferences
+                            SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                      // starting the profile activity
+                      finish();
+                      startActivity(new Intent(getApplicationContext(), HomePage.class));
+                    } else {
+      Toast.makeText(
+              getApplicationContext(),
+              "Login unsuccessful .. try again",
+              Toast.LENGTH_SHORT)
+              .show();
+    }
+  } catch (JSONException e) {
+    e.printStackTrace();
+  }
+}*/

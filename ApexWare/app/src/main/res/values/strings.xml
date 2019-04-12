@@ -35,6 +35,10 @@
     <string name="setting">Setting</string>
     <string name="title_post">Add an interesting title</string>
     <string name="karma">Karma</string>
+    <string name="createPost">Create Post</string>
+    <string name="text_post_title">Text Post</string>
+    <string name="image_post_title">Image Post</string>
+    <string name="link_post_title">Link Post</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

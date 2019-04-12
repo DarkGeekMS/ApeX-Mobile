@@ -8,15 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.srx.widget.TabBarView;
+
 public class AboutFragment extends Fragment {
     View view;
     public AboutFragment() {
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.about_fragment,container,false);
         return view;
     }
+
+
 }
+

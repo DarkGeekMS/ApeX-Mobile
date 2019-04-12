@@ -15,6 +15,10 @@
         android:roundIcon="@mipmap/logo_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".test"></activity>
+        <activity android:name=".Profile" />
+        <activity android:name=".SignUp" />
         <activity android:name=".UserCommunities"></activity>
         <activity android:name=".CreatePost" />
         <activity android:name=".Profile" />

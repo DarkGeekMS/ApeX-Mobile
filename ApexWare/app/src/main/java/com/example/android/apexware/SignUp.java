@@ -143,42 +143,65 @@ public class SignUp extends AppCompatActivity {
                   // converting response to json object
                   JSONObject obj = new JSONObject(response);
 
-                  // if no error in response
-                  if (response != null) {
-                    Toast.makeText(
-                            getApplicationContext(), "SignUp Successfully", Toast.LENGTH_SHORT)
-                        .show();
+              // if no error in response
+              if (response != null) {
+                Toast.makeText(getApplicationContext(), "SignUp Successfully", Toast.LENGTH_SHORT)
+                    .show();
 
-                    // getting the user from the response
-                    JSONObject userJson = obj.getJSONObject("user");
-                    // JSONObject userJson1 = obj.getJSONObject("token");
-                    // creating a new user object
-                    User user =
-                        new User(
-                            userJson.getString("email"),
-                            userJson.getString("username"),
-                            userJson.getString("id"),
-                            obj.getString("token") // ---->
-                            );
-                    // storing the user in shared preferences
-                    SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
-                    // starting the profile activity
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), HomePage.class));
-                  } else {
-                    Toast.makeText(
-                            getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
-                        .show();
-                  }
-                } catch (JSONException e) {
-                  e.printStackTrace();
-                }
+                // getting the user from the response
+                JSONObject userJson = obj.getJSONObject("user");
+                // JSONObject userJson1 = obj.getJSONObject("token");
+                // creating a new user object
+                User user =
+                    new User(
+                        userJson.getString("email"),
+                        userJson.getString("username"),
+                        userJson.getString("id"),
+                        obj.getString("token"));
+                // storing the user in shared preferences
+                SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                // starting the profile activity
+                finish();
+                startActivity(new Intent(getApplicationContext(), HomePage.class));
+              } else {
+                Toast.makeText(
+                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                    .show();
+              }
+
+            } catch (JSONException e) {
+              e.printStackTrace();
+            }
+          }
+        },
+        username,
+        password,
+        email);
+  }
+
+  public void getResponse(
+      int method,
+      String url,
+      JSONObject jsonValue,
+      final VolleyCallback callback,
+      final String username,
+      final String password,
+      final String email) {
+    StringRequest stringRequest =
+        new StringRequest(
+            Request.Method.POST,
+            url,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                callback.onSuccessResponse(response);
               }
             },
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
                     .show();
               }
             }) {
