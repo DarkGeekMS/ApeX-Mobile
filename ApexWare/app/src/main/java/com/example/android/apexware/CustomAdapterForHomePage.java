@@ -1,5 +1,4 @@
 package com.example.android.apexware;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Movie;
@@ -34,15 +33,16 @@ import java.util.Map;
 
 import static android.view.View.GONE;
 
-
 public class CustomAdapterForHomePage extends ArrayAdapter {
-  /**
+    List<Post> hiddenPotsList = new ArrayList<>();
+
+    /**
    * this class to make custom list to be for the post in form of card view layout it extend from
    * array adapter base class it only list of post in it
    */
   // to reference the Activity
   private final Activity context;
-
+  String value;
   // list array of post objects
   List<Post> potsList = new ArrayList<>();
 
@@ -62,12 +62,12 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
    * this is predefined method to get position of each item in list in service and assign some
    * attributes and events to it
    */
-  public View getView(int position, View view, ViewGroup parent) {
-    View listItem = view;
+  public View getView(final int position, View view, ViewGroup parent) {
+     View listItem = view;
     if (listItem == null)
       listItem = LayoutInflater.from(context).inflate(R.layout.homepgaelistview, parent, false);
     final Post currentPost = potsList.get(position);
-
+    final View post=listItem;
     // button event for this button
     final Button button = (Button) listItem.findViewById(R.id.popupmeu);
     button.setOnClickListener(
@@ -80,21 +80,40 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                         new PopupMenu.OnMenuItemClickListener() {
                           @Override
                           public boolean onMenuItemClick(MenuItem item) {
-
-                            if(item.getTitle()=="Save"){savePost(currentPost.getPostId());}
-                    /*Toast.makeText(
-                            postsandcomments.this,
-                            "You Clicked : " + item.getTitle(),
-                            Toast.LENGTH_SHORT)
-                        .show();*/
-                            // we can use item name to make intent for the new responces
-                            if(item.getTitle()=="Hide"){
-                              hidePost(currentPost.getPostId());
+                            if(item.getItemId()==R.id.savepost){savePost(currentPost.getPostId(),Request.Method.GET, null,
+                                    new  VolleyCallback(){
+                                        @Override
+                                        public void onSuccessResponse(String result) {
+                                            try {
+                                                JSONObject response = new JSONObject(result);
+                                                value=response.toString();
+                                                Toast.makeText(context,"post is saved",Toast.LENGTH_SHORT).show();
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });}
+                            if(item.getItemId()==R.id.hidepost){
+                                hidePost(currentPost.getPostId(),Request.Method.GET, null, new  VolleyCallback(){
+                                            @Override
+                                            public void onSuccessResponse(String result) {
+                                                try {
+                                                    JSONObject response = new JSONObject(result);
+                                                    value=response.toString();
+                                                    hiddenPotsList.add(currentPost);
+                                                    remove(currentPost);
+                                                       /* post.setVisibility(View.GONE);*/
+                                                    // creating a new user object
+                                                    User user = new User(response.getString("token"));
+                                                    // storing the user in shared preferences
+                                                    SharedPrefmanager.getInstance(context).userLogin(user);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
 
                             }
-                   /* Toast.makeText(context, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT)
-                        .show();*/
-                            // we can use item name to make intent for the new responces
                             return true;
                           }
                         });
@@ -133,66 +152,66 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     up.setOnClickListener(
             new View.OnClickListener() {
               @Override
-              public void onClick(View v) {int i = Integer.parseInt(counter.getText().toString());
-                if (currentPost.isUpvoted() == false) {
-                  if (currentPost.isDownvoted() == false) // was not up or down (default case)
-                  {
-                    upvotePost(currentPost.getPostId(),i);
-                    up.setTextColor(Color.BLUE);
-
-                    i++;
-                    counter.setText(Integer.toString(i));
-                    currentPost.setUpvoted(true);
-                  } else if (currentPost.isDownvoted()
-                          == true) // was down voted and up vote was clicked
-                  {upvotePost(currentPost.getPostId(),i);
-                    down.setTextColor(Color.GRAY);
-                    up.setTextColor(Color.BLUE);
-                    i += 2;
-                    counter.setText(Integer.toString(i));
-                    currentPost.setUpvoted(true);
-                    currentPost.setDownvoted(false);
-                  }
-                } else if (currentPost.isUpvoted() == true) // was upvoted and upvote was clicked
-                {
-                  up.setTextColor(Color.GRAY);
-                  i--;
-                  counter.setText(Integer.toString(i));
-                  currentPost.setUpvoted(false);
-                }
+              public void onClick(View v) {
+                final int currentvotes = Integer.parseInt(counter.getText().toString());
+                upVotePost(currentPost.getPostId(),Request.Method.POST, null,
+                        new  VolleyCallback(){
+                          @Override
+                          public void onSuccessResponse(String result) {
+                            try {
+                              JSONObject response = new JSONObject(result);
+                              value=response.getString("votes");
+                              counter.setText(value);
+                              int newvotes=Integer.parseInt(value);
+                              if(newvotes>currentvotes){
+                                if(newvotes==currentvotes+2)//was downvoted and upvote clicked
+                                { down.setTextColor(Color.GRAY);
+                                  currentPost.setDownvoted(false);}
+                                up.setTextColor(Color.BLUE);
+                                currentPost.setUpvoted(true);}
+                              else if (newvotes<currentvotes)//was upvoted & upvote clicked
+                              {
+                                up.setTextColor(Color.GRAY);
+                                currentPost.setUpvoted(false);
+                              }
+                            } catch (JSONException e) {
+                              e.printStackTrace();
+                            }
+                          }
+                        });
               }
             });
     // downVote
     down.setOnClickListener(
             new View.OnClickListener() {
               @Override
-              public void onClick(View v) {int i = Integer.parseInt(counter.getText().toString());
-                if (currentPost.isDownvoted() == false) {
-                  if (currentPost.isUpvoted() == false) // was not up or down (default case)
-                  {
-                    downvotePost(currentPost.getPostId(),i);
-                    down.setTextColor(Color.RED);
-                    i--;
-                    counter.setText(Integer.toString(i));
-                    currentPost.setDownvoted(true);
-                  } else if (currentPost.isUpvoted() == true) // was up voted and down vote was clicked
-                  {
-                    downvotePost(currentPost.getPostId(),i);
-                    down.setTextColor(Color.RED);
-                    up.setTextColor(Color.GRAY);
-                    i -= 2;
-                    counter.setText(Integer.toString(i));
-                    currentPost.setUpvoted(false);
-                    currentPost.setDownvoted(true);
-                  }
-                } else if (currentPost.isDownvoted()
-                        == true) // was down voted and down vote was clicked
-                {
-                  down.setTextColor(Color.GRAY);
-                  i++;
-                  counter.setText(Integer.toString(i));
-                  currentPost.setDownvoted(false);
-                }
+              public void onClick(View v) {
+                  final int currentvotes = Integer.parseInt(counter.getText().toString());
+                  downVotePost(currentPost.getPostId(),Request.Method.GET, null,
+                          new  VolleyCallback(){
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                  try {
+                                      JSONObject response = new JSONObject(result);
+                                      value=response.getString("votes");
+                                      counter.setText(value);
+                                      int newvotes=Integer.parseInt(value);
+                                      if(newvotes<currentvotes){
+                                          if(newvotes==currentvotes-2)//was upvoted and downvote clicked
+                                          { up.setTextColor(Color.GRAY);
+                                              currentPost.setUpvoted(false);}
+                                          down.setTextColor(Color.RED);
+                                          currentPost.setDownvoted(true);}
+                                      else if (newvotes>currentvotes)//was downvoted & downvote clicked(cancel downvote)
+                                      {
+                                          down.setTextColor(Color.GRAY);
+                                          currentPost.setDownvoted(false);
+                                      }
+                                  } catch (JSONException e) {
+                                      e.printStackTrace();
+                                  }
+                              }
+                          });
               }
             });
 
@@ -257,7 +276,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
         // break;
     }
   }
-
   /**
    *
    *
@@ -288,15 +306,11 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     displayYoutubeVideo.getSettings().setLoadWithOverviewMode(true);
     // displayYoutubeVideo.getSettings().setUseWideViewPort(true);
   }
-
-
-
-  //upvote request 'send 1'
-  public void upvotePost(String postID,int old){
+  public void upVotePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
-    final String token= SharedPrefmanager.getInstance(context.getApplicationContext()).getToken();
-    final int oldvotes=old;
-    String url = "http://localhost/api/vote";
+    User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token=user.getToken();
+    String url = "http://34.66.175.211/api/vote";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -309,11 +323,9 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           JSONObject obj = new JSONObject(response);
                           // if no error in response
                           if (response != null) {
-                            final String receivedResponse = obj.getString("votes");
-                            int newvotes = Integer.parseInt(receivedResponse);
-                            if (newvotes > oldvotes) {
+                              callback.onSuccessResponse(response);
                               Toast.makeText(context, "you upvoted the post", Toast.LENGTH_SHORT).show();
-                            }
+
                           } else {
                             Toast.makeText(
                                     context,
@@ -347,12 +359,11 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-  //same as upvote but we send -1 instead of 1
-  public void downvotePost(String postID,int old){
+  public void downVotePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
-    final String token= SharedPrefmanager.getInstance(context.getApplicationContext()).getToken();
-    final int oldvotes=old;
-    String url = "http://localhost/api/vote";
+    User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token=user.getToken();
+    String url = "http://34.66.175.211/api/vote";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -365,12 +376,10 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           JSONObject obj = new JSONObject(response);
                           // if no error in response
                           if (response != null) {
-                            final String receivedResponse = obj.getString("votes");
-                            int newvotes = Integer.parseInt(receivedResponse);
-                            if (newvotes < oldvotes) {
-                              Toast.makeText(context, "you downvoted the post", Toast.LENGTH_SHORT).show();
-                            }
-                          } else {
+                              callback.onSuccessResponse(response);
+                            Toast.makeText(context, "you downvoted the post", Toast.LENGTH_SHORT).show();
+                          }
+                          else {
                             Toast.makeText(
                                     context,
                                     "something went wrong.. try again",
@@ -403,10 +412,11 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-  public void savePost(String postID){
+  public void savePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
-    final String token= SharedPrefmanager.getInstance(context.getApplicationContext()).getToken();
-    String url = "http://localhost/api/save";
+    User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token=user.getToken();
+    String url = "http://34.66.175.211/api/save";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -419,7 +429,8 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           JSONObject obj = new JSONObject(response);
                           // if no error in response
                           if (response != null) {
-                            Toast.makeText(context, "Post is saved ", Toast.LENGTH_SHORT).show();
+                              callback.onSuccessResponse(response);
+                              Toast.makeText(context, "Post is saved ", Toast.LENGTH_SHORT).show();
                           } else {
                             Toast.makeText(
                                     context,
@@ -435,6 +446,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                     new Response.ErrorListener() {
                       @Override
                       public void onErrorResponse(VolleyError error) {
+                        String er=error.getMessage();
                         Toast.makeText(
                                 context,
                                 "something went wrong with the connection",
@@ -452,10 +464,11 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-  public void hidePost(String postID){
+  public void hidePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
-    final String token= SharedPrefmanager.getInstance(context.getApplicationContext()).getToken();
-    String url = "http://localhost/api/Hide";
+    User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token=user.getToken();
+    String url = "http://34.66.175.211/api/Hide";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -468,7 +481,8 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           JSONObject obj = new JSONObject(response);
                           // if no error in response
                           if (response != null) {
-                            Toast.makeText(context, "Post is hidden", Toast.LENGTH_SHORT).show();
+                              callback.onSuccessResponse(response);
+                              Toast.makeText(context, "Post is hidden", Toast.LENGTH_SHORT).show();
                           } else {
                             Toast.makeText(
                                     context,
@@ -501,9 +515,5 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-
-
-
-
 
 }

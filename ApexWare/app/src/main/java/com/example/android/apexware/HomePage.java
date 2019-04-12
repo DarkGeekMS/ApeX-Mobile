@@ -1,5 +1,4 @@
 package com.example.android.apexware;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-
 public class HomePage extends AppCompatActivity {
   private DrawerLayout drawerLayout;
   ListView list;
@@ -68,6 +66,7 @@ public class HomePage extends AppCompatActivity {
             "Hello its plaesure to meet you here please fell as hoemand leave wuefhiwoeufhwieufhweiufhief  fhewiuf eiufh ief ufhieuhf iuehf uihefiu h feufh iuehf  fiue  eiufhei h efiueh iuh feiufh eiuhf uehf iuhiufheiufheiufh  ehfiuefheiufhiuhefiufehiue  efihoeoIUFEHWEIFUHIF IUHIU HIU");
     postArrayList.add(testpost);
     Post testpost1 = new Post();
+    testpost1.setPostId("t3_2");
     testpost1.setPostType(1);
     testpost1.setPostOwner("Mazen");
     testpost1.setPostCreateDate(19);
@@ -77,6 +76,7 @@ public class HomePage extends AppCompatActivity {
     testpost1.setImageURL("https://i.imgur.com/7cWUnve.jpg");
     postArrayList.add(testpost1);
     Post testpost2 = new Post();
+    testpost2.setPostId("t3_3");
     testpost2.setPostType(2);
     testpost2.setPostOwner("Mazen");
     testpost2.setPostCreateDate(19);

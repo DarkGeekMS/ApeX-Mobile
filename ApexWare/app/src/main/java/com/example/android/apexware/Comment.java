@@ -7,12 +7,30 @@ package com.example.android.apexware;
 public class Comment {
 
   /** data members */
-  private int Id;
+  private String Id;
 
   private String postId;
   private String commentOwner = null;
   private String commentContent;
   private int commentCreateDate = 0;
+  private boolean Upvoted=false;
+  private boolean Downvoted=false;
+
+  public boolean isUpvoted() {
+    return Upvoted;
+  }
+
+  public void setUpvoted(boolean upvoted) {
+    Upvoted = upvoted;
+  }
+
+  public boolean isDownvoted() {
+    return Downvoted;
+  }
+
+  public void setDownvoted(boolean downvoted) {
+    Downvoted = downvoted;
+  }
 
   private int votesCount;
   /** default constructor */
@@ -22,7 +40,7 @@ public class Comment {
 
   /** get functions */
   /** this method is to get comment id for Id */
-  public int getId() {
+  public String getId() {
     return Id;
   }
 
@@ -55,7 +73,7 @@ public class Comment {
    *
    * @param id
    */
-  public void setId(int id) {
+  public void setId(String id) {
     Id = id;
   }
 

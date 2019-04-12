@@ -131,7 +131,7 @@ public class activity_sign_up extends AppCompatActivity {
       editTextPassword.requestFocus();
       return;
     }
-    String url = "http://localhost:8000/api/sign_up?";
+    String url = "http://34.66.175.211/api/sign_up";
     StringRequest stringRequest =
         new StringRequest(
             Request.Method.POST,

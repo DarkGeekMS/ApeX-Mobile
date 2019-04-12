@@ -38,7 +38,7 @@ android:orientation="horizontal"
     android:textSize="25sp"
     android:textStyle="bold"
     android:focusable="false"
-    android:onClick="upvotecomment"/>
+    />
 
 <TextView
     android:id="@+id/votecounterforcomment"
@@ -65,7 +65,7 @@ android:orientation="horizontal"
     android:textSize="25sp"
     android:textStyle="bold"
     android:focusable="false"
-    android:onClick="downvotecomment"/>
+    />
 
 <Button
     android:id="@+id/commentreplys"
