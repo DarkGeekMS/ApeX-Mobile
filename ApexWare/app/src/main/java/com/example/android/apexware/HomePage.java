@@ -44,6 +44,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 
+/**
+ * main page of the whole application
+ * @author mazen
+ */
 public class HomePage extends AppCompatActivity {
   private DrawerLayout drawerLayout;
   ListView list;
@@ -145,7 +149,7 @@ public class HomePage extends AppCompatActivity {
     // add image icon to open drawer from it
     ActionBar actionbar = getSupportActionBar();
     actionbar.setDisplayHomeAsUpEnabled(true);
-    actionbar.setHomeAsUpIndicator(R.drawable.ic_audiotrack_black_24dp);
+    actionbar.setHomeAsUpIndicator(R.drawable.list_white);
     drawerLayout = findViewById(R.id.drawer_layout);
 
     // Enable Navigation bar
@@ -229,21 +233,21 @@ public class HomePage extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
               switch (item.getItemId()) {
-                case R.id.i_music:
-                  Toast.makeText(getApplicationContext(), "music is selected", Toast.LENGTH_SHORT)
+                case R.id.i_home:
+                  Toast.makeText(getApplicationContext(), "home is selected", Toast.LENGTH_SHORT)
                       .show();
                   return true;
-                case R.id.i_backup:
-                  Toast.makeText(getApplicationContext(), "backup is selected", Toast.LENGTH_SHORT)
+                case R.id.i_apexLists:
+                  Toast.makeText(getApplicationContext(), "apexLists is selected", Toast.LENGTH_SHORT)
                       .show();
                   return true;
-                case R.id.i_favor:
-                  Toast.makeText(getApplicationContext(), "favour is selected", Toast.LENGTH_SHORT)
+                case R.id.i_notifications:
+                  Toast.makeText(getApplicationContext(), "notifications is selected", Toast.LENGTH_SHORT)
                       .show();
                   return true;
-                case R.id.i_visibility:
+                case R.id.i_inbox:
                   Toast.makeText(
-                          getApplicationContext(), "visibility is selected", Toast.LENGTH_SHORT)
+                          getApplicationContext(), "inbox is selected", Toast.LENGTH_SHORT)
                       .show();
                   return true;
                 case R.id.i_empty:

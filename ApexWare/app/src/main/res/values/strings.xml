@@ -10,6 +10,7 @@
     <string name="post">Post</string>
     <string name="downvote">↓</string>
     <string name="votecounter">-1</string>
+    <string name="age">age</string>
     <string name="commentd">Comments</string>
     <string name="password_hint">Password</string>
     <string name="signup_btn_txt">SIGN UP</string>
@@ -30,7 +31,7 @@
     <string name="image_post">Image post</string>
     <string name="text_post">Text post</string>
     <string name="myprofie">My Profile</string>
-    <string name="save">Save</string>
+    <string name="save">Saved</string>
     <string name="history">History</string>
     <string name="setting">Setting</string>
     <string name="title_post">Add an interesting title</string>
