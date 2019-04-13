@@ -1,5 +1,7 @@
 package com.example.android.apexware;
 
+import android.content.Context;
+
 /**
  * this class is a simulation to the back end service that sends dummy objects and responses to the
  * activities to debug without getting affected with the bacck end and connection proplems
@@ -17,7 +19,7 @@ public class MockRestService implements DataSupplier {
    * @return : true if the parameters are not empty strings
    */
   @Override
-  public boolean login_interface(String username, String password) {
+  public boolean login_interface(String username, String password, final Context context) {
     if (username.equals("") && password.equals("")) return false;
     return true;
   }

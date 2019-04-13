@@ -60,5 +60,4 @@ public interface Routes {
     String getSubscribers=serverAddress+"get_subscribers?";//post&get
     String getApexNames=serverAddress+"Apex_names?";
 
-
 }

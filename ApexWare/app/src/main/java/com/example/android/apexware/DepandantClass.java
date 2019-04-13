@@ -1,4 +1,7 @@
 package com.example.android.apexware;
+
+import android.content.Context;
+
 /**
  * this class is a base class that 2 kinds of services inherit it it contain methods that only call
  * the interface methods using the inherited supplier
@@ -18,8 +21,8 @@ public class DepandantClass {
   }
 
   /** @return : return true if login successful and user exists */
-  boolean login(String username, String password) {
-    return mSupplier.login_interface(username, password);
+  boolean login(String username, String password,final Context context) {
+    return mSupplier.login_interface(username, password,context);
   }
   /**
    * send string of all details to create a new user

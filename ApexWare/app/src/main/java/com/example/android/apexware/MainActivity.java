@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
   ToggleButton toggle_btn;
   EditText editTextPassword;
   EditText editTextUsername;
+  static boolean successFlag=false;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
@@ -99,22 +100,25 @@ public class MainActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (finalRestClient.login(
-                editTextUsername.getText().toString(), editTextPassword.getText().toString())) {
-              // Toast.makeText(getApplicationContext(),"Login
-              // successful",Toast.LENGTH_SHORT).show();
-              userLogin();
+            if (passwordCheck()) {
+              if(
+                  finalRestClient.login(
+                      editTextUsername.getText().toString(),
+                      editTextPassword.getText().toString(),
+                      getApplicationContext()))
+              {
+                  Intent i=new Intent(getApplicationContext(), HomePage.class);//only used when debug
+                  startActivity(i);}
             } else {
               Toast.makeText(
                       getApplicationContext(),
-                      "Login unsuccessful .. try again",
+                      "Password or username don't meet the standers",
                       Toast.LENGTH_SHORT)
                   .show();
             }
           }
         });
   }
-
   /*
    * opens the activity sign up on pressing the button sign up
    */
@@ -122,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent(this, SignUp.class);
     startActivity(intent);
   }
-
   /** toggle button affect viewing password as text or as dots */
   public void onToggleClick(View v) {
     if (toggle_btn.isChecked()) {
@@ -143,113 +146,23 @@ public class MainActivity extends AppCompatActivity {
       toggle_btn.setBackground(img);
     }
   }
+  public boolean passwordCheck()
+  {
+      // first getting the values
+      final String username = editTextUsername.getText().toString();
+      final String password = editTextPassword.getText().toString();
 
-  /**
-   * check all fields are filled with data , connect to server , fill jason and send the request to
-   * the server with all data needed
-   *
-   * @author mazen
-   */
-  private void userLogin() {
-    // first getting the values
-    final String username = editTextUsername.getText().toString();
-    final String password = editTextPassword.getText().toString();
-
-    // validating inputs
-    if (TextUtils.isEmpty(username)) {
-      editTextUsername.setError("Please enter your username");
-      editTextUsername.requestFocus();
-      return;
-    }
-    if (TextUtils.isEmpty(password)) {
-      editTextPassword.setError("Please enter your password");
-      editTextPassword.requestFocus();
-      return;
-    }
-    String url = "http://34.66.175.211//api/sign_in?";
-    getResponse(Request.Method.GET, url, null,
-            new  VolleyCallback(){
-              @Override
-              public void onSuccessResponse(String result) {
-                try {
-                  JSONObject response = new JSONObject(result);
-                  String token=response.getString("token");
-                  if(token!=null)
-                  {
-                    // creating a new user object
-                    User user = new User(response.getString("token"));
-                    // storing the user in shared preferences
-                    SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
-                    startActivity(new Intent(getApplicationContext(), HomePage.class));
-                  }
-                  Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
-
-                } catch (JSONException e) {
-                  e.printStackTrace();
-                }
-              }
-            },username,password);
+      // validating inputs
+      if (TextUtils.isEmpty(username)) {
+          editTextUsername.setError("Please enter your username");
+          editTextUsername.requestFocus();
+          return false;
+      }
+      if (TextUtils.isEmpty(password)) {
+          editTextPassword.setError("Please enter your password");
+          editTextPassword.requestFocus();
+          return false;
+      }
+      return true;
   }
-
-
-  public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final String username, final String password) {
-    // if everything is fine
-    StringRequest stringRequest =
-            new StringRequest(
-                    Request.Method.POST,
-                    url,
-                    new Response.Listener<String>() {
-                      @Override
-                      public void onResponse(String response) {
-                        // if no error in response
-                        if (response != null) {
-                          callback.onSuccessResponse(response);
-                        }
-                      }
-                    },
-                    new Response.ErrorListener() {
-                      @Override
-                      public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "Username or Password maybe incorrect",
-                                Toast.LENGTH_SHORT)
-                                .show();
-                      }
-                    }) {
-              @Override
-              protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-                return params;
-              }
-            };
-    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
-  }
-
 }
-
-/*
-Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT)
-                              .show();
-                      // getting the user from the response
-                      // -----------JSONObject userJson = obj.getJSONObject("token");
-                      // creating a new user object
-                      User user = new User(obj.getString("token"));
-                      // storing the user in shared preferences
-                            SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
-                      // starting the profile activity
-                      finish();
-                      startActivity(new Intent(getApplicationContext(), HomePage.class));
-                    } else {
-      Toast.makeText(
-              getApplicationContext(),
-              "Login unsuccessful .. try again",
-              Toast.LENGTH_SHORT)
-              .show();
-    }
-  } catch (JSONException e) {
-    e.printStackTrace();
-  }
-}*/

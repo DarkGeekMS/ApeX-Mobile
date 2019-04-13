@@ -1,4 +1,7 @@
 package com.example.android.apexware;
+
+import android.content.Context;
+
 /**
  * the interface for every function used by the service (mock up or backend) and they override these
  * methods in their classes
@@ -12,7 +15,7 @@ public interface DataSupplier {
    * @param password
    * @return : return true if login successful and user exists
    */
-  boolean login_interface(String username, String password);
+  boolean login_interface(String username, String password,final Context context);
   /**
    * send string of all details to create a new user
    *
