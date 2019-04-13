@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,15 +26,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false">
+
             <ImageView
                 android:id="@+id/apexcomlogo"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/link"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:layout_height="50dp"
-                android:layout_marginStart="3dp"
-                android:layout_marginLeft="3dp"
                 android:contentDescription="@string/imageicon_apexcom"
-                android:focusable="false"/>
+                android:focusable="false" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -50,13 +53,16 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:text="r/pics"
+                    android:textColor="@color/light_grey"
                     android:focusable="false"/>
 
                 <TextView
                     android:id="@+id/apexcomOwnerNameAndTimeCreated"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
-                    android:textColor="#D3D3D3"
+                    android:textColor="@color/light_grey"
+                    android:text="posted by sha3er97"
                     android:focusable="false"/>
             </LinearLayout>
             <Button
@@ -85,7 +91,10 @@
                 android:layout_height="match_parent"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:text="amazing post"
+                android:paddingStart="3dp"
+                android:layout_marginStart="3dp"
+                android:textColor="@android:color/black"
                 android:focusable="false"/>
             <RelativeLayout
                 android:layout_width="match_parent"

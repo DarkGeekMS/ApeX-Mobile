@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.android.apexware"
-   >
+    package="com.example.android.apexware">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -16,10 +16,13 @@
         android:roundIcon="@mipmap/logo_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity_sign_up"/>
-        <activity android:name=".postsandcomments"></activity>
-        <activity android:name=".HomePage"/>
-        <activity android:name=".VolleyConnection"/>
+        <activity android:name=".LoadingScreen"></activity>
+        <activity android:name=".UserCommunities" />
+        <activity android:name=".CreatePost" />
+        <activity android:name=".Profile" />
+        <activity android:name=".SignUp" />
+        <activity android:name=".postsandcomments" />
+        <activity android:name=".HomePage" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RestService" />
     </application>
 
 </manifest>

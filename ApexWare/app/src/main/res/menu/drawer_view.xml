@@ -3,19 +3,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/myProfile"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/profile"
             android:title="@string/myprofie" />
         <item
             android:id="@+id/save"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/saved"
             android:title="@string/save" />
         <item
             android:id="@+id/history"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/history"
             android:title="@string/history" />
         <item
             android:id="@+id/setting"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/settings"
             android:title="@string/setting" />
     </group>
 </menu>
