@@ -38,4 +38,16 @@ public class MockRestService implements DataSupplier {
     if (username.equals("") || password.equals("") || email.equals(" ")) return false;
     return true;
   }
+
+    /**
+     * @param type        : post type (link,text,image)
+     * @param title       :post title (necessary)
+     * @param mainPost    : main post (link , lines of text , image uri)
+     * @param communityID : id of apexcom chosen to post to
+     * @return true always to let the program continue in case of debugging with no server
+     */
+    @Override
+    public boolean createPost_interface(String type, String title, String mainPost, int communityID) {
+        return true;
+    }
 }

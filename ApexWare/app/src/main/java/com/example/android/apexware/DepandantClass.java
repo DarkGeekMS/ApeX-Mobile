@@ -21,17 +21,22 @@ public class DepandantClass {
   }
 
   /** @return : return true if login successful and user exists */
-  boolean login(String username, String password,final Context context) {
-    return mSupplier.login_interface(username, password,context);
+  boolean login(String username, String password, final Context context) {
+      return mSupplier.login_interface(username, password, context);
   }
   /**
-   * send string of all details to create a new user
+   * sends string of all details to create a new user
    *
    * @return : return true if it is successful
    */
   boolean signup(String username, String email, String password) {
     return mSupplier.signup_interface(username, email, password);
   }
-  // msupplier can be used at this point to call any function there in a generic use
 
+    /**
+     * @return : return true if post was published seccessfully
+     */
+    boolean createPost(String type, String title, String mainPost, int communityID) {
+        return mSupplier.createPost_interface(type, title, mainPost, communityID);
+    }
 }

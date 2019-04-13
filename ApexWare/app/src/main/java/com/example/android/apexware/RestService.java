@@ -121,4 +121,9 @@ public class RestService  implements DataSupplier {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
+
+    @Override
+    public boolean createPost_interface(String type, String title, String mainPost, int communityID) {
+        return false;
+    }
 }
