@@ -309,7 +309,15 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
   public boolean isChildSelectable(int groupPosition, int childPosition) {
     return true;
   }
-    public void upVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback){
+
+    /**
+     * upvote request for comment/reply
+     * @param ID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
+  public void upVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback){
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
@@ -361,6 +369,14 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                 };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
+
+    /**
+     * downvote request for comment/reply
+     * @param ID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
     public void downVote(String ID,int method, JSONObject jsonValue, final VolleyCallback callback){
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();

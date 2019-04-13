@@ -18,13 +18,18 @@ public interface DataSupplier {
   boolean login_interface(String username, String password, final Context context);
   /**
    * send string of all details to create a new user
-   *
    * @param username
    * @param email
    * @param password
    * @return : return true if it is succesful
    */
   boolean signup_interface(String username, String email, String password);
+  /**
+   * this function sends post id
+   * @param id
+   * @return
+   */
+  int upVote_intearface(String id);
 
     /**
      * send post details to the server to add it to a certain community

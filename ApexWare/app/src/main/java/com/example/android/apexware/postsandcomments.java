@@ -57,7 +57,7 @@ public class postsandcomments extends AppCompatActivity {
     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorGray));
-    ExpandableListView commentsList = (ExpandableListView) findViewById(R.id.listofcomments);
+    ExpandableListView commentsList =  findViewById(R.id.listofcomments);
     ArrayList<Comment> commentArrayList = new ArrayList();
     ArrayList<Comment> repliesArrayList = new ArrayList();
     HashMap<Comment, List<Comment>> listHashMap = new HashMap<>();
@@ -147,6 +147,10 @@ public class postsandcomments extends AppCompatActivity {
                                             User user = new User(response.getString("token"));
                                             // storing the user in shared preferences
                                             SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                                              Intent intent = new Intent();
+                                              intent.putExtra("editTextValue", post1.getPostId());
+                                              setResult(Integer.parseInt(post1.getPostId()), intent);
+                                              finish();
                                           } catch (JSONException e) {
                                             e.printStackTrace();
                                           }
@@ -285,7 +289,6 @@ public class postsandcomments extends AppCompatActivity {
 
 
   }
-
   /**
    * upvote comment of a post
    * @param v
@@ -334,6 +337,11 @@ public class postsandcomments extends AppCompatActivity {
     i++;
     counter.setText(Integer.toString(i));
   }
+
+    /**
+     * downvote reply of a comment
+     * @param v
+     */
   public void downvotereply(View v) {
     TextView counter = findViewById(R.id.votecounterforreply);
     int i = Integer.parseInt(counter.getText().toString());
@@ -366,6 +374,14 @@ public class postsandcomments extends AppCompatActivity {
     displayYoutubeVideo.getSettings().setLoadWithOverviewMode(true);
     displayYoutubeVideo.getSettings().setUseWideViewPort(true);
   }
+
+    /**
+     * upvote post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void upvote(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
@@ -419,6 +435,14 @@ public class postsandcomments extends AppCompatActivity {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
+
+    /**
+     * downvote post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void downvote(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
@@ -472,6 +496,14 @@ public class postsandcomments extends AppCompatActivity {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
+
+    /**
+     * save post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void savePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
@@ -524,6 +556,14 @@ public class postsandcomments extends AppCompatActivity {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
+
+    /**
+     * hide post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void hidePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
