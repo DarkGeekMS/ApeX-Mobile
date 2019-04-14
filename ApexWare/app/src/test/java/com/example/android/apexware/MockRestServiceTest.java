@@ -1,5 +1,7 @@
 package com.example.android.apexware;
 
+import android.support.v7.app.AppCompatActivity;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,21 +11,21 @@ import static org.junit.Assert.*;
  *
  * @author mostafa
  */
-public class MockRestServiceTest {
+public class MockRestServiceTest extends AppCompatActivity {
     private MockRestService restClient = new MockRestService();
     /**
      * check that the empty strings will always return false if the data suppier is the mock service
      */
     @Test
     public void login_interface_false() {
-        assertFalse(restClient.login_interface("", ""));
+        assertFalse(restClient.login_interface("", "",null));
     }
     /**
      * check that a random dummy user will always return true if the data suppier is the mock service
      */
     @Test
     public void login_interface_true() {
-        assertTrue(restClient.login_interface("mostafa", "1234"));
+        assertTrue(restClient.login_interface("mostafa", "1234",null));
     }
     /**
      * check that the empty strings will always return false if the data suppier is the mock service
