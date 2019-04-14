@@ -16,9 +16,9 @@ public class testForComments {
      */
     @Test
     public void setPostIdIsCorrect(){
-        Comment c1=new Comment( 9);
-      int i=  c1.getPostId();
-        Assert.assertEquals("post id is wrong",9,i,0.0);
+        Comment c1=new Comment( "9");
+      String i=  c1.getPostId();
+        Assert.assertEquals(i,"9");
     }
     /**
      * this method tests the set and get functions of comment id
@@ -26,10 +26,10 @@ public class testForComments {
 
     @Test
     public  void setCommentIdIsCorrect(){
-        Comment c1=new Comment( 9);
-        c1.setId(11);
-        int i=  c1.getId();
-        Assert.assertEquals ("post id is wrong",11,i,0.0);
+        Comment c1=new Comment( "9");
+        c1.setId("11");
+        String i=  c1.getId();
+        Assert.assertEquals (i,"11");
     }
     /**
      * this method tests the set and get functions of comment owner
@@ -37,7 +37,7 @@ public class testForComments {
 
     @Test
     public  void setCommentOwnerIsCorrect(){
-        Comment c1=new Comment( 9);
+        Comment c1=new Comment( "9");
         c1.setCommentOwner("omar");
         String i=  c1.getCommentOwner();
         Assert.assertEquals("not correct",i,"omar");
@@ -48,7 +48,7 @@ public class testForComments {
 
     @Test
     public  void setCommentcontentIsCorrect(){
-        Comment c1=new Comment( 9);
+        Comment c1=new Comment( "9");
         c1.setCommentContent("this is content");
         String i=  c1.getCommentContent();
         Assert.assertEquals("not correct",i,"this is content");
@@ -59,7 +59,7 @@ public class testForComments {
 
     @Test
     public  void setCommentcreatedateIsCorrect(){
-        Comment c1=new Comment( 9);
+        Comment c1=new Comment( "9");
         c1.setCommentCreateDate(12);
         int i=  c1.getCommentCreateDate();
         Assert.assertEquals("not correct",i,12);

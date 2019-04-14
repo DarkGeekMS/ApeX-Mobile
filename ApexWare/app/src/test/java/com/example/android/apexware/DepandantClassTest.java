@@ -1,5 +1,8 @@
 package com.example.android.apexware;
 
+import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,7 +12,7 @@ import static org.junit.Assert.*;
  *
  * @author mostafa
  */
-public class DepandantClassTest {
+public class DepandantClassTest extends AppCompatActivity {
     private DepandantClass restClient_mock = new DepandantClass(new MockRestService());
 
     /**
@@ -17,7 +20,7 @@ public class DepandantClassTest {
      */
     @Test
     public void login_false() {
-        assertFalse(restClient_mock.login("", ""));
+        assertFalse(restClient_mock.login("", "",null ));
     }
 
     /**
@@ -25,7 +28,7 @@ public class DepandantClassTest {
      */
     @Test
     public void login_true() {
-        assertTrue(restClient_mock.login("mostafa", "1234"));
+        assertTrue(restClient_mock.login("mostafa", "1234",null));
     }
 
     /**
