@@ -131,7 +131,7 @@ public class SignUp extends AppCompatActivity {
       editTextPassword.requestFocus();
       return;
     }
-    String url = "http://34.66.175.211/api/sign_up";
+    String url = "http://35.232.3.8/api/sign_up";
     getResponse(
             Request.Method.POST,
             url,null,
@@ -200,8 +200,9 @@ public class SignUp extends AppCompatActivity {
               @Override
               public void onErrorResponse(VolleyError error) {
                 Toast.makeText(
-                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                        getApplicationContext(), "Server Error", Toast.LENGTH_SHORT)
                     .show();
+                error.getMessage();
               }
             }) {
           @Override

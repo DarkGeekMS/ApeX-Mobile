@@ -15,11 +15,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            def url = System.getenv("API_BASE_URL") != null ? System.getenv("API_BASE_URL") : "http://34.66.175.211"
+            def url = System.getenv("API_BASE_URL") != null ? System.getenv("API_BASE_URL") : "http://35.232.3.8"
             buildConfigField("String", "API_BASE_URL", "\"${url}\"")
         }
         debug {
-            def url = System.getenv("API_BASE_URL") != null ? System.getenv("API_BASE_URL") : "http://34.66.175.211"
+            def url = System.getenv("API_BASE_URL") != null ? System.getenv("API_BASE_URL") : "http://35.232.3.8"
             buildConfigField("String", "API_BASE_URL", "\"${url}\"")
         }
     }
