@@ -1,5 +1,8 @@
 package com.example.android.apexware;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Movie;
 import android.view.LayoutInflater;
@@ -31,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.app.PendingIntent.getActivity;
 import static android.view.View.GONE;
 
 public class CustomAdapterForHomePage extends ArrayAdapter {
@@ -39,6 +43,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
    * this class to make custom list to be for the post in form of card view layout it extend from
    * array adapter base class it only list of post in it
    */
+
   // to reference the Activity
   private final Activity context;
   String value;
@@ -111,6 +116,44 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                         });
 
                             }
+                              if(item.getItemId()==R.id.reportpost){
+                                 final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                  AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                  builder.setTitle("report");
+                                  builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                          if (isChecked) {
+                                              // If the user checked the item, add it to the selected items
+                                              selectedItems.add(which);
+                                          } else if (selectedItems.contains(which)) {
+                                              // Else, if the item is already in the array, remove it
+                                              selectedItems.remove(Integer.valueOf(which));
+                                          }
+                                      }
+                                  });
+                                    builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int id) {
+                                          // User clicked send, we should send the selectedItems results to the server
+                                          Toast.makeText(context,"post is reported",Toast.LENGTH_SHORT).show();
+
+                                      }
+                                  })
+                                          .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                              @Override
+                                              public void onClick(DialogInterface dialog, int id) {
+                                                //report canceled
+                                                  Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
+
+                                              }
+                                          });
+
+                                   builder.show();
+
+                              }
+
+
                             return true;
                           }
                         });

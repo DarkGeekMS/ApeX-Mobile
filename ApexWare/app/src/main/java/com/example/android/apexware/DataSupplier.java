@@ -29,8 +29,6 @@ public interface DataSupplier {
    * @param id
    * @return
    */
-  int upVote_intearface(String id);
-
     /**
      * send post details to the server to add it to a certain community
      *
