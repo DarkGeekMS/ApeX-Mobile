@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/globeIMG"
         android:layout_width="42dp"
@@ -22,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:layout_toRightOf="@+id/globeIMG"
         android:id="@+id/community_name_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,10 +35,7 @@
         android:background="@android:color/white"
         android:text="  sample  community"
         android:textColor="@color/light_grey"
-        app:layout_constraintBottom_toBottomOf="@+id/globeIMG"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/globeIMG"
-        app:layout_constraintTop_toTopOf="@+id/globeIMG"  />
+        android:layout_marginTop="10dp"/>
 
-
+</RelativeLayout>
 </android.support.constraint.ConstraintLayout>

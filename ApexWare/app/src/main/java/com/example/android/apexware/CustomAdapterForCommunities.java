@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class CustomAdapterForCommunities extends ArrayAdapter {
-
     // to reference the Activity
     private final Activity context;
 
@@ -44,6 +43,6 @@ public class CustomAdapterForCommunities extends ArrayAdapter {
 
         return rowView;
 
-    };
+    }
 
 }

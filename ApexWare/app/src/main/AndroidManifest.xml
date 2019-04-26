@@ -23,6 +23,8 @@
         <activity android:name=".SignUp" />
         <activity android:name=".postsandcomments" />
         <activity android:name=".HomePage" />
+        <activity android:name=".apexLists"/>
+        <activity android:name=".Community"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

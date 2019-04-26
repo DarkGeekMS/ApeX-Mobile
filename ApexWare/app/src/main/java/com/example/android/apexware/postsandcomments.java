@@ -376,7 +376,6 @@ public class postsandcomments extends AppCompatActivity {
     i++;
     counter.setText(Integer.toString(i));
   }
-
     /**
      * downvote reply of a comment
      * @param v
@@ -413,7 +412,6 @@ public class postsandcomments extends AppCompatActivity {
     displayYoutubeVideo.getSettings().setLoadWithOverviewMode(true);
     displayYoutubeVideo.getSettings().setUseWideViewPort(true);
   }
-
     /**
      * upvote post request
      * @param postID
@@ -440,7 +438,6 @@ public class postsandcomments extends AppCompatActivity {
                           if (response != null) {
                               callback.onSuccessResponse(response);
                               Toast.makeText(getApplicationContext(), "you upvoted the post", Toast.LENGTH_SHORT).show();
-
                           } else {
                             Toast.makeText(
                                     getApplicationContext(),

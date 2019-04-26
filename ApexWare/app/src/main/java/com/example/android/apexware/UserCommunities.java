@@ -55,6 +55,7 @@ public class UserCommunities extends AppCompatActivity {
         new CustomAdapterForCommunities(this, nameArray, imageLinks);
     listView = (ListView) findViewById(R.id.listcommunitiesid);
     listView.setAdapter(adapter);
+
   }
 
   /** return to post and discard choosing the community */
@@ -62,9 +63,5 @@ public class UserCommunities extends AppCompatActivity {
     Intent intent = new Intent(this, CreatePost.class);
     startActivity(intent);
   }
-  /*
-  private String[] getUserCommunities(String[] nameArray) {
 
-  }
-  */
 }
