@@ -1,10 +1,14 @@
 package com.example.android.apexware;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
@@ -45,7 +49,9 @@ import java.util.Map;
 public class CreatePost extends AppCompatActivity {
 
   public static final int REQUEST_GET_SINGLE_FILE = 1;
+  private static final int TAKE_PICTURE = 2;
   public static int stPosition = -1;
+  Uri imageUri;
   ImageButton back_btn;
   ImageView preview;
   Button post_btn;
@@ -274,7 +280,7 @@ public class CreatePost extends AppCompatActivity {
 
   /**
    * get data returned from intent and preview it on the image view
-   *
+   * from camera or gallery
    * @param requestCode request defined previously to ensure consistency
    * @param resultCode defined in activity.java and used as a check
    * @param data : intent opening the gallery and returning with image
@@ -282,23 +288,42 @@ public class CreatePost extends AppCompatActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    try {
-      if (resultCode == RESULT_OK) {
-        if (requestCode == REQUEST_GET_SINGLE_FILE) {
-          Uri selectedImageUri = data.getData();
-          // Get the path from the Uri
-          final String path = getPathFromURI(selectedImageUri);
-          if (path != null) {
-            File f = new File(path);
-            selectedImageUri = Uri.fromFile(f);
+    if (resultCode == Activity.RESULT_OK) {
+      switch (requestCode) {
+        case REQUEST_GET_SINGLE_FILE:
+          {
+            try {
+              Uri selectedImageUri = data.getData();
+              // Get the path from the Uri
+              final String path = getPathFromURI(selectedImageUri);
+              if (path != null) {
+                File f = new File(path);
+                selectedImageUri = Uri.fromFile(f);
+              }
+              // Set the image in ImageView
+              preview.setVisibility(View.VISIBLE);
+              preview.setImageURI(selectedImageUri);
+            } catch (Exception e) {
+              Log.e("FileSelectorActivity", "File select error", e);
+            }
           }
-          // Set the image in ImageView
-          preview.setVisibility(View.VISIBLE);
-          preview.setImageURI(selectedImageUri);
-        }
+        case TAKE_PICTURE:
+          {
+            Uri selectedImage = imageUri;
+            getContentResolver().notifyChange(selectedImage, null);
+            ContentResolver cr = getContentResolver();
+            Bitmap bitmap;
+            try {
+              bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
+
+              preview.setImageBitmap(bitmap);
+              Toast.makeText(this, selectedImage.toString(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+              Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT).show();
+              Log.e("Camera", e.toString());
+            }
+          }
       }
-    } catch (Exception e) {
-      Log.e("FileSelectorActivity", "File select error", e);
     }
   }
 
@@ -320,7 +345,13 @@ public class CreatePost extends AppCompatActivity {
     return res;
   }
 
+  /** opens camera to take a photo */
   public void openCamera(View view) {
-    // todo handle capturing image with camera
+    // COMPLETED TODO handle capturing image with camera
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    File photo = new File(Environment.getExternalStorageDirectory(), "Pic.jpg");
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+    imageUri = Uri.fromFile(photo);
+    startActivityForResult(intent, TAKE_PICTURE);
   }
 }
