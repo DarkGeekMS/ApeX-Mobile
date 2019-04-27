@@ -44,7 +44,7 @@
         android:inputType="textPassword"
         android:singleLine="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/username_text_input"/>
+        app:layout_constraintTop_toBottomOf="@id/username_text_input" />
 
     <ToggleButton
         android:id="@+id/toggle_pass_btn"
@@ -52,9 +52,9 @@
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/toggle_off"
+        android:onClick="onToggleClick"
         android:textOff="@string/empty_string"
         android:textOn="@string/empty_string"
-        android:onClick="onToggleClick"
         app:layout_constraintBottom_toBottomOf="@+id/password_text_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/password_text_input"
@@ -65,16 +65,17 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/white"
         android:fontFamily="sans-serif"
+        android:textStyle="bold"
         android:text="@string/signup_btn_txt"
         android:textColor="@color/myblue"
         android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password_text_input" />
+        app:layout_constraintBottom_toTopOf="@+id/login_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView4" />
 
     <Button
         android:id="@+id/forgot_pass_btn"
@@ -85,12 +86,30 @@
         android:layout_marginEnd="22dp"
         android:background="@android:color/white"
         android:fontFamily="sans-serif"
+        android:onClick="forgot_password"
         android:text="@string/forgot_pass_btn_txt"
         android:textColor="@color/myblue"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password_text_input" />
+
+    <Button
+        android:id="@+id/forgot_pass_btn2"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:onClick="forgot_user_name"
+        android:text="@string/forgot_username"
+        android:textColor="@color/myblue"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_text_input" />
 
     <Button
         android:id="@+id/login_btn"
@@ -104,4 +123,19 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_user"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/signup_btn"
+        app:layout_constraintEnd_toStartOf="@+id/signup_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/signup_btn" />
 </android.support.constraint.ConstraintLayout>

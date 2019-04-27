@@ -3,6 +3,7 @@ package com.example.android.apexware;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Debug;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +31,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.android.apexware.Routes.active_mock;
+
 /**
  * first activity in the program and contains login form which the user fill with his data to enter
  * th app
@@ -72,9 +76,8 @@ public class MainActivity extends AppCompatActivity {
     /*
      * use either mock service or back end service
      * */
-    boolean debug = true;
     DepandantClass restClient = null;
-    if (debug) {
+    if (active_mock) {
       restClient = new DepandantClass(new MockRestService());
     } else {
       restClient = new DepandantClass(new RestService());
@@ -165,4 +168,18 @@ public class MainActivity extends AppCompatActivity {
       }
       return true;
   }
+
+    public void forgot_user_name(View view) {
+      //COMPLETED TODO IMPLEMENT
+        Intent intent = new Intent(MainActivity.this, ForgotPass.class);
+        intent.putExtra("type", "user");
+        startActivity(intent);
+    }
+
+    public void forgot_password(View view) {
+        //COMPLETED TODO IMPLEMENT
+        Intent intent = new Intent(MainActivity.this, ForgotPass.class);
+        intent.putExtra("type", "pass");
+        startActivity(intent);
+    }
 }

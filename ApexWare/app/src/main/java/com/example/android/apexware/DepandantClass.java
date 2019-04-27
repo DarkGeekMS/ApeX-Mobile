@@ -22,7 +22,7 @@ public class DepandantClass {
 
   /** @return : return true if login successful and user exists */
   boolean login(String username, String password, final Context context) {
-      return mSupplier.login_interface(username, password, context);
+    return mSupplier.login_interface(username, password, context);
   }
   /**
    * sends string of all details to create a new user
@@ -33,10 +33,16 @@ public class DepandantClass {
     return mSupplier.signup_interface(username, email, password);
   }
 
-    /**
-     * @return : return true if post was published seccessfully
-     */
-    boolean createPost(String type, String title, String mainPost, int communityID) {
-        return mSupplier.createPost_interface(type, title, mainPost, communityID);
-    }
+  /** @return : return true if post was published seccessfully */
+  boolean createPost(String type, String title, String mainPost, int communityID) {
+    return mSupplier.createPost_interface(type, title, mainPost, communityID);
+  }
+
+  void verify_forget_pass(String email, String username,final Context context) {
+    mSupplier.verify_forget_pass_interface(email, username,context);
+  }
+
+  void verify_forget_user(String email, String password,final Context context) {
+    mSupplier.verify_forget_user_interface(email, password,context);
+  }
 }

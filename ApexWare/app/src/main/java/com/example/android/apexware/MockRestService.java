@@ -1,6 +1,7 @@
 package com.example.android.apexware;
 
 import android.content.Context;
+import static com.example.android.apexware.VerifyCode.mock_code;
 
 /**
  * this class is a simulation to the back end service that sends dummy objects and responses to the
@@ -49,5 +50,27 @@ public class MockRestService implements DataSupplier {
     @Override
     public boolean createPost_interface(String type, String title, String mainPost, int communityID) {
         return true;
+    }
+
+  /**
+   * used in cases of forgetting password to send verify mail to the user
+   *
+   * @param email    user email
+   * @param username user name
+   */
+  @Override
+  public void verify_forget_pass_interface(String email, String username,final Context context) {
+    mock_code = "0123";
+  }
+
+    /**
+     * used in cases of forgetting username to send verify mail to the user
+     *
+     * @param email    user email
+     * @param password the password user knows
+     */
+    @Override
+    public void verify_forget_user_interface(String email, String password,final Context context) {
+        mock_code = "0123";
     }
 }
