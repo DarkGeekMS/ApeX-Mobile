@@ -310,7 +310,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/vote";
+    String url = "http://35.232.3.8/api/vote";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -363,7 +363,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/vote";
+    String url = "http://35.232.3.8/api/vote";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -416,7 +416,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/save";
+    String url = "http://35.232.3.8/api/save";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -468,7 +468,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/Hide";
+    String url = "http://35.232.3.8/api/Hide";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
