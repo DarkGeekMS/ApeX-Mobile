@@ -18,8 +18,10 @@ import android.widget.ListView;
  */
 public class UserCommunities extends AppCompatActivity {
 
+ // public static final CustomAdapterForCommunities adapter;
   ListView listView;
   String[] nameArray;
+  String[] idArray;
   String[] imageLinks;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -39,20 +41,12 @@ public class UserCommunities extends AppCompatActivity {
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
-    // nameArray = getUserCommunities(nameArray);
-
     /*
-    arbitrary names and images to test the appearance
-     */
-    nameArray = new String[] {"gggg", "hhhhh", "LLLLLL"};
-    imageLinks =
-        new String[] {
-          "https://i.imgur.com/S7USWRb.jpg",
-          "https://i.imgur.com/S7USWRb.jpg",
-          "https://i.imgur.com/S7USWRb.jpg"
-        };
-    CustomAdapterForCommunities adapter =
-        new CustomAdapterForCommunities(this, nameArray, imageLinks);
+      getUserCommunities( nameArray, imageLinks, idArray);
+      TODO get all communities from database and add them to list
+      */
+
+      CustomAdapterForCommunities adapter = new CustomAdapterForCommunities(this, nameArray, imageLinks, idArray);
     listView = (ListView) findViewById(R.id.listcommunitiesid);
     listView.setAdapter(adapter);
   }
@@ -62,9 +56,5 @@ public class UserCommunities extends AppCompatActivity {
     Intent intent = new Intent(this, CreatePost.class);
     startActivity(intent);
   }
-  /*
-  private String[] getUserCommunities(String[] nameArray) {
 
-  }
-  */
 }
