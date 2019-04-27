@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/logo_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoadingScreen"></activity>
+        <activity android:name=".WriteMessage"></activity>
+        <activity android:name=".LoadingScreen" />
         <activity android:name=".UserCommunities" />
         <activity android:name=".CreatePost" />
         <activity android:name=".Profile" />

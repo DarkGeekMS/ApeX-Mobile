@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/WriteMessagesToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/myblue"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+    <EditText
+        android:paddingStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/username_reciever_userinput"
+        android:hint="Type u/Usernam"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:inputType="textPersonName"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:paddingStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/subject_userinput"
+        android:inputType="textEmailSubject"
+        android:layout_width="match_parent"
+        android:hint="Type subject of message"
+        android:maxLines="1"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:paddingStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/message_content"
+        android:inputType="textLongMessage"
+        android:hint="Type your Message Here"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
