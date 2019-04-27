@@ -202,8 +202,6 @@ public class postsandcomments extends AppCompatActivity {
                 popup.show(); // showing popup menu
               }
             });
-    /*int id=getIntent().getIntExtra("id", 0);
-    post1.setPostId(String.valueOf(id));*/
     /*put the data on the views*/
     /*logo*/
     ImageView logo = findViewById(R.id.apexcomlogo);
@@ -423,7 +421,7 @@ public class postsandcomments extends AppCompatActivity {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/vote";
+    String url = "http://35.232.3.8/api/vote";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -483,7 +481,7 @@ public class postsandcomments extends AppCompatActivity {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/vote";
+    String url = "http://35.232.3.8/api/vote";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -544,7 +542,7 @@ public class postsandcomments extends AppCompatActivity {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/save";
+    String url = "http://35.232.3.8/api/save";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
@@ -604,7 +602,7 @@ public class postsandcomments extends AppCompatActivity {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
     final String token=user.getToken();
-    String url = "http://34.66.175.211/api/Hide";
+    String url = "http://35.232.3.8/api/Hide";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,

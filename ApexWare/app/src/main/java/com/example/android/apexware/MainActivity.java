@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * use either mock service or back end service
      * */
-    boolean debug = false;
+    boolean debug = true;
     DepandantClass restClient = null;
     if (debug) {
       restClient = new DepandantClass(new MockRestService());

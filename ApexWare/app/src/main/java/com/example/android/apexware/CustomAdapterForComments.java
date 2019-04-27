@@ -321,7 +321,7 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
-        String url = "http://34.66.175.211/api/vote";
+        String url = "http://35.232.3.8/api/vote";
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
@@ -381,7 +381,7 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
-        String url = "http://34.66.175.211/api/vote";
+        String url = "http://35.232.3.8/api/vote";
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
