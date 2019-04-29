@@ -33,9 +33,9 @@ public class apexLists extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         // finally change the color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
-        CommunityInfo comm1=new CommunityInfo("any name bla bla bla","JDOCNOJWNC",1234859,"https://i.imgur.com/6z13lku.jpg","https://i.imgur.com/Z6s6Who.jpg");
-        CommunityInfo comm2=new CommunityInfo("any name bs mo5tlf","JDOCNOJWNC",69841651,"https://i.imgur.com/6z13lku.jpg","https://i.imgur.com/Z6s6Who.jpg");
-        CommunityInfo comm3=new CommunityInfo("any name bs very different","JDOCNOJWNC",65541651,"https://i.imgur.com/6z13lku.jpg","https://i.imgur.com/Z6s6Who.jpg");
+        CommunityInfo comm1=new CommunityInfo("any name bla bla bla","JDOCNOJWNC",1234859,"https://i.imgur.com/6z13lku.jpg","https://i.imgur.com/Z6s6Who.jpg","co1");
+        CommunityInfo comm2=new CommunityInfo("any name bs mo5tlf","JDOCNOJWNC",69841651,"https://i.imgur.com/6z13lku.jpg","https://i.imgur.com/Z6s6Who.jpg","co1");
+        CommunityInfo comm3=new CommunityInfo("any name bs very different","JDOCNOJWNC",65541651,"https://i.imgur.com/6z13lku.jpg","https://i.imgur.com/Z6s6Who.jpg","co3");
         commlist.add(comm1);
         commlist.add(comm2);
         commlist.add(comm3);

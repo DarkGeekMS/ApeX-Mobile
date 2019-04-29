@@ -25,7 +25,7 @@
             <ImageView
                 android:id="@+id/toolbarbackground"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="146dp"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
             <android.support.v7.widget.Toolbar
@@ -70,29 +70,32 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="50dp" />
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/comm_info"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="109dp"
-                    android:background="#00ffffff">
+                    android:background="#00ffffff"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:id="@+id/texts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        >
 
                         <TextView
                             android:id="@+id/comm_name"
                             android:layout_width="wrap_content"
-                            android:layout_height="1dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:layout_marginTop="50dp"
                             android:text="any name bla bla"
                             android:textColor="#000"
-                            android:textSize="20sp"
-                            android:maxLength="20"/>
+                            android:textSize="15sp"
+                            android:maxLength="17"/>
 
                         <TextView
                             android:id="@+id/comm_tag_name"
@@ -102,7 +105,7 @@
                             android:layout_marginStart="20dp"
                             android:text="tag name"
                             android:textColor="#000"
-                            android:textSize="15sp"
+                            android:textSize="10sp"
                             android:maxLength="20"/>
 
                         <TextView
@@ -121,14 +124,16 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="23dp"
                         android:layout_toEndOf="@+id/texts"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <ToggleButton
                             android:id="@+id/subscribeBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="35dp"
+                            android:layout_weight="1"
                             android:textOff="subscribe"
                             android:textOn="subscribed"
                             android:textSize="12dp" />
@@ -141,9 +146,10 @@
                             android:layout_marginTop="10dp"
                             android:textOff="off"
                             android:textOn="on"
-                            android:textSize="12dp" />
+                            android:textSize="12dp"
+                            android:layout_weight="1"/>
                     </LinearLayout>
-                </RelativeLayout>
+                </LinearLayout>
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

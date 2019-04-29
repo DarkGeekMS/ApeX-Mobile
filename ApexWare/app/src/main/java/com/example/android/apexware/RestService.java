@@ -172,11 +172,7 @@ public class RestService implements DataSupplier {
       final String password,
       final Context context) {
     // if everything is fine
-    StringRequest stringRequest =
-        new StringRequest(
-            Request.Method.POST,
-            url,
-            new Response.Listener<String>() {
+    StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
               @Override
               public void onResponse(String response) {
                 // if no error in response
@@ -282,4 +278,6 @@ public class RestService implements DataSupplier {
         };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
+
 }
+

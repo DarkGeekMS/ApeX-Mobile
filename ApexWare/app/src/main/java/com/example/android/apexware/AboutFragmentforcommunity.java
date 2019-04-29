@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +35,9 @@ public class AboutFragmentforcommunity extends Fragment {
         view=inflater.inflate(R.layout.aboutfragmentforcommunity,container,false);
         ListView moderats= view.findViewById(R.id.moderators);
         ExpandableListView Rules=view.findViewById(R.id.Ruleslist);
+        View rulestextview = getLayoutInflater().inflate(R.layout.rulestextview, null);
+        Rules.addHeaderView(rulestextview);
+        View moderatorstextview = getLayoutInflater().inflate(R.layout.modstextview, null);
         ArrayList<String>  RulesHeader = new ArrayList<String>();
         HashMap<String, List<String>> RuleDetails = new HashMap<String, List<String>>();
         String [] modearators   ={"ali","yasser","yomna","shaddad","pewds","ali","yasser","yomna","shaddad","pewds","ali","yasser","yomna","shaddad","pewds","ali","yasser","yomna","shaddad","pewds"};
@@ -47,16 +52,15 @@ public class AboutFragmentforcommunity extends Fragment {
         RulesHeader.add("rule 7");
         List<String> rule1details=new ArrayList<String>();
         rule1details.add("bllllllllllllllllllllllla");
-
         RuleDetails.put(RulesHeader.get(0),rule1details);
         RuleDetails.put(RulesHeader.get(1),rule1details);
         RuleDetails.put(RulesHeader.get(2),rule1details);
         RuleDetails.put(RulesHeader.get(3),rule1details);
         RuleDetails.put(RulesHeader.get(4),rule1details);
         RuleDetails.put(RulesHeader.get(5),rule1details);
-        RuleDetails.put(RulesHeader.get(6),rule1details);
         aboutExListAdapter rulesAdapter =new aboutExListAdapter(this.getActivity(),RulesHeader,RuleDetails);
         Rules.setAdapter(rulesAdapter);
+        moderats.addHeaderView(moderatorstextview);
         //this ontouch listener makes the listview scrollable but   NOT THE WHOLE VIEW
         moderats.setOnTouchListener(new ListView.OnTouchListener() {
             @Override
@@ -66,7 +70,6 @@ public class AboutFragmentforcommunity extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                       v.getParent().requestDisallowInterceptTouchEvent(true);
                         break;
-
                     case MotionEvent.ACTION_UP:
                        v.getParent().requestDisallowInterceptTouchEvent(false);
                         break;
@@ -76,9 +79,7 @@ public class AboutFragmentforcommunity extends Fragment {
             }
         });
         return view;
-
     }
-
 /*
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -101,6 +102,4 @@ public class AboutFragmentforcommunity extends Fragment {
         listView.setLayoutParams(params);
     }
 */
-
-
 }

@@ -13,6 +13,15 @@ public class CommunityInfo implements Parcelable {
     private int numOfFollowers;
     private String communityLogo;
     private String Background;
+    private String comID;
+
+    public String getComID() {
+        return comID;
+    }
+
+    public void setComID(String comID) {
+        this.comID = comID;
+    }
 
     public String getBackground() {
         return Background;
@@ -25,12 +34,13 @@ public class CommunityInfo implements Parcelable {
     public CommunityInfo() {
     }
 
-    public CommunityInfo(String communityName, String communityTagName, int numOfFollowers, String communityLogo,String Background) {
+    public CommunityInfo(String communityName, String communityTagName, int numOfFollowers, String communityLogo,String Background,String comID) {
         this.communityName = communityName;
         this.communityTagName = communityTagName;
         this.numOfFollowers = numOfFollowers;
         this.communityLogo = communityLogo;
         this.Background=Background;
+        this.comID=comID;
     }
 
     protected CommunityInfo(Parcel in) {
@@ -39,6 +49,7 @@ public class CommunityInfo implements Parcelable {
         numOfFollowers = in.readInt();
         communityLogo = in.readString();
         Background=in.readString();
+        comID=in.readString();
     }
 
     public static final Creator<CommunityInfo> CREATOR = new Creator<CommunityInfo>() {
@@ -97,5 +108,6 @@ public class CommunityInfo implements Parcelable {
         dest.writeInt(numOfFollowers);
         dest.writeString(communityLogo);
         dest.writeString(Background);
+        dest.writeString(comID);
     }
 }

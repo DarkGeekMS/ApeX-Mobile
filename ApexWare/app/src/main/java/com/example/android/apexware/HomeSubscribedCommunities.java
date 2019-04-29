@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 public class HomeSubscribedCommunities extends Fragment {
     ListView list;
     CustomAdapterForHomePage adapter;
+    List<Post> hiddenPotsList = new ArrayList<>();
+    ArrayList<Post> postArrayList = new ArrayList();
+
     public HomeSubscribedCommunities() {
         // Required empty public constructor
     }
@@ -40,9 +44,8 @@ public class HomeSubscribedCommunities extends Fragment {
           // create list view object to handele given array adapter
           list = (ListView)view.findViewById(R.id.ListOFPosts);
         // create array adapter list for the view
-        ArrayList<Post> postArrayList = new ArrayList();
         Post testpost = new Post();
-        testpost.setPostId("t3_1");
+        testpost.setPostId("1");
         testpost.setPostType(0);
         testpost.setPostOwner("Mazen");
         testpost.setPostCreateDate(19);
@@ -115,4 +118,20 @@ public class HomeSubscribedCommunities extends Fragment {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyDataSetChanged()`
     }
+
+    /*@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String result=data.getStringExtra("id");
+                hiddenPotsList.add(postArrayList.get(Integer.parseInt(result)));
+                postArrayList.remove(Integer.parseInt(result));
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
+*/
 }

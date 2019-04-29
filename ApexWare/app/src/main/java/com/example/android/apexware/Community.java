@@ -25,7 +25,11 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.Toolbar;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -43,6 +49,10 @@ public class Community extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private LinearLayout linearLayout;
     private LinearLayout btns;
+    String state=null;
+    String notifications=null;
+    ToggleButton sub=findViewById(R.id.subscribeBtn);
+    ToggleButton notifis =findViewById(R.id.notificationBtn);
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +86,7 @@ public class Community extends AppCompatActivity {
         Picasso.get().load(comm1.getBackground()).into(background);
         comname.setText(comm1.getCommunityName());
         comTagName.setText(comm1.getCommunityTagName());
-        followers.setText(String.valueOf(comm1.getnumOfFollowers()));
-        ToggleButton sub=findViewById(R.id.subscribeBtn);
+        followers.setText(String.valueOf(comm1.getnumOfFollowers())+"followers");
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
             int scrollRange = -1;
@@ -130,7 +139,107 @@ public class Community extends AppCompatActivity {
                         popup.show(); // showing popup menu
                     }
                 });
-      }
 
+        sub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getsubState(comm1.getCommunityName());
+            }
+        });
+      }
+//here we assumed that the response will be either "subscribed" or "unsubscribed" with key "state"
+    public void getsubState(String name){
+    getsubResponse(Request.Method.POST, Routes.signUp,null, new VolleyCallback(){
+        @Override
+        public void onSuccessResponse(String response) {
+            try {
+                // converting response to json object
+                JSONObject obj = new JSONObject(response);
+
+                // if no error in response
+                if (response != null) {
+                    state= obj.getString("state");
+                    if(state=="subscribed")
+                        sub.setChecked(true);
+                      //should check if subscribed or not
+                else if(state=="unsubscribed")
+                    {sub.setChecked(false);}
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    },name);
+}
+    public void getsubResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final String comName) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                callback.onSuccessResponse(response);
+                            }},
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(
+                                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                                        .show();
+                                error.getMessage();
+                            }
+                        }) {
+
+                };
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+//here we assumed that the response will be either "on" or "off" with key "notification"
+    public void getnotifiState(String name){
+        getsubResponse(Request.Method.POST,/*should be changed*/ Routes.signUp,null, new VolleyCallback(){
+            @Override
+            public void onSuccessResponse(String response) {
+                try {
+                    // converting response to json object
+                    JSONObject obj = new JSONObject(response);
+
+                    // if no error in response
+                    if (response != null) {
+                        notifications= obj.getString("notification");
+                        if(notifications=="on")
+                            notifis.setChecked(true);
+                            //should check if subscribed or not
+                        else  if(notifications=="off")
+                        {notifis.setChecked(false);}
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },name);
+    }
+    public void getnotifiResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final String comName) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callback.onSuccessResponse(response);
+            }},
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(
+                                getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                                .show();
+                        error.getMessage();
+                    }
+                }) {
+
+        };
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
 
 }

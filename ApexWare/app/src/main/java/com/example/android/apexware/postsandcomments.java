@@ -1,5 +1,6 @@
 package com.example.android.apexware;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -137,7 +138,13 @@ public class postsandcomments extends AppCompatActivity {
                                       });}
                             // we can use item name to make intent for the new responces
                             if(item.getItemId()==R.id.hidepost){
-                              hidePost(post1.getPostId(),Request.Method.GET, null,
+                                //test,request was working
+                                Intent returnIntent = new Intent();
+                                returnIntent.putExtra("id",post1.getPostId());
+                                setResult(Activity.RESULT_OK,returnIntent);
+                                finish();
+                                //end test
+                             /* hidePost(post1.getPostId(),Request.Method.GET, null,
                                       new  VolleyCallback(){
                                         @Override
                                         public void onSuccessResponse(String result) {
@@ -157,7 +164,7 @@ public class postsandcomments extends AppCompatActivity {
                                             e.printStackTrace();
                                           }
                                         }
-                                      });
+                                      });*/
                             }
 
                               if(item.getItemId()==R.id.reportpost){
@@ -323,7 +330,17 @@ public class postsandcomments extends AppCompatActivity {
 
               }
             });
-
+TextView addcomment=findViewById(R.id.addcomment);
+addcomment.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(postsandcomments.this ,addCommentActivity.class);
+        Gson gson = new Gson();
+        String ID = gson.toJson(post1.getPostId());
+        intent.putExtra("postID", ID); // sending the post to next activity
+        startActivity(intent);
+    }
+});
 
   }
   /**

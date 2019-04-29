@@ -59,7 +59,7 @@ public class Profile extends AppCompatActivity {
         });
 
         ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new PostsFragment(),"Post");
+        viewPagerAdapter.addFragment(new PostFragment(),"Post");
         viewPagerAdapter.addFragment(new CommentFragment(),"Comment");
         viewPagerAdapter.addFragment(new AboutFragment(),"About");
         viewPager.setAdapter(viewPagerAdapter);

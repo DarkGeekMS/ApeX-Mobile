@@ -29,7 +29,13 @@ public class aboutExListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return listDataChild.get(listDataHeader.get(groupPosition)).size();
+
+        if (listDataChild.get(listDataHeader.get(groupPosition)) == null) {
+            return 0;
+        } else {
+            return listDataChild.get(listDataHeader.get(groupPosition)).size();
+
+        }
     }
 
     @Override

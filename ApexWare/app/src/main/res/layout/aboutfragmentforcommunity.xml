@@ -3,34 +3,21 @@
     android:layout_height="wrap_content"
     android:id="@+id/scrollojt"
     android:fillViewport="true" >-->
-    <RelativeLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
-        <TextView
-            android:id="@+id/rulesheader"
-            android:layout_width="wrap_content"
+        <ExpandableListView
+            android:id="@+id/Ruleslist"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rules"
-            android:textSize="20dp"/>
-    <ExpandableListView
-        android:layout_below="@+id/rulesheader"
-        android:id="@+id/Ruleslist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:groupIndicator="@null"
-        >
-    </ExpandableListView>
-        <TextView
-            android:layout_below="@+id/Ruleslist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Moderators"
-            android:id="@+id/modsheader"/>
+            android:layout_below="@+id/rulesheader"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:groupIndicator="@null"></ExpandableListView>
+
         <ListView
             android:layout_below="@+id/modsheader"
             android:id="@+id/moderators"
@@ -40,6 +27,6 @@
             android:focusableInTouchMode="false"
             >
         </ListView>
-    </RelativeLayout>
+    </LinearLayout>
 <!--
 </ScrollView>-->
