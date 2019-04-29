@@ -1,6 +1,7 @@
 package com.example.android.apexware;
 
 import android.content.Context;
+import android.widget.EditText;
 
 /**
  * this class is a base class that 2 kinds of services inherit it it contain methods that only call
@@ -38,11 +39,15 @@ public class DepandantClass {
     return mSupplier.createPost_interface(type, title, mainPost, communityID);
   }
 
-  void verify_forget_pass(String email, String username,final Context context) {
-    mSupplier.verify_forget_pass_interface(email, username,context);
+  void verify_forget_pass(String email, String username, final Context context) {
+    mSupplier.verify_forget_pass_interface(email, username, context);
   }
 
-  void verify_forget_user(String email, String password,final Context context) {
-    mSupplier.verify_forget_user_interface(email, password,context);
+  void verify_forget_user(String email, String password, final Context context) {
+    mSupplier.verify_forget_user_interface(email, password, context);
+  }
+
+  public String confirmCode(String email, String code, final Context context) {
+    return mSupplier.confirmCode_interface(email, code, context);
   }
 }

@@ -50,5 +50,6 @@
     <string name="reset_pass_form">enter your email and username and we will send you password reset link</string>
     <string name="reset_user_form">enter your email and password and we will send you username reset link</string>
     <string name="verify_form">Enter your verification code</string>
-
+    <string name="settings">Settings</string>
+    <string name="general">General</string>
 </resources>

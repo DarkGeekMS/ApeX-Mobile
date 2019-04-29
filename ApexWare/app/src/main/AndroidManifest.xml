@@ -17,7 +17,9 @@
         android:roundIcon="@mipmap/logo_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewPass"></activity>
+        <activity android:name=".NotificationSettings"></activity>
+        <activity android:name=".Settings" />
+        <activity android:name=".NewPass" />
         <activity android:name=".VerifyCode" />
         <activity android:name=".ForgotPass" />
         <activity android:name=".WriteMessage" />

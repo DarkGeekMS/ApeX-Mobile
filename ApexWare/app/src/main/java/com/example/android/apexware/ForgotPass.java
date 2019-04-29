@@ -35,9 +35,8 @@ public class ForgotPass extends AppCompatActivity {
     Intent intent = getIntent();
     type = intent.getStringExtra("type");
 
-    /*
-     * use either mock service or back end service
-     * */
+
+    // use either mock service or back end service
     if (active_mock) {
       restClient = new DepandantClass(new MockRestService());
     } else {
@@ -91,6 +90,7 @@ public class ForgotPass extends AppCompatActivity {
     startActivity(new Intent(this, MainActivity.class));
   }
 
+  /**send request to get the verify code sent*/
   public void verify(View view) {
     if (verified()) {
       // COMPLETED todo go to next activity and send the request of mail verify
@@ -109,6 +109,7 @@ public class ForgotPass extends AppCompatActivity {
       }
       Intent intent = new Intent(ForgotPass.this, VerifyCode.class);
       intent.putExtra("type", type);
+      intent.putExtra("email", email);
       startActivity(intent);
 
     } else {
@@ -118,7 +119,7 @@ public class ForgotPass extends AppCompatActivity {
   }
 
   /**
-   * verify nedded data is inserted by the user
+   * verify needed data is inserted by the user
    *
    * @return true if all data is correct
    */

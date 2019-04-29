@@ -157,7 +157,45 @@ public class RestService implements DataSupplier {
         context);
   }
 
-  /*-------------------------------------------------------------------------------------------------------*/
+    /**
+     * @param email email of user
+     * @param code  code he entered and sent to be checked
+     * @return user name of the user if correct
+     */
+    @Override
+    public String confirmCode_interface(String email, String code,final Context context) {
+        String url = "http://34.66.175.211/api/code_check";
+        getResponse4(
+                Request.Method.POST,
+                url,
+                null,
+                new VolleyCallback() {
+                    @Override
+                    public void onSuccessResponse(String response) {
+                        try {
+                            // converting response to json object
+                            JSONObject obj = new JSONObject(response);
+
+                            // if no error in response
+                            if (response != null) {
+                                Log.d(TAG, "onSuccessResponse: a");
+                                //todo get user name from response
+                            } else {
+                                Log.d(TAG, "onFailResponse: ");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                email,
+                code,
+                context);
+        return "debug"; //for debug todo
+    }
+
+    /*-------------------------------------------------------------------------------------------------------*/
   // reponse functions
   public void getResponse(
       int method,
@@ -278,4 +316,45 @@ public class RestService implements DataSupplier {
         };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
+
+
+    public void getResponse4(
+            int method,
+            String url,
+            JSONObject jsonValue,
+            final VolleyCallback callback,
+            final String email,
+            final String code,
+            final Context context) {
+        // if everything is fine
+        StringRequest stringRequest =
+                new StringRequest(
+                        Request.Method.POST,
+                        url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // if no error in response
+                                if (response != null) {
+                                    callback.onSuccessResponse(response);
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(context, "ServerError", Toast.LENGTH_SHORT).show();
+                                error.getMessage();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("email", email);
+                        params.put("code", code);
+                        return params;
+                    }
+                };
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
 }

@@ -38,15 +38,25 @@ public interface DataSupplier {
 
   /**
    * used in cases of forgetting password to send verify mail to the user
+   *
    * @param email user email
    * @param username user name
    */
-  void verify_forget_pass_interface(String email, String username,final Context context);
+  void verify_forget_pass_interface(String email, String username, final Context context);
 
   /**
    * used in cases of forgetting username to send verify mail to the user
+   *
    * @param email user email
    * @param password the password user knows
    */
-  void verify_forget_user_interface(String email, String password,final Context context);
+  void verify_forget_user_interface(String email, String password, final Context context);
+
+  /**
+   *
+   * @param email email of user
+   * @param code code he entered and sent to be checked
+   * @return user name of the user if correct
+   */
+  String confirmCode_interface(String email, String code,final Context context);
 }

@@ -72,5 +72,17 @@ public class MockRestService implements DataSupplier {
     @Override
     public void verify_forget_user_interface(String email, String password,final Context context) {
         mock_code = "0123";
+        // todo send automatic mail with code let it be 0123
     }
+
+  /**
+   * @param email email of user
+   * @param code  code he entered and sent to be checked
+   * @return user name of the user if correct
+   */
+  @Override
+  public String confirmCode_interface(String email, String code,final Context context) {
+    if (code.equals("0123")) return "mock user";
+     return "wrong code";
+  }
 }

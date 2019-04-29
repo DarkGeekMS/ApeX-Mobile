@@ -46,6 +46,7 @@ import java.util.ArrayList;
 
 /**
  * main page of the whole application
+ *
  * @author mazen
  */
 public class HomePage extends AppCompatActivity {
@@ -60,7 +61,6 @@ public class HomePage extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
-
 
     Window window = this.getWindow();
     // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -129,37 +129,40 @@ public class HomePage extends AppCompatActivity {
           new BottomNavigationViewEx.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
+              Fragment fragment;
 
               switch (item.getItemId()) {
                 case R.id.i_home:
                   Toast.makeText(getApplicationContext(), "home is selected", Toast.LENGTH_SHORT)
                       .show();
-                  fragment=new HomeFragment();
+                  fragment = new HomeFragment();
                   loadFragment(fragment);
                   return true;
                 case R.id.i_apexLists:
-                  Toast.makeText(getApplicationContext(), "apexLists is selected", Toast.LENGTH_SHORT)
+                  Toast.makeText(
+                          getApplicationContext(), "apexLists is selected", Toast.LENGTH_SHORT)
                       .show();
-                  fragment=new ListOfCommunityFragment();
+                  fragment = new ListOfCommunityFragment();
                   loadFragment(fragment);
                   return true;
                 case R.id.i_notifications:
-                    try{
-                  Toast.makeText(getApplicationContext(), "notifications is selected", Toast.LENGTH_SHORT)
-                      .show();
+                  try {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "notifications is selected",
+                            Toast.LENGTH_SHORT)
+                        .show();
                     fragment = new NotificationFragment();
                     loadFragment(fragment);
-                  return true;}
-                  catch (Exception e){
-                        e.printStackTrace();
+                    return true;
+                  } catch (Exception e) {
+                    e.printStackTrace();
                   }
                 case R.id.i_inbox:
-                  Toast.makeText(
-                          getApplicationContext(), "inbox is selected", Toast.LENGTH_SHORT)
+                  Toast.makeText(getApplicationContext(), "inbox is selected", Toast.LENGTH_SHORT)
                       .show();
-                    fragment=new MessageFragment();
-                    loadFragment(fragment);
+                  fragment = new MessageFragment();
+                  loadFragment(fragment);
                   return true;
                 case R.id.i_empty:
                   Toast.makeText(getApplicationContext(), "empty is selected", Toast.LENGTH_SHORT)
@@ -247,12 +250,12 @@ public class HomePage extends AppCompatActivity {
     startActivity(intent);
   }
 
-
   public void linkClick(View view) {
     Intent intent = new Intent(HomePage.this, CreatePost.class);
     intent.putExtra("type", "link");
     startActivity(intent);
   }
+
   private void loadFragment(Fragment fragment) {
     // load fragment
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
