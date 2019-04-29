@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
    * opens the activity sign up on pressing the button sign up
    */
   public void openActivity_sign_up() {
-    Intent intent = new Intent(this, HomePage.class);
+    Intent intent = new Intent(this, SignUp.class);
     startActivity(intent);
   }
   /** toggle button affect viewing password as text or as dots */

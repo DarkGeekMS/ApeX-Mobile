@@ -81,7 +81,6 @@ public class RestService  implements DataSupplier {
    * @author mazen
    */
   private void userLogin() {
-
   }
 
 

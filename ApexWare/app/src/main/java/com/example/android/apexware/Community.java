@@ -104,7 +104,7 @@ public class Community extends AppCompatActivity {
         });
         ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(new PostsFragment(),"posts");
-        viewPagerAdapter.addFragment(new AboutFragment(),"About");
+        viewPagerAdapter.addFragment(new AboutFragmentforcommunity(),"About");
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
        final Button options = findViewById(R.id.commOptions);
