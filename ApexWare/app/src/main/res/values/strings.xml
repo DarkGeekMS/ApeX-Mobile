@@ -40,7 +40,6 @@
     <string name="text_post_title">Text Post</string>
     <string name="image_post_title">Image Post</string>
     <string name="link_post_title">Link Post</string>
-    <string name="back_arrow">back arrow</string>
     <string name="write_message">Write Message</string>
     <string name="mark_all_as_read">Mark all as read</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -132,6 +131,6 @@
     <string name="reset_pass_form">enter your email and username and we will send you password reset link</string>
     <string name="reset_user_form">enter your email and password and we will send you username reset link</string>
     <string name="verify_form">Enter your verification code</string>
-
+    <string name="back_arrow">Back Arrow</string>
 <!--&gt;>>>>>> 15258cc92c42444621bcfd23589299b3b1931662-->
 </resources>

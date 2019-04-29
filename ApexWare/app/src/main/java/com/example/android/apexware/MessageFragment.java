@@ -55,8 +55,13 @@ public class MessageFragment extends Fragment {
         switch (item.getItemId()) {
 
             case R.id.WriteMessage:
+                try{
                 startActivity(new Intent(getActivity(),WriteMessage.class));
                 return true;
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
 
             case R.id.MarkAllAsRead:
 
