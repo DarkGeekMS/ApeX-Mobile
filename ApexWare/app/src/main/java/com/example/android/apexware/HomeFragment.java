@@ -46,7 +46,8 @@ public class HomeFragment extends Fragment {
         TabLayout tabLayout= (TabLayout)view.findViewById(R.id.viewMode_tablayout);
         ViewPager viewPager=(ViewPager)view.findViewById(R.id.viewMode_viewpager);
 
-        ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(activity.getSupportFragmentManager());
+
+        ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getChildFragmentManager());//activity.getSupportFragmentManager()
         viewPagerAdapter.addFragment(new HomeSubscribedCommunities(),"Home");
         viewPagerAdapter.addFragment(new PopularUnsubscribedCommunities(),"Popular");
 

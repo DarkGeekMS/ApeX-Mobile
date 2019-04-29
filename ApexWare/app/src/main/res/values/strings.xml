@@ -43,7 +43,6 @@
     <string name="back_arrow">back arrow</string>
     <string name="write_message">Write Message</string>
     <string name="mark_all_as_read">Mark all as read</string>
-<!--<<<<<<< HEAD-->
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">Settings</string>
@@ -123,6 +122,7 @@
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
 
+    <string name="pref_title_vibrate">Vibrate</string>
     <!--<string name="pref_title_vibrate">Vibrate</string>
 
     <string name="pref_title_vibrate">Vibrate</string>-->

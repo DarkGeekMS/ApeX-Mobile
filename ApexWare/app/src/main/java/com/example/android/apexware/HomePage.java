@@ -112,6 +112,9 @@ public class HomePage extends AppCompatActivity {
             return true;
           }
         });
+
+    Fragment fragment=new HomeFragment();
+    loadFragment(fragment);
   }
 
   @Override
@@ -133,33 +136,18 @@ public class HomePage extends AppCompatActivity {
 
               switch (item.getItemId()) {
                 case R.id.i_home:
-                  Toast.makeText(getApplicationContext(), "home is selected", Toast.LENGTH_SHORT)
-                      .show();
                   fragment=new HomeFragment();
                   loadFragment(fragment);
                   return true;
                 case R.id.i_apexLists:
-                { Toast.makeText(getApplicationContext(), "apexLists is selected", Toast.LENGTH_SHORT)
-                      .show();
                   fragment=new ListOfCommunityFragment();
                   loadFragment(fragment);
-                Intent i =new Intent(HomePage.this,apexLists.class);
-                startActivity(i);}
                   return true;
                 case R.id.i_notifications:
-                    try{
-                  Toast.makeText(getApplicationContext(), "notifications is selected", Toast.LENGTH_SHORT)
-                      .show();
                     fragment = new NotificationFragment();
                     loadFragment(fragment);
-                  return true;}
-                  catch (Exception e){
-                        e.printStackTrace();
-                  }
+                  return true;
                 case R.id.i_inbox:
-                  Toast.makeText(
-                          getApplicationContext(), "inbox is selected", Toast.LENGTH_SHORT)
-                      .show();
                     fragment=new MessageFragment();
                     loadFragment(fragment);
                   return true;
