@@ -40,7 +40,6 @@
     <string name="text_post_title">Text Post</string>
     <string name="image_post_title">Image Post</string>
     <string name="link_post_title">Link Post</string>
-    <string name="back_arrow">back arrow</string>
     <string name="write_message">Write Message</string>
     <string name="mark_all_as_read">Mark all as read</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -48,7 +47,6 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
-
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
@@ -56,10 +54,8 @@
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
     </string>
-
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
-
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
         <item>Always</item>
@@ -71,10 +67,8 @@
         <item>0</item>
         <item>-1</item>
     </string-array>
-
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
-
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
@@ -108,7 +102,6 @@
         <item>"It's spam or abuse"</item>
         <item>"It breaks the rules"</item>
         <item>"It's threatening self-harm or suicide"</item>
-
     </string-array>
     <string-array name="multi_select_list_preference_default_value" />
 
@@ -133,5 +126,6 @@
     <string name="reset_user_form">enter your email and password and we will send you username reset link</string>
     <string name="verify_form">Enter your verification code</string>
 
-    <!--&gt;>>>>>> 15258cc92c42444621bcfd23589299b3b1931662-->
+    <string name="back_arrow">Back Arrow</string>
+
 </resources>

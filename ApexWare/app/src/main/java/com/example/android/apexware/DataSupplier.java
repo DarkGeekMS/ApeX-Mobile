@@ -1,6 +1,7 @@
 package com.example.android.apexware;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * the interface for every function used by the service (mock up or backend) and they override these
@@ -8,7 +9,7 @@ import android.content.Context;
  *
  * @author mostafa
  */
-public interface DataSupplier {
+public interface DataSupplier  {
 
   /**
    * @param username
