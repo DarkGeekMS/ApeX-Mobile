@@ -22,6 +22,8 @@
         <activity android:name=".NewPass" />
         <activity android:name=".replytocomment"></activity>
         <activity android:name=".NewPass" />
+        <activity android:name=".test"></activity>
+        <activity android:name=".NewPass" />
         <activity android:name=".VerifyCode" />
         <activity android:name=".ForgotPass" />
         <activity android:name=".WriteMessage" />

@@ -54,7 +54,7 @@ public class RestService implements DataSupplier {
                   // storing the user in shared preferences
                   SharedPrefmanager.getInstance(context).userLogin(user);
                   Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show();
-                  Intent i = new Intent(context, HomePage.class);
+                  Intent i = new Intent(context, LoadingScreen.class);
                   context.startActivity(i);
                   flag = true;
                 }

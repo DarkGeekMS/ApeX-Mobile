@@ -38,12 +38,16 @@ public class CustomAdapterForMessages extends ArrayAdapter {
       final Messages currentMessages = messagesList.get(position);
     //set image logo
       ImageView messageLogo = (ImageView) listItem.findViewById(R.id.emailLogo);
-      if(currentMessages.isRead()){
-          messageLogo.setImageResource(R.drawable.ic_email_read);
+      if(currentMessages.isRead()==1){
+          messageLogo.setImageResource(R.drawable.ic_email_read_gray);
       }
-      else{
+      else if(currentMessages.isRead()==0){
 
           messageLogo.setImageResource(R.drawable.ic_email);
+      }
+      else
+      {
+          messageLogo.setImageResource(R.drawable.ic_email_sent);
       }
     //set mail subject
       TextView messageSubject=(TextView) listItem.findViewById(R.id.messageSubject);
@@ -53,7 +57,7 @@ public class CustomAdapterForMessages extends ArrayAdapter {
       messageContent.setText(currentMessages.getContent());
     //set sender name and creation date
       TextView messageSenderandCreationDate  =(TextView) listItem.findViewById(R.id.sender_creationdate);
-      String temp=currentMessages.getSender()+"."+currentMessages.getFormat();
+      String temp=currentMessages.getSender()+"."+currentMessages.getCreatedAgo();
       messageSenderandCreationDate.setText(temp);
 
       return listItem;

@@ -14,7 +14,7 @@ public class LoadingScreen extends AppCompatActivity {
             public void run(){
                 try{
                     sleep(4*1000);
-                    Intent i=new Intent (getBaseContext(),MainActivity.class);
+                    Intent i=new Intent (getBaseContext(),HomePage.class);
                     startActivity(i);
                     finish();
                 }

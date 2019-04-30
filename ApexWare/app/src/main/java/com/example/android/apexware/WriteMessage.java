@@ -137,7 +137,7 @@ public class WriteMessage extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        params.put("username", username);
+                        params.put("receiver", username);
                         params.put("subject", subject);
                         params.put("content", content);
                         params.put("token",token);

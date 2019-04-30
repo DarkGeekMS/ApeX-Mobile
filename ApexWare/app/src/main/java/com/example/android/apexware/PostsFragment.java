@@ -32,7 +32,7 @@ public class PostsFragment extends Fragment {
         p1.setPostId("t3_1");
         p1.setPostType(0);
         p1.setPostOwner("omar");
-        p1.setPostCreateDate(19);
+        p1.setPostCreateDate("19");
         p1.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
         p1.setApexcomName("AndroidTeam");
         p1.setPostTitle("Test this post");
@@ -42,7 +42,7 @@ public class PostsFragment extends Fragment {
         p2.setPostId("t3_1");
         p2.setPostType(1);
         p2.setPostOwner("omar");
-        p2.setPostCreateDate(19);
+        p2.setPostCreateDate("19");
         p2.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
         p2.setApexcomName("AndroidTeam");
         p2.setPostTitle("Test this post");
@@ -51,7 +51,7 @@ public class PostsFragment extends Fragment {
         p3.setPostId("t3_1");
         p3.setPostType(3);
         p3.setPostOwner("omar");
-        p3.setPostCreateDate(19);
+        p3.setPostCreateDate("19");
         p3.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
         p3.setApexcomName("AndroidTeam");
         p3.setPostTitle("Test this post");
@@ -60,7 +60,7 @@ public class PostsFragment extends Fragment {
         p4.setPostId("t3_1");
         p4.setPostType(2);
         p4.setPostOwner("omar");
-        p4.setPostCreateDate(19);
+        p4.setPostCreateDate("19");
         p4.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
         p4.setApexcomName("AndroidTeam");
         p4.setPostTitle("Test this post");
@@ -69,7 +69,7 @@ public class PostsFragment extends Fragment {
         p5.setPostId("t3_1");
         p5.setPostType(2);
         p5.setPostOwner("omar");
-        p5.setPostCreateDate(19);
+        p5.setPostCreateDate("19");
         p5.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
         p5.setApexcomName("AndroidTeam");
         p5.setPostTitle("Test this post");

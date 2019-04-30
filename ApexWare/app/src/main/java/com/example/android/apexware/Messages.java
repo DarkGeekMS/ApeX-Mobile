@@ -7,9 +7,9 @@ public class Messages {
     private String id;
     private String subject;
     private String content;
-    private boolean isRead;
+    private int isRead;
     private String sender;
-    private SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+    private String createdAgo ;
 
     public String getId() {
         return id;
@@ -27,11 +27,11 @@ public class Messages {
         this.subject = subject;
     }
 
-    public boolean isRead() {
+    public int isRead() {
         return isRead;
     }
 
-    public void setRead(boolean read) {
+    public void setRead(int read) {
         isRead = read;
     }
 
@@ -43,12 +43,12 @@ public class Messages {
         this.sender = sender;
     }
 
-    public SimpleDateFormat getFormat() {
-        return format;
+    public String getCreatedAgo() {
+        return createdAgo;
     }
 
-    public void setFormat(SimpleDateFormat format) {
-        this.format = format;
+    public void setFormat(String time) {
+        this.createdAgo = time;
     }
 
     public String getContent() {
