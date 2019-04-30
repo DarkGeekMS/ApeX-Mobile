@@ -49,6 +49,7 @@ public class UserCommunities extends AppCompatActivity {
       CustomAdapterForCommunities adapter = new CustomAdapterForCommunities(this, nameArray, imageLinks, idArray);
     listView = (ListView) findViewById(R.id.listcommunitiesid);
     listView.setAdapter(adapter);
+
   }
 
   /** return to post and discard choosing the community */

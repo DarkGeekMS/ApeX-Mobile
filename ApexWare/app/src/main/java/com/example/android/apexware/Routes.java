@@ -4,61 +4,67 @@ package com.example.android.apexware;
  */
 public interface Routes {
     //All variables are default to public,static,final
-    boolean active_mock=true;
+    boolean active_mock=false;
 
     //Server Base Address
-    String serverAddress="http://34.66.175.211//api/";
+    String serverAddress="http://35.232.3.8//api/";
 
     //Account routes
-    String deleteMessage=serverAddress+"del_msg?";//post
-    String readMessage=serverAddress+"read_msg?";//post
-    String me=serverAddress+"me?";//post
-    String updatePrefrence=serverAddress+"updateprefs?";//patch
-    String prefrence=serverAddress+"prefs?";//post
-    String information=serverAddress+"info?";//post
+    String deleteMessage=serverAddress+"DeleteMessage?";//post
+    String readMessage=serverAddress+"ReadMessage?";//post
+    String me=serverAddress+"Me?";//post
+    String updatePrefrence=serverAddress+"UpdatePreferences?";//patch
+    String prefrence=serverAddress+"GetPreferences?";//post
+    String blockList=serverAddress+"BlockList";//post
+    String information=serverAddress+"ProfileInfo?";//post
+    String InboxMessages=serverAddress+"InboxMessages?";//post
     String karma=serverAddress+"Karma?";
-    String signOut=serverAddress+"sign_out?";
-    String signUp=serverAddress+"sign_up?";
-    String signIn=serverAddress+"sign_in?";
-    String mailVerification=serverAddress+"mail_verify?";
-    String checkCode=serverAddress+"check_code?";
+    String signOut=serverAddress+"SignOut?";
+    String signUp=serverAddress+"SignUp?";
+    String signIn=serverAddress+"SignIn?";
+    String mailVerification=serverAddress+"MailVerification?";
+    String checkCode=serverAddress+"CheckCode?";
+    String changePassword=serverAddress+"ChangePassword";
+    String getUserData=serverAddress+"UserData";
 
     //Administrations
     String deleteAccount=serverAddress+"del_account?";//delete
-    String deleteUser=serverAddress+"del_user?";//delete
-    String addModerator=serverAddress+"add_moderator?";//post
+    String deleteApexcom=serverAddress+"DeleteApexcom?";//delete
+    String deleteUser=serverAddress+"DeleteUser?";//delete
+    String addModerator=serverAddress+"AddModerator?";//post
 
     //Links,Comments and Posts
     String comment=serverAddress+"comment?";//post
-    String deleteComment=serverAddress+"delete?";//delete
-    String editComment=serverAddress+"edit?";//patch
-    String reportComment=serverAddress+"report?";//post
-    String voteForComment=serverAddress+"vote?";//post
-    String lockPost=serverAddress+"lock_post?";//post
+    String deleteComment=serverAddress+"Delete?";//delete
+    String editComment=serverAddress+"EditText?";//patch
+    String reportComment=serverAddress+"Report?";//post
+    String voteForComment=serverAddress+"Vote?";//post
+    String lockPost=serverAddress+"LockPost?";//post
     String hidePost=serverAddress+"Hide?";//post
-    String savePost=serverAddress+"save?";//post
-    String moreComments=serverAddress+"moreComments?";//post
+    String savePost=serverAddress+"Save?";//post
+    String moreComments=serverAddress+"RetrieveComments?";//post
 
     //User
-    String blockUser=serverAddress+"block_user?";//post
-    String compose=serverAddress+"compose?";//post
-    String userData=serverAddress+"user_data?";//post
+    String blockUser=serverAddress+"/BlockUser?";//post
+    String compose=serverAddress+"ComposeMessage?";//post
+    String userData=serverAddress+"UserData?";//post
 
     //Moderation
-    String block=serverAddress+"block?";//post
-    String reportAction=serverAddress+"report_action?";//post
-    String reviewReports=serverAddress+"review_reports?";//post
+    String block=serverAddress+"ApexcomBlockUser?";//post
+    String reportAction=serverAddress+"IgnoreReport?";//post
+    String reviewReports=serverAddress+"ReviewReports?";//post
 
     //Apexcom
-    String about=serverAddress+"about?";//post&get
-    String submit_post=serverAddress+"submit_post?";//post
-    String subscribeApexcom=serverAddress+"subscribe?";//post
-    String siteAdmin=serverAddress+"site_admin?";//post
+    String getApexcom=serverAddress+"GetApexcoms?";//post&get
+    String about=serverAddress+"AboutApexcom?";//post&get
+    String submit_post=serverAddress+"SubmitPost?";//post
+    String subscribeApexcom=serverAddress+"Subscribe?";//post
+    String siteAdmin=serverAddress+"SiteAdmin?";//post
 
     //General
-    String sortPosts=serverAddress+"sort_posts?";//post&get
-    String searchForApexcom=serverAddress+"search?";//post&get
-    String getSubscribers=serverAddress+"get_subscribers?";//post&get
-    String getApexNames=serverAddress+"Apex_names?";
+    String sortPosts=serverAddress+"SortPosts?";//post&get
+    String searchForApexcom=serverAddress+"Search?";//post&get
+    String getSubscribers=serverAddress+"GetSubscribers?";//post&get
+    String getApexNames=serverAddress+"ApexComs?";
 
 }

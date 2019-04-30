@@ -3,6 +3,7 @@ package com.example.android.apexware;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import com.android.volley.AuthFailureError;
@@ -39,7 +40,7 @@ public class RestService implements DataSupplier {
     try {
       getResponse(
           Request.Method.GET,
-          url,
+          Routes.signIn,
           null,
           new VolleyCallback() {
             @Override
@@ -128,7 +129,7 @@ public class RestService implements DataSupplier {
    */
   @Override
   public void verify_forget_user_interface(String email, String password, final Context context) {
-    String url = "http://34.66.175.211/api/mail_verify";
+      String url = "http://34.66.175.211/api/mail_verify";
     getResponse3(
         Request.Method.POST,
         url,
@@ -206,11 +207,7 @@ public class RestService implements DataSupplier {
       final String password,
       final Context context) {
     // if everything is fine
-    StringRequest stringRequest =
-        new StringRequest(
-            Request.Method.POST,
-            url,
-            new Response.Listener<String>() {
+    StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
               @Override
               public void onResponse(String response) {
                 // if no error in response

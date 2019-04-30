@@ -7,5 +7,6 @@
     <color name="light_grey">#C0888888</color>
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="colorGray">#ccc</color>
+    <color name="Black">#000000</color>
     <color name="backGray">#DDD9D9</color>
 </resources>

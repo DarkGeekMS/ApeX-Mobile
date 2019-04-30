@@ -5,15 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".postsandcomments">
+    tools:context=".postsandcomments"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
-       <!-- <ScrollView
+        <!-- <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/scrollView">
@@ -197,8 +198,19 @@
             android:layout_height="match_parent"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:groupIndicator="@null"
-            >
-        </ExpandableListView>
+            android:groupIndicator="@null"></ExpandableListView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Add comment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorGray"
+            android:focusableInTouchMode="false"
+            android:inputType="none"
+            android:id="@+id/addcomment"/>
+
     </RelativeLayout>
 </LinearLayout>

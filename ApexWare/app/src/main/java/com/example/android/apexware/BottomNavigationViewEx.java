@@ -23,7 +23,8 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 /** Created by yu on 2016/11/10. */
-public class BottomNavigationViewEx extends BottomNavigationView {
+public class
+BottomNavigationViewEx extends BottomNavigationView {
   // used for animation
   private float mShiftAmount;
   private float mScaleUpFactor;

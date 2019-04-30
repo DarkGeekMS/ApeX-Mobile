@@ -6,7 +6,6 @@ import android.widget.EditText;
 /**
  * this class is a base class that 2 kinds of services inherit it it contain methods that only call
  * the interface methods using the inherited supplier
- *
  * @author mostafa
  */
 public class DepandantClass {

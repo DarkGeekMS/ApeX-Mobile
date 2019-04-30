@@ -29,6 +29,7 @@ public class CustomAdapterForCommunities extends BaseAdapter {
   // to reference the Activity
   private final Activity context;
 
+
   // to store the list of communities names
   private  String[] nameArray=new String[] {"gggg", "hhhhh", "LLLLLL"};
 
@@ -69,12 +70,12 @@ public class CustomAdapterForCommunities extends BaseAdapter {
 
     // this code gets references to objects in the listview_row.xml file
     TextView nameTextField = (TextView) rowView.findViewById(R.id.community_name_TV);
-    TextView idHolder = (TextView) rowView.findViewById(R.id.idcom);
+    //TextView idHolder = (TextView) rowView.findViewById(R.id.idcom);
     ImageView imageView = (ImageView) rowView.findViewById(R.id.globeIMG);
 
     // this code sets the values of the objects to values from the arrays
     nameTextField.setText(nameArray[position]);
-    idHolder.setText(idArray[position]);
+    //idHolder.setText(idArray[position]);
     Picasso.get().load(imageLinkArray[position]).into(imageView);
 
     return rowView;
@@ -92,6 +93,7 @@ public class CustomAdapterForCommunities extends BaseAdapter {
   public int getCount() {
     return idArray.length;
   }
+
 
   @Nullable
   @Override

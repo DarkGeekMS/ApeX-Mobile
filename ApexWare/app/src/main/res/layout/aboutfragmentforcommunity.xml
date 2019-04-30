@@ -1,0 +1,32 @@
+<!--<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollojt"
+    android:fillViewport="true" >-->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <ExpandableListView
+            android:id="@+id/Ruleslist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rulesheader"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:groupIndicator="@null"></ExpandableListView>
+
+        <ListView
+            android:layout_below="@+id/modsheader"
+            android:id="@+id/moderators"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            >
+        </ListView>
+    </LinearLayout>
+<!--
+</ScrollView>-->

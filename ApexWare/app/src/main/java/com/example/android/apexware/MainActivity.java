@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
   Button login;
   Button signup;
   Button forgot_pass;
+
   ToggleButton toggle_btn;
   EditText editTextPassword;
   EditText editTextUsername;
@@ -104,14 +105,17 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onClick(View v) {
             if (passwordCheck()) {
-              if(
+                      try{
+                          int x=0;
                   finalRestClient.login(
                       editTextUsername.getText().toString(),
                       editTextPassword.getText().toString(),
-                      getApplicationContext()))
-              {
+                      getApplicationContext());}
+                      catch (Exception e){
+                          e.printStackTrace();
+                      }
                   Intent i=new Intent(getApplicationContext(), HomePage.class);//only used when debug
-                  startActivity(i);}
+                  startActivity(i);
             } else {
               Toast.makeText(
                       getApplicationContext(),

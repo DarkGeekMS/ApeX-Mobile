@@ -1,5 +1,8 @@
 package com.example.android.apexware;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -57,8 +60,8 @@ public class postsandcomments extends AppCompatActivity {
     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorGray));
-    ExpandableListView commentsList = (ExpandableListView) findViewById(R.id.listofcomments);
-    ArrayList<Comment> commentArrayList = new ArrayList();
+    ExpandableListView commentsList =  findViewById(R.id.listofcomments);
+    final ArrayList<Comment> commentArrayList = new ArrayList();
     ArrayList<Comment> repliesArrayList = new ArrayList();
     HashMap<Comment, List<Comment>> listHashMap = new HashMap<>();
     /** * fake data */
@@ -135,7 +138,13 @@ public class postsandcomments extends AppCompatActivity {
                                       });}
                             // we can use item name to make intent for the new responces
                             if(item.getItemId()==R.id.hidepost){
-                              hidePost(post1.getPostId(),Request.Method.GET, null,
+                                //test,request was working
+                                Intent returnIntent = new Intent();
+                                returnIntent.putExtra("id",post1.getPostId());
+                                setResult(Activity.RESULT_OK,returnIntent);
+                                finish();
+                                //end test
+                             /* hidePost(post1.getPostId(),Request.Method.GET, null,
                                       new  VolleyCallback(){
                                         @Override
                                         public void onSuccessResponse(String result) {
@@ -147,12 +156,52 @@ public class postsandcomments extends AppCompatActivity {
                                             User user = new User(response.getString("token"));
                                             // storing the user in shared preferences
                                             SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                                              Intent intent = new Intent();
+                                              intent.putExtra("editTextValue", post1.getPostId());
+                                              setResult(Integer.parseInt(post1.getPostId()), intent);
+                                              finish();
                                           } catch (JSONException e) {
                                             e.printStackTrace();
                                           }
                                         }
-                                      });
+                                      });*/
                             }
+                              if(item.getItemId()==R.id.reportpost){
+                                  final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                  AlertDialog.Builder builder = new AlertDialog.Builder(postsandcomments.this);
+                                  builder.setTitle("report");
+                                  builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                          if (isChecked) {
+                                              // If the user checked the item, add it to the selected items
+                                              selectedItems.add(which);
+                                          } else if (selectedItems.contains(which)) {
+                                              // Else, if the item is already in the array, remove it
+                                              selectedItems.remove(Integer.valueOf(which));
+                                          }
+                                      }
+                                  });
+                                  builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int id) {
+                                          // User clicked send, we should send the selectedItems results to the server
+                                          Toast.makeText(postsandcomments.this,"post is reported",Toast.LENGTH_SHORT).show();
+
+                                      }
+                                  })
+                                          .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                              @Override
+                                              public void onClick(DialogInterface dialog, int id) {
+                                                  //report canceled
+                                                  Toast.makeText(postsandcomments.this,"report is canceled",Toast.LENGTH_SHORT).show();
+
+                                              }
+                                          });
+
+                                  builder.show();
+
+                              }
                             return true;
                           }
                         });
@@ -280,70 +329,21 @@ public class postsandcomments extends AppCompatActivity {
 
               }
             });
+TextView addcomment=findViewById(R.id.addcomment);
+addcomment.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(postsandcomments.this ,addCommentActivity.class);
+        Gson gson = new Gson();
+        String ID = gson.toJson(post1.getPostId());
+        intent.putExtra("postID", ID); // sending the post to next activity
+        startActivity(intent);
+    }
+});
 
 
   }
 
-  /**
-   * upvote comment of a post
-   * @param v
-   */
-  public void upvotecomment(View v) {
-    TextView counter = findViewById(R.id.votecounterforcomment);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button up = findViewById(R.id.upvotecomment);
-    Button down = findViewById(R.id.downvotecomment);
-    if (down.getCurrentTextColor() == Color.RED) {
-      down.setTextColor(Color.GRAY);
-    }
-    up.setTextColor(Color.BLUE);
-    i++;
-    counter.setText(Integer.toString(i));
-  }
-  /**
-   * downvote comment of a post
-   * @param v
-   */
-  public void downvotecomment(View v) {
-    TextView counter = findViewById(R.id.votecounterforcomment);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button down = findViewById(R.id.downvotecomment);
-    Button up = findViewById(R.id.upvotecomment);
-    if (up.getCurrentTextColor() == Color.BLUE) {
-      up.setTextColor(Color.GRAY);
-    }
-    down.setTextColor(Color.RED);
-    i--;
-    counter.setText(Integer.toString(i));
-  }
-  /**
-   * upvote reply of a comment
-   * @param v
-   */
-  public void upvotereply(View v) {
-    TextView counter = findViewById(R.id.votecounterforreply);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button up = findViewById(R.id.upvotereply);
-    Button down = findViewById(R.id.downvotereply);
-    if (down.getCurrentTextColor() == Color.RED) {
-      down.setTextColor(Color.GRAY);
-    }
-    up.setTextColor(Color.BLUE);
-    i++;
-    counter.setText(Integer.toString(i));
-  }
-  public void downvotereply(View v) {
-    TextView counter = findViewById(R.id.votecounterforreply);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button down = findViewById(R.id.downvotereply);
-    Button up = findViewById(R.id.upvotereply);
-    if (up.getCurrentTextColor() == Color.BLUE) {
-      up.setTextColor(Color.GRAY);
-    }
-    down.setTextColor(Color.RED);
-    i--;
-    counter.setText(Integer.toString(i));
-  }
   private void setuoVideoSetting(WebView temp, String url) {
     String frameVideo =
             "<html><body><br><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"
@@ -364,6 +364,13 @@ public class postsandcomments extends AppCompatActivity {
     displayYoutubeVideo.getSettings().setLoadWithOverviewMode(true);
     displayYoutubeVideo.getSettings().setUseWideViewPort(true);
   }
+    /**
+     * upvote post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void upvote(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
@@ -383,7 +390,6 @@ public class postsandcomments extends AppCompatActivity {
                           if (response != null) {
                               callback.onSuccessResponse(response);
                               Toast.makeText(getApplicationContext(), "you upvoted the post", Toast.LENGTH_SHORT).show();
-
                           } else {
                             Toast.makeText(
                                     getApplicationContext(),
@@ -417,6 +423,14 @@ public class postsandcomments extends AppCompatActivity {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
+
+    /**
+     * downvote post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void downvote(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
@@ -470,6 +484,14 @@ public class postsandcomments extends AppCompatActivity {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
+
+    /**
+     * save post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void savePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
@@ -522,6 +544,14 @@ public class postsandcomments extends AppCompatActivity {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
+
+    /**
+     * hide post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void hidePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
@@ -573,7 +603,70 @@ public class postsandcomments extends AppCompatActivity {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
-}
+    /**
+     * upvote comment of a post
+     * @param v
+     */
+    public void upvotecomment(View v) {
+        TextView counter = findViewById(R.id.votecounterforcomment);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button up = findViewById(R.id.upvotecomment);
+        Button down = findViewById(R.id.downvotecomment);
+        if (down.getCurrentTextColor() == Color.RED) {
+            down.setTextColor(Color.GRAY);
+        }
+        up.setTextColor(Color.BLUE);
+        i++;
+        counter.setText(Integer.toString(i));
+    }
+    /**
+     * downvote comment of a post
+     * @param v
+     */
+    public void downvotecomment(View v) {
+        TextView counter = findViewById(R.id.votecounterforcomment);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button down = findViewById(R.id.downvotecomment);
+        Button up = findViewById(R.id.upvotecomment);
+        if (up.getCurrentTextColor() == Color.BLUE) {
+            up.setTextColor(Color.GRAY);
+        }
+        down.setTextColor(Color.RED);
+        i--;
+        counter.setText(Integer.toString(i));
+    }
+    /**
+     * upvote reply of a comment
+     * @param v
+     */
+    public void upvotereply(View v) {
+        TextView counter = findViewById(R.id.votecounterforreply);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button up = findViewById(R.id.upvotereply);
+        Button down = findViewById(R.id.downvotereply);
+        if (down.getCurrentTextColor() == Color.RED) {
+            down.setTextColor(Color.GRAY);
+        }
+        up.setTextColor(Color.BLUE);
+        i++;
+        counter.setText(Integer.toString(i));
+    }
+    /**
+     * downvote reply of a comment
+     * @param v
+     */
+    public void downvotereply(View v) {
+        TextView counter = findViewById(R.id.votecounterforreply);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button down = findViewById(R.id.downvotereply);
+        Button up = findViewById(R.id.upvotereply);
+        if (up.getCurrentTextColor() == Color.BLUE) {
+            up.setTextColor(Color.GRAY);
+        }
+        down.setTextColor(Color.RED);
+        i--;
+        counter.setText(Integer.toString(i));
+    }}
 
 
 

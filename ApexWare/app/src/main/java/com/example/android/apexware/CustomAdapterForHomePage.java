@@ -1,5 +1,8 @@
 package com.example.android.apexware;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Movie;
 import android.view.LayoutInflater;
@@ -31,21 +34,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.app.PendingIntent.getActivity;
 import static android.view.View.GONE;
 
 public class CustomAdapterForHomePage extends ArrayAdapter {
     List<Post> hiddenPotsList = new ArrayList<>();
-
     /**
    * this class to make custom list to be for the post in form of card view layout it extend from
    * array adapter base class it only list of post in it
    */
+
   // to reference the Activity
   private final Activity context;
   String value;
   // list array of post objects
   List<Post> potsList = new ArrayList<>();
-
   /**
    * this is constructor for the this class it the setup each item with predefined xml layout
    *
@@ -57,7 +60,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     this.context = context;
     potsList = list;
   }
-
   /**
    * this is predefined method to get position of each item in list in service and assign some
    * attributes and events to it
@@ -114,6 +116,44 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                         });
 
                             }
+                              if(item.getItemId()==R.id.reportpost){
+                                 final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                  AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                  builder.setTitle("report");
+                                  builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                          if (isChecked) {
+                                              // If the user checked the item, add it to the selected items
+                                              selectedItems.add(which);
+                                          } else if (selectedItems.contains(which)) {
+                                              // Else, if the item is already in the array, remove it
+                                              selectedItems.remove(Integer.valueOf(which));
+                                          }
+                                      }
+                                  });
+                                    builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int id) {
+                                          // User clicked send, we should send the selectedItems results to the server
+                                          Toast.makeText(context,"post is reported",Toast.LENGTH_SHORT).show();
+
+                                      }
+                                  })
+                                          .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                              @Override
+                                              public void onClick(DialogInterface dialog, int id) {
+                                                //report canceled
+                                                  Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
+
+                                              }
+                                          });
+
+                                   builder.show();
+
+                              }
+
+
                             return true;
                           }
                         });
@@ -124,11 +164,9 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     // set apexcom logo
     ImageView apexcomLogo = (ImageView) listItem.findViewById(R.id.apexcomlogo);
     Picasso.get().load(currentPost.getApexcomLogo()).resize(50, 50).into(apexcomLogo);
-
     // set apexcom name
     TextView apexcomName = (TextView) listItem.findViewById(R.id.apexcomName);
     apexcomName.setText(currentPost.getApexcomName());
-
     // set post owner and time of created post
     TextView postOwnerAndCreatedTime =
             (TextView) listItem.findViewById(R.id.apexcomOwnerNameAndTimeCreated);
@@ -214,10 +252,8 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           });
               }
             });
-
     return listItem;
   };
-
   /**
    *
    *
@@ -246,7 +282,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
       videoLinkView.setVisibility(View.VISIBLE);
     }
   }
-
   /**
    *
    *
@@ -306,6 +341,13 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     displayYoutubeVideo.getSettings().setLoadWithOverviewMode(true);
     // displayYoutubeVideo.getSettings().setUseWideViewPort(true);
   }
+    /**
+     * upvote post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
   public void upVotePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
@@ -412,7 +454,14 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-  public void savePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
+    /**
+     * save post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
+    public void savePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
@@ -464,7 +513,14 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-  public void hidePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
+    /**
+     * hide post request
+     * @param postID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
+    public void hidePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();

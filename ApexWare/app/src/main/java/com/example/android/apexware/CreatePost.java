@@ -50,6 +50,7 @@ public class CreatePost extends AppCompatActivity {
 
   public static final int REQUEST_GET_SINGLE_FILE = 1;
   private static final int TAKE_PICTURE = 2;
+  private static final String TAG = "create post";
   public static int stPosition = -1;
   Uri imageUri;
   ImageButton back_btn;
@@ -60,7 +61,7 @@ public class CreatePost extends AppCompatActivity {
   EditText post_title;
   TextView title;
   ConstraintLayout choose_image;
-  String communityID = "empty";
+  String communityID = "t5_1";
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
@@ -118,7 +119,7 @@ public class CreatePost extends AppCompatActivity {
     CustomAdapterForCommunities adapter = new CustomAdapterForCommunities(this);
     if (stPosition != -1) {
       choose_community.setText(adapter.getName(stPosition));
-      communityID = adapter.getItem(stPosition).toString();
+      // communityID = adapter.getItem(stPosition).toString();
     }
 
     // when post button is pressed .. validate then send request
@@ -181,11 +182,9 @@ public class CreatePost extends AppCompatActivity {
 
   public void takeData(
       String type, String title, String mainPost, String communityID, String token) {
-
-    String url = "http://34.66.175.211/api/create_post";
     getResponse(
         Request.Method.POST,
-        url,
+        Routes.submit_post,
         null,
         new VolleyCallback() {
           @Override
@@ -203,7 +202,7 @@ public class CreatePost extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), HomePage.class));
               } else {
                 Toast.makeText(
-                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                        getApplicationContext(), "Unsuccessful onsuccess ", Toast.LENGTH_SHORT)
                     .show();
               }
 
@@ -242,17 +241,19 @@ public class CreatePost extends AppCompatActivity {
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "onErrorResponse: ",error );
                 Toast.makeText(
-                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                        getApplicationContext(), "Unsuccessful get responce", Toast.LENGTH_SHORT)
                     .show();
               }
             }) {
           @Override
           protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
+            params.put("ApexCom_id", communityID);
             params.put("title", title);
-            params.put("content", mainPost);
-            params.put("apexcomid", communityID);
+            if (type.equals("text")) params.put("body", mainPost);
+            else if (type.equals("link")) params.put("video_url", mainPost);
             params.put("token", token);
             return params;
           }
@@ -279,8 +280,8 @@ public class CreatePost extends AppCompatActivity {
   }
 
   /**
-   * get data returned from intent and preview it on the image view
-   * from camera or gallery
+   * get data returned from intent and preview it on the image view from camera or gallery
+   *
    * @param requestCode request defined previously to ensure consistency
    * @param resultCode defined in activity.java and used as a check
    * @param data : intent opening the gallery and returning with image

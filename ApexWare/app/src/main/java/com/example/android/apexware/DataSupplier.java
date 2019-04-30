@@ -1,6 +1,7 @@
 package com.example.android.apexware;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * the interface for every function used by the service (mock up or backend) and they override these
@@ -38,7 +39,6 @@ public interface DataSupplier {
 
   /**
    * used in cases of forgetting password to send verify mail to the user
-   *
    * @param email user email
    * @param username user name
    */
@@ -46,7 +46,6 @@ public interface DataSupplier {
 
   /**
    * used in cases of forgetting username to send verify mail to the user
-   *
    * @param email user email
    * @param password the password user knows
    */
