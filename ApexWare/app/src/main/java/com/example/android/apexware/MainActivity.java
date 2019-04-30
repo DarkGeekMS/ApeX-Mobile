@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
   ToggleButton toggle_btn;
   EditText editTextPassword;
   EditText editTextUsername;
-  static boolean successFlag = false;
+  static boolean successFlag=false;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onClick(View v) {
             if (passwordCheck()) {
-              if (!active_mock) {
+                login.setEnabled(false); // disable button to avoid multiple requests
+                if (!active_mock) {
                 try {
                   getResponse(
                       Request.Method.GET,
@@ -153,19 +154,16 @@ public class MainActivity extends AppCompatActivity {
             } else {
               Toast.makeText(
                       getApplicationContext(),
-                      "Password or username don't meet the standers",
+                      "Password or username don't meet the standards",
                       Toast.LENGTH_SHORT)
                   .show();
             }
           }
         });
   }
-  /*
-   * opens the activity sign up on pressing the button sign up
-   */
+  /** opens the activity sign up on pressing the button sign up */
   public void openActivity_sign_up() {
-    Intent intent = new Intent(this, SignUp.class);
-    startActivity(intent);
+    startActivity(new Intent(this, SignUp.class));
   }
   /** toggle button affect viewing password as text or as dots */
   public void onToggleClick(View v) {
@@ -188,25 +186,31 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * check username and password
+   *
+   * @return true if username and password are valid
+   */
   public boolean passwordCheck() {
     // first getting the values
     final String username = editTextUsername.getText().toString();
     final String password = editTextPassword.getText().toString();
 
-    // validating inputs
-    if (TextUtils.isEmpty(username)) {
-      editTextUsername.setError("Please enter your username");
-      editTextUsername.requestFocus();
-      return false;
-    }
-    if (TextUtils.isEmpty(password)) {
-      editTextPassword.setError("Please enter your password");
-      editTextPassword.requestFocus();
-      return false;
-    }
-    return true;
+      // validating inputs
+      if (TextUtils.isEmpty(username)) {
+          editTextUsername.setError("Please enter your username");
+          editTextUsername.requestFocus();
+          return false;
+      }
+      if (TextUtils.isEmpty(password)) {
+          editTextPassword.setError("Please enter your password");
+          editTextPassword.requestFocus();
+          return false;
+      }
+      return true;
   }
 
+  /** go to another activity to reset password and enter other data (email and pass) * */
   public void forgot_user_name(View view) {
     // COMPLETED TODO IMPLEMENT
     Intent intent = new Intent(MainActivity.this, ForgotPass.class);
@@ -214,13 +218,13 @@ public class MainActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
+  /** go to another activity to reset password and enter other data (email and username) * */
   public void forgot_password(View view) {
     // COMPLETED TODO IMPLEMENT
     Intent intent = new Intent(MainActivity.this, ForgotPass.class);
     intent.putExtra("type", "pass");
     startActivity(intent);
   }
-
   public void getResponse(
       int method,
       String url,

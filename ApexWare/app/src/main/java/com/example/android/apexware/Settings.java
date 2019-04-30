@@ -32,7 +32,8 @@ public class Settings extends AppCompatActivity {
   }
 
   public void open_notifications(View view) {
-    // todo open notifications activity
+    // COMPLETED todo open notifications activity
+    startActivity(new Intent(this,NotificationSettings.class));
   }
 
     /**open accounts pop up when accounts button is chosen in settings*/
@@ -51,9 +52,12 @@ public class Settings extends AppCompatActivity {
     button.getLocationOnScreen(location);
 
     // Initialize the Point with x, and y positions
+    Display display = getWindowManager().getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
     p = new Point();
-    p.x = location[0];
-    p.y = location[1];
+    p.x = size.x/2;
+    p.y = size.y;
   }
 
   // Get the x and y position after the button is draw on screen
@@ -84,7 +88,7 @@ public class Settings extends AppCompatActivity {
 
     // Some offset to align the popup a bit to the right, and a bit down, relative to button's
     // position.
-    int OFFSET_X = 30;
+    int OFFSET_X = 0;
     int OFFSET_Y = 30;
 
     // Clear the default translucent background

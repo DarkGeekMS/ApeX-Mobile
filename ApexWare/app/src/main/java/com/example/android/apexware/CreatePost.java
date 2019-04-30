@@ -135,7 +135,7 @@ public class CreatePost extends AppCompatActivity {
                   main_post.getText().toString(),
                   communityID,
                   token);
-
+              post_btn.setEnabled(false);//turn off button to avoid multiple requests
               // TODO: 13/04/2019  complete create post request with image and correct order
             }
           }
@@ -245,6 +245,7 @@ public class CreatePost extends AppCompatActivity {
                 Toast.makeText(
                         getApplicationContext(), "Unsuccessful get responce", Toast.LENGTH_SHORT)
                     .show();
+                post_btn.setEnabled(true); //re enable button
               }
             }) {
           @Override

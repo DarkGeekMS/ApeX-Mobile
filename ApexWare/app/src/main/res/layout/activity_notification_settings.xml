@@ -58,9 +58,9 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/private_msg_tv"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_marginTop="8dp"
         android:drawableStart="@drawable/inbox"
         android:drawableTint="@color/light_grey"
@@ -75,13 +75,93 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/private_msg_checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:buttonTint="@color/myblue"
         android:checked="true"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
-        app:layout_constraintEnd_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="@+id/textView6" />
+        app:layout_constraintBottom_toBottomOf="@+id/private_msg_tv"
+        app:layout_constraintEnd_toEndOf="@+id/private_msg_tv"
+        app:layout_constraintTop_toTopOf="@+id/private_msg_tv" />
+
+    <TextView
+        android:id="@+id/comments_tv"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:drawableStart="@drawable/comment"
+        android:drawableTint="@color/light_grey"
+        android:background="@color/white"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
+        android:text="   Comments on your posts"
+        android:paddingStart="5dp"
+        android:textSize="14sp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/private_msg_tv" />
+
+    <CheckBox
+        android:id="@+id/comments_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:buttonTint="@color/myblue"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@+id/comments_tv"
+        app:layout_constraintEnd_toEndOf="@+id/comments_tv"
+        app:layout_constraintTop_toTopOf="@+id/comments_tv" />
+
+    <TextView
+        android:id="@+id/replies_tv"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:drawableStart="@drawable/reply"
+        android:drawableTint="@color/light_grey"
+        android:background="@color/white"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
+        android:text="   Replies to your comments"
+        android:paddingStart="5dp"
+        android:textSize="14sp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/comments_tv" />
+
+    <CheckBox
+        android:id="@+id/replies_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:buttonTint="@color/myblue"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@+id/replies_tv"
+        app:layout_constraintEnd_toEndOf="@+id/replies_tv"
+        app:layout_constraintTop_toTopOf="@+id/replies_tv" />
+    <TextView
+        android:id="@+id/mentions_tv"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:drawableStart="@drawable/profile"
+        android:drawableTint="@color/light_grey"
+        android:background="@color/white"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
+        android:text="   Mentions of your username"
+        android:paddingStart="5dp"
+        android:textSize="14sp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/replies_tv" />
+
+    <CheckBox
+        android:id="@+id/mentions_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:buttonTint="@color/myblue"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@+id/mentions_tv"
+        app:layout_constraintEnd_toEndOf="@+id/mentions_tv"
+        app:layout_constraintTop_toTopOf="@+id/mentions_tv" />
 </android.support.constraint.ConstraintLayout>

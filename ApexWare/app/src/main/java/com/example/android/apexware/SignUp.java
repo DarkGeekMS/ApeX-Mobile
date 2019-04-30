@@ -26,7 +26,6 @@ import java.util.Map;
 
 /**
  * where user can create a new account if he can't login or using the app for first time
- *
  * @author mostafa
  */
 public class SignUp extends AppCompatActivity {
@@ -49,13 +48,67 @@ public class SignUp extends AppCompatActivity {
     editTextUsername = (EditText) findViewById(R.id.username_text_input);
     editTextPassword = (EditText) findViewById(R.id.password_text_input);
 
+    final String username = editTextUsername.getText().toString().trim();
+    final String email = editTextEmail.getText().toString().trim();
+    final String password = editTextPassword.getText().toString().trim();
     try {
-
       create_acc.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              registerUser();
+              if (registerUser(username, email, password)) {
+                getResponse(
+                    Request.Method.POST,
+                    Routes.signUp,
+                    null,
+                    new VolleyCallback() {
+                      @Override
+                      public void onSuccessResponse(String response) {
+                        try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+
+                          // if no error in response
+                          if (response != null) {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "SignUp Successfully",
+                                    Toast.LENGTH_SHORT)
+                                .show();
+
+                            // getting the user from the response
+                            JSONObject userJson = obj.getJSONObject("user");
+                            // JSONObject userJson1 = obj.getJSONObject("token");
+                            // creating a new user object
+                            User user =
+                                new User(
+                                    userJson.getString("email"),
+                                    userJson.getString("username"),
+                                    userJson.getString("id"),
+                                    obj.getString("token"));
+                            // storing the user in shared preferences
+                            SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
+                            // starting the profile activity
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), HomePage.class));
+                          } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Unsuccessful operation",
+                                    Toast.LENGTH_SHORT)
+                                .show();
+                          }
+
+                        } catch (JSONException e) {
+                          e.printStackTrace();
+                        }
+                      }
+                    },
+                    username,
+                    password,
+                    email);
+                create_acc.setEnabled(false); // to avoid multiple requests
+              }
             }
           });
     } catch (Exception e) {
@@ -97,81 +150,33 @@ public class SignUp extends AppCompatActivity {
     }
   }
 
-  /**
-   * check all fields are filled with data , connect to server , fill jason and send the request to
-   * the server with all data needed
-   *
-   * @author mazen
-   */
-  private void registerUser() {
-    final String username = editTextUsername.getText().toString().trim();
-    final String email = editTextEmail.getText().toString().trim();
-    final String password = editTextPassword.getText().toString().trim();
+  /** check all fields are filled with data and valid */
+  public boolean registerUser(String username, String email, String password) {
     // first we will do the validations
 
     if (TextUtils.isEmpty(username)) {
       editTextUsername.setError("Please enter username");
       editTextUsername.requestFocus();
-      return;
+      return false;
     }
 
     if (TextUtils.isEmpty(email)) {
       editTextEmail.setError("Please enter your email");
       editTextEmail.requestFocus();
-      return;
+      return false;
     }
 
     if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
       editTextEmail.setError("Enter a valid email");
       editTextEmail.requestFocus();
-      return;
+      return false;
     }
     if (TextUtils.isEmpty(password)) {
       editTextPassword.setError("Enter a password");
       editTextPassword.requestFocus();
-      return;
+      return false;
     }
-    getResponse(Request.Method.POST, Routes.signUp,null, new VolleyCallback(){
-            @Override
-            public void onSuccessResponse(String response) {
-                try {
-                  // converting response to json object
-                  JSONObject obj = new JSONObject(response);
-
-              // if no error in response
-              if (response != null) {
-                Toast.makeText(getApplicationContext(), "SignUp Successfully", Toast.LENGTH_SHORT)
-                    .show();
-
-                // getting the user from the response
-                JSONObject userJson = obj.getJSONObject("user");
-                // JSONObject userJson1 = obj.getJSONObject("token");
-                // creating a new user object
-                User user =
-                    new User(
-                        userJson.getString("email"),
-                        userJson.getString("username"),
-                        userJson.getString("id"),
-                        obj.getString("token"));
-                // storing the user in shared preferences
-                SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
-                // starting the profile activity
-                finish();
-                startActivity(new Intent(getApplicationContext(), HomePage.class));
-              } else {
-                Toast.makeText(
-                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
-                    .show();
-              }
-
-            } catch (JSONException e) {
-              e.printStackTrace();
-            }
-          }
-        },
-        username,
-        password,
-        email);
+    return true;
   }
 
   public void getResponse(
@@ -195,10 +200,9 @@ public class SignUp extends AppCompatActivity {
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
-                Toast.makeText(
-                        getApplicationContext(), "Server Error", Toast.LENGTH_SHORT)
-                    .show();
+                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
                 error.getMessage();
+                create_acc.setEnabled(true); // reset button to send another request
               }
             }) {
           @Override

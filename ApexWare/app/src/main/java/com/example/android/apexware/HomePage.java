@@ -101,8 +101,7 @@ public class HomePage extends AppCompatActivity {
             if (menuItem.getItemId() == R.id.myProfile)
               startActivity(new Intent(getApplicationContext(), Profile.class));
             if (menuItem.getItemId() == R.id.setting)
-              Toast.makeText(getApplicationContext(), "Setting has been choosed", Toast.LENGTH_LONG)
-                  .show();
+              startActivity(new Intent(getApplicationContext(), Settings.class));
             // close drawer when item is tapped
             drawerLayout.closeDrawers();
 

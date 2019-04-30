@@ -36,7 +36,6 @@ public class RestService implements DataSupplier {
   @Override
   public boolean login_interface(
       final String username, final String password, final Context context) {
-    String url = "http://35.232.3.8//api/sign_in?";
     try {
       getResponse(
           Request.Method.GET,
@@ -165,10 +164,9 @@ public class RestService implements DataSupplier {
      */
     @Override
     public String confirmCode_interface(String email, String code,final Context context) {
-        String url = "http://34.66.175.211/api/code_check";
         getResponse4(
                 Request.Method.POST,
-                url,
+                Routes.checkCode,
                 null,
                 new VolleyCallback() {
                     @Override
