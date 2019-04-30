@@ -39,10 +39,11 @@ public class CustomAdapterForMessages extends ArrayAdapter {
     //set image logo
       ImageView messageLogo = (ImageView) listItem.findViewById(R.id.emailLogo);
       if(currentMessages.isRead()){
-          Picasso.get().load(R.drawable.ic_email_read).resize(50, 50).into(messageLogo);
+          messageLogo.setImageResource(R.drawable.ic_email_read);
       }
       else{
-          Picasso.get().load(R.drawable.ic_email).resize(50, 50).into(messageLogo);
+
+          messageLogo.setImageResource(R.drawable.ic_email);
       }
     //set mail subject
       TextView messageSubject=(TextView) listItem.findViewById(R.id.messageSubject);

@@ -33,8 +33,8 @@ public class WriteMessage extends AppCompatActivity {
     EditText editTextReciever;
     EditText editTextSubject;
     EditText editTextContent;
-    //User user = SharedPrefmanager.getInstance(this).getUser();
-   //final String token=user.getToken();
+    User user = SharedPrefmanager.getInstance(this).getUser();
+    final String token=user.getToken();
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,45 +72,39 @@ public class WriteMessage extends AppCompatActivity {
         return true;
     }
     public void sendMessage (MenuItem item){
-        Toast.makeText(this,"you pressed send button",Toast.LENGTH_SHORT).show();
-    }
-    /*public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.:
-                getResponse(Request.Method.POST,
-                        Routes.InboxMessages,
-                        null,
-                        new VolleyCallback(){
-                            @Override
-                            public void onSuccessResponse(String response) {
-                                try {
-                                    // converting response to json object
-                                    JSONObject obj = new JSONObject(response);
+        getResponse(Request.Method.POST,
+                Routes.compose,
+                null,
+                new VolleyCallback(){
+                    @Override
+                    public void onSuccessResponse(String response) {
+                        try {
+                            // converting response to json object
+                            JSONObject obj = new JSONObject(response);
 
-                                    // if no error in response
-                                    if (response != null) {
-                                        // getting the result from the response
-                                        String temp=obj.getString("id");
-                                        if(temp!="Receiver id is not found"){
-                                            Toast.makeText(getApplicationContext(),"Successfuly sent",Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(
-                                                getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
-                                                .show();
-                                    }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                            // if no error in response
+                            if (response != null) {
+                                // getting the result from the response
+                                String temp=obj.getString("id");
+                                if(temp!="Receiver id is not found"){
+                                    int x=0;
+                                    Toast.makeText(getApplicationContext(),"Successfuly sent",Toast.LENGTH_SHORT).show();
                                 }
+                            } else {
+                                int x=0;
+                                Toast.makeText(
+                                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                                        .show();
                             }
-                        },editTextReciever.getText().toString().trim(),
-                          editTextSubject.getText().toString().trim(),
-                          editTextContent.getText().toString().trim(),token);
-                return true;
-                }
-        return super.onOptionsItemSelected(item);
-    }*/
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },editTextReciever.getText().toString().trim(),
+                editTextSubject.getText().toString().trim(),
+                editTextContent.getText().toString().trim(),token);
+    }
     public void getResponse(
             int method,
             String url,
@@ -133,6 +127,7 @@ public class WriteMessage extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                int x=0;
                                 Toast.makeText(
                                         getApplicationContext(), "Server Error", Toast.LENGTH_SHORT)
                                         .show();
