@@ -17,7 +17,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
             <ImageButton
-                android:id="@+id/cancelcomment"
+                android:id="@+id/cancelreplytocomment"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_weight="0.5"
@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
-                    android:text="Add comment"
+                    android:text="Reply"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:layout_marginStart="8dp"
@@ -55,10 +55,29 @@
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/commentownernametoreply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="comment owner name"
+                android:textColor="@color/myblue"/>
+            <TextView
+                android:id="@+id/commentcontenttoreply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="comment content"
+                android:textSize="20dp"
+                android:textColor="@color/Black"/>
+
+        </LinearLayout>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your comment"
+            android:hint="Your reply"
             />
     </LinearLayout>
 

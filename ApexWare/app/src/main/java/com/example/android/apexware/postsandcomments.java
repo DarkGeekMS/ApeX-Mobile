@@ -61,7 +61,7 @@ public class postsandcomments extends AppCompatActivity {
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorGray));
     ExpandableListView commentsList =  findViewById(R.id.listofcomments);
-    ArrayList<Comment> commentArrayList = new ArrayList();
+    final ArrayList<Comment> commentArrayList = new ArrayList();
     ArrayList<Comment> repliesArrayList = new ArrayList();
     HashMap<Comment, List<Comment>> listHashMap = new HashMap<>();
     /** * fake data */
@@ -166,7 +166,6 @@ public class postsandcomments extends AppCompatActivity {
                                         }
                                       });*/
                             }
-
                               if(item.getItemId()==R.id.reportpost){
                                   final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
                                   AlertDialog.Builder builder = new AlertDialog.Builder(postsandcomments.this);
@@ -342,71 +341,9 @@ addcomment.setOnClickListener(new View.OnClickListener() {
     }
 });
 
+
   }
-  /**
-   * upvote comment of a post
-   * @param v
-   */
-  public void upvotecomment(View v) {
-    TextView counter = findViewById(R.id.votecounterforcomment);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button up = findViewById(R.id.upvotecomment);
-    Button down = findViewById(R.id.downvotecomment);
-    if (down.getCurrentTextColor() == Color.RED) {
-      down.setTextColor(Color.GRAY);
-    }
-    up.setTextColor(Color.BLUE);
-    i++;
-    counter.setText(Integer.toString(i));
-  }
-  /**
-   * downvote comment of a post
-   * @param v
-   */
-  public void downvotecomment(View v) {
-    TextView counter = findViewById(R.id.votecounterforcomment);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button down = findViewById(R.id.downvotecomment);
-    Button up = findViewById(R.id.upvotecomment);
-    if (up.getCurrentTextColor() == Color.BLUE) {
-      up.setTextColor(Color.GRAY);
-    }
-    down.setTextColor(Color.RED);
-    i--;
-    counter.setText(Integer.toString(i));
-  }
-  /**
-   * upvote reply of a comment
-   * @param v
-   */
-  public void upvotereply(View v) {
-    TextView counter = findViewById(R.id.votecounterforreply);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button up = findViewById(R.id.upvotereply);
-    Button down = findViewById(R.id.downvotereply);
-    if (down.getCurrentTextColor() == Color.RED) {
-      down.setTextColor(Color.GRAY);
-    }
-    up.setTextColor(Color.BLUE);
-    i++;
-    counter.setText(Integer.toString(i));
-  }
-    /**
-     * downvote reply of a comment
-     * @param v
-     */
-  public void downvotereply(View v) {
-    TextView counter = findViewById(R.id.votecounterforreply);
-    int i = Integer.parseInt(counter.getText().toString());
-    Button down = findViewById(R.id.downvotereply);
-    Button up = findViewById(R.id.upvotereply);
-    if (up.getCurrentTextColor() == Color.BLUE) {
-      up.setTextColor(Color.GRAY);
-    }
-    down.setTextColor(Color.RED);
-    i--;
-    counter.setText(Integer.toString(i));
-  }
+
   private void setuoVideoSetting(WebView temp, String url) {
     String frameVideo =
             "<html><body><br><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"
@@ -666,7 +603,70 @@ addcomment.setOnClickListener(new View.OnClickListener() {
             };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
-}
+    /**
+     * upvote comment of a post
+     * @param v
+     */
+    public void upvotecomment(View v) {
+        TextView counter = findViewById(R.id.votecounterforcomment);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button up = findViewById(R.id.upvotecomment);
+        Button down = findViewById(R.id.downvotecomment);
+        if (down.getCurrentTextColor() == Color.RED) {
+            down.setTextColor(Color.GRAY);
+        }
+        up.setTextColor(Color.BLUE);
+        i++;
+        counter.setText(Integer.toString(i));
+    }
+    /**
+     * downvote comment of a post
+     * @param v
+     */
+    public void downvotecomment(View v) {
+        TextView counter = findViewById(R.id.votecounterforcomment);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button down = findViewById(R.id.downvotecomment);
+        Button up = findViewById(R.id.upvotecomment);
+        if (up.getCurrentTextColor() == Color.BLUE) {
+            up.setTextColor(Color.GRAY);
+        }
+        down.setTextColor(Color.RED);
+        i--;
+        counter.setText(Integer.toString(i));
+    }
+    /**
+     * upvote reply of a comment
+     * @param v
+     */
+    public void upvotereply(View v) {
+        TextView counter = findViewById(R.id.votecounterforreply);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button up = findViewById(R.id.upvotereply);
+        Button down = findViewById(R.id.downvotereply);
+        if (down.getCurrentTextColor() == Color.RED) {
+            down.setTextColor(Color.GRAY);
+        }
+        up.setTextColor(Color.BLUE);
+        i++;
+        counter.setText(Integer.toString(i));
+    }
+    /**
+     * downvote reply of a comment
+     * @param v
+     */
+    public void downvotereply(View v) {
+        TextView counter = findViewById(R.id.votecounterforreply);
+        int i = Integer.parseInt(counter.getText().toString());
+        Button down = findViewById(R.id.downvotereply);
+        Button up = findViewById(R.id.upvotereply);
+        if (up.getCurrentTextColor() == Color.BLUE) {
+            up.setTextColor(Color.GRAY);
+        }
+        down.setTextColor(Color.RED);
+        i--;
+        counter.setText(Integer.toString(i));
+    }}
 
 
 

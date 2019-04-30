@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/logo_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewPass"></activity>
+        <activity android:name=".replytocomment"></activity>
+        <activity android:name=".NewPass" />
         <activity android:name=".VerifyCode" />
         <activity android:name=".ForgotPass" />
         <activity android:name=".WriteMessage" />
@@ -27,11 +28,10 @@
         <activity android:name=".SignUp" />
         <activity android:name=".postsandcomments" />
         <activity android:name=".HomePage" />
-        <activity android:name=".apexLists"/>
-        <activity android:name=".addCommentActivity"/>
-        <activity android:name=".Community"/>
+        <activity android:name=".apexLists" />
+        <activity android:name=".addCommentActivity" />
+        <activity android:name=".Community" />
         <activity android:name=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
