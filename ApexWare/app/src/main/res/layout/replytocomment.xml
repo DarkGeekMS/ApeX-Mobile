@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="comment owner name"
-                android:textColor="@color/myblue"/>
+                android:textColor="@color/colorGray"/>
             <TextView
                 android:id="@+id/commentcontenttoreply"
                 android:layout_width="match_parent"
@@ -78,6 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Your reply"
+            android:id="@+id/yourREply"
+            android:textSize="25dp"
             />
     </LinearLayout>
 

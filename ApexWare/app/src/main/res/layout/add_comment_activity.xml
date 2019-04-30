@@ -42,9 +42,11 @@
                     android:layout_marginStart="8dp"
                     android:fontFamily="sans-serif"
                     android:layout_marginTop="11dp"
+                    android:id="@+id/activitytitle"
                     />
 
                 <Button
+                    android:id="@+id/postcomment"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
@@ -59,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Your comment"
+            android:id="@+id/addCommenttopost"
             />
     </LinearLayout>
 

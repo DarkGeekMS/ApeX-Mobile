@@ -49,16 +49,19 @@ public class Community extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private LinearLayout linearLayout;
     private LinearLayout btns;
+    String value;
     String state=null;
     String notifications=null;
-    ToggleButton sub=findViewById(R.id.subscribeBtn);
-    ToggleButton notifis =findViewById(R.id.notificationBtn);
+    ToggleButton sub;
+    ToggleButton notifis;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.communityview);
         Window window = this.getWindow();
+         sub=findViewById(R.id.subscribeBtn);
+         notifis =findViewById(R.id.notificationBtn);
         // clear FLAG_TRANSLUCENT_STATUS flag:
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
@@ -143,37 +146,25 @@ public class Community extends AppCompatActivity {
         sub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getsubState(comm1.getCommunityName());
-            }
+                subtocomm(comm1.getComID(),Request.Method.POST,null,  new  VolleyCallback(){
+                    @Override
+                    public void onSuccessResponse(String result) {
+                        try {
+                            JSONObject response = new JSONObject(result);
+                            value=response.getString("reported");
+                            if(value=="true")
+                            {Toast.makeText(Community.this,"ayyy handel success",Toast.LENGTH_SHORT).show();}
+                            else  Toast.makeText(Community.this,"ooooh noooo",Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });            }
         });
       }
 //here we assumed that the response will be either "subscribed" or "unsubscribed" with key "state"
-    public void getsubState(String name){
-    getsubResponse(Request.Method.POST, Routes.signUp,null, new VolleyCallback(){
-        @Override
-        public void onSuccessResponse(String response) {
-            try {
-                // converting response to json object
-                JSONObject obj = new JSONObject(response);
+    public void getsubState(String id){
 
-                // if no error in response
-                if (response != null) {
-                    state= obj.getString("state");
-                    if(state=="subscribed")
-                        sub.setChecked(true);
-                      //should check if subscribed or not
-                else if(state=="unsubscribed")
-                    {sub.setChecked(false);}
-                } else {
-                    Toast.makeText(
-                            getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
-                            .show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    },name);
 }
     public void getsubResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final String comName) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -241,5 +232,57 @@ public class Community extends AppCompatActivity {
         };
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
+
+    public void subtocomm(String commid, int method, JSONObject jsonValue, final VolleyCallback callback){
+        final String comid=commid;
+        User user = SharedPrefmanager.getInstance(Community.this).getUser();
+        final String token=user.getToken();
+        StringRequest stringRequest =
+                new StringRequest(
+                        Request.Method.POST,
+                        Routes.subscribeApexcom,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    // converting response to json object
+                                    JSONObject obj = new JSONObject(response);
+                                    // if no error in response
+                                    if (response != null) {
+                                        callback.onSuccessResponse(response);
+                                    } else {
+                                        Toast.makeText(
+                                                Community.this,
+                                                "something went wrong.. try again",
+                                                Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(
+                                        Community.this,
+                                        "something went wrong with the connection",
+                                        Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("ApexCom_id", comid);
+                        params.put("token", token);
+                        return params;
+                    }
+                };
+        VolleySingleton.getInstance(Community.this).addToRequestQueue(stringRequest);
+    }
+
+
 
 }

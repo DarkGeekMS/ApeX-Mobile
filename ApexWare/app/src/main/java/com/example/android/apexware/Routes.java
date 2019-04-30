@@ -35,10 +35,10 @@ public interface Routes {
 
     //Links,Comments and Posts
     String comment=serverAddress+"comment?";//post
-    String deleteComment=serverAddress+"Delete?";//delete
-    String editComment=serverAddress+"EditText?";//patch
-    String reportComment=serverAddress+"Report?";//post
-    String voteForComment=serverAddress+"Vote?";//post
+    String delete=serverAddress+"Delete?";//delete
+    String edit=serverAddress+"EditText?";//patch
+    String report=serverAddress+"Report?";//post
+    String vote=serverAddress+"Vote?";//post
     String lockPost=serverAddress+"LockPost?";//post
     String hidePost=serverAddress+"Hide?";//post
     String savePost=serverAddress+"Save?";//post

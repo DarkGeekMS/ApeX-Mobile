@@ -36,6 +36,8 @@ import java.util.Map;
 
 import static java.lang.StrictMath.abs;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -213,7 +215,8 @@ public class HomeSubscribedCommunities extends Fragment {
                 Gson gson = new Gson();
                 String postAsString = gson.toJson(p1);
                 intent.putExtra("postToDisplay", postAsString); // sending the post to next activity
-                startActivity(intent);
+                  intent.putExtra("itemPos",position);
+                startActivityForResult(intent,10);
               }
             });
         list.setOnScrollListener(new EndlessScrollListener() {
@@ -239,21 +242,26 @@ public class HomeSubscribedCommunities extends Fragment {
         //  --> Notify the adapter of the new items made with `notifyDataSetChanged()`
     }
 
-    /*@Override
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if(requestCode==10&&resultCode==RESULT_OK)
+        {
+            String id=data.getStringExtra("postpos");
+            if(id!="300000")
+            {
+                for(int i = 0 ; i < postArrayList.size() ; i++){
+                    if(id.equalsIgnoreCase(postArrayList.get(i).getPostId())){
+                        postArrayList.remove(i);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getContext(),"post is hidden",Toast.LENGTH_SHORT).show();
+            }
+            else  Toast.makeText(getContext(),"what tf",Toast.LENGTH_SHORT).show();
 
-        if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                String result=data.getStringExtra("id");
-                hiddenPotsList.add(postArrayList.get(Integer.parseInt(result)));
-                postArrayList.remove(Integer.parseInt(result));
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
         }
     }//onActivityResult
-*/
+
     public void getResponse(
             int method,
             String url,

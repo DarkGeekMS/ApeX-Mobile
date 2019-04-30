@@ -396,8 +396,6 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                       });
           }
       });
-
-
       return convertView;
   }
 
@@ -405,7 +403,6 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
   public boolean isChildSelectable(int groupPosition, int childPosition) {
     return true;
   }
-
     /**
      * upvote request for comment/reply
      * @param ID
@@ -413,15 +410,14 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
      * @param jsonValue
      * @param callback
      */
-  public void upVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback){
+    public void upVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback){
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
-        String url = "http://35.232.3.8/api/vote";
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
-                        url,
+                        Routes.vote,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -465,7 +461,6 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                 };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
-
     /**
      * downvote request for comment/reply
      * @param ID
@@ -477,11 +472,10 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
-        String url = "http://35.232.3.8/api/vote";
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
-                        url,
+                        Routes.vote,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

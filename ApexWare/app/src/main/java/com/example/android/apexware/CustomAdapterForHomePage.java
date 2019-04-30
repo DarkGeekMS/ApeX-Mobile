@@ -1,6 +1,8 @@
 package com.example.android.apexware;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -15,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +42,13 @@ import static android.view.View.GONE;
 
 public class CustomAdapterForHomePage extends ArrayAdapter {
     List<Post> hiddenPotsList = new ArrayList<>();
+    int mSelected = -1;
+
+    @Override
+    public void remove( Object object) {
+        super.remove(object);
+    }
+
     /**
    * this class to make custom list to be for the post in form of card view layout it extend from
    * array adapter base class it only list of post in it
@@ -88,8 +98,11 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                         public void onSuccessResponse(String result) {
                                             try {
                                                 JSONObject response = new JSONObject(result);
-                                                value=response.toString();
-                                                Toast.makeText(context,"post is saved",Toast.LENGTH_SHORT).show();
+                                                value=response.getString("value");
+                                                if(value=="true")
+                                                Toast.makeText(context,"Post is saved",Toast.LENGTH_SHORT).show();
+                                                else  Toast.makeText(context,"error,not saved",Toast.LENGTH_SHORT).show();
+
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
@@ -101,9 +114,15 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                             public void onSuccessResponse(String result) {
                                                 try {
                                                     JSONObject response = new JSONObject(result);
-                                                    value=response.toString();
-                                                    hiddenPotsList.add(currentPost);
-                                                    remove(currentPost);
+                                                    value=response.getString("hide");
+                                                    if(value=="true")
+                                                    {  hiddenPotsList.add(currentPost);
+                                                        remove(currentPost);
+                                                        Toast.makeText(context,"post is hidden",Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    else  Toast.makeText(context,"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
+
+
                                                        /* post.setVisibility(View.GONE);*/
                                                     // creating a new user object
                                                     User user = new User(response.getString("token"));
@@ -117,43 +136,63 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
 
                             }
                               if(item.getItemId()==R.id.reportpost){
-                                 final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                  final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
+                                  final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
                                   AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                   builder.setTitle("report");
-                                  builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                  builder.setMultiChoiceItems(reason, null, new DialogInterface.OnMultiChoiceClickListener() {
                                       @Override
                                       public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                                           if (isChecked) {
+                                              if ((mSelected != -1) && (mSelected != which)) {
+                                                  final int oldVal = mSelected;
+                                                  final AlertDialog alert = (AlertDialog)dialog;
+                                                  final ListView list = alert.getListView();
+                                                  list.setItemChecked(oldVal, false);}
                                               // If the user checked the item, add it to the selected items
-                                              selectedItems.add(which);
+                                              mSelected = which;
+                                              selectedItems.add(mSelected);
                                           } else if (selectedItems.contains(which)) {
                                               // Else, if the item is already in the array, remove it
                                               selectedItems.remove(Integer.valueOf(which));
                                           }
                                       }
                                   });
-                                    builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                  builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
                                       @Override
                                       public void onClick(DialogInterface dialog, int id) {
+                                          reportPost(currentPost.getPostId(),Request.Method.GET, null,
+                                                  new  VolleyCallback(){
+                                                      @Override
+                                                      public void onSuccessResponse(String result) {
+                                                          try {
+                                                              JSONObject response = new JSONObject(result);
+                                                              value=response.getString("reported");
+                                                              if(value=="true")
+                                                                  Toast.makeText(context,"Post Is Reported",Toast.LENGTH_SHORT).show();
+                                                              else  Toast.makeText(context,"error,not reported",Toast.LENGTH_SHORT).show();
+                                                          } catch (JSONException e) {
+                                                              e.printStackTrace();
+                                                          }
+                                                      }
+                                                  },reason[mSelected]);
                                           // User clicked send, we should send the selectedItems results to the server
-                                          Toast.makeText(context,"post is reported",Toast.LENGTH_SHORT).show();
 
                                       }
                                   })
                                           .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                                               @Override
                                               public void onClick(DialogInterface dialog, int id) {
-                                                //report canceled
+                                                  //report canceled
+
                                                   Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
 
                                               }
                                           });
 
-                                   builder.show();
+                                  builder.show();
 
                               }
-
-
                             return true;
                           }
                         });
@@ -201,7 +240,8 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                               value=response.getString("votes");
                               counter.setText(value);
                               int newvotes=Integer.parseInt(value);
-                              if(newvotes>currentvotes){
+                              currentPost.setVotesCount(newvotes);
+                                if(newvotes>currentvotes){
                                 if(newvotes==currentvotes+2)//was downvoted and upvote clicked
                                 { down.setTextColor(Color.GRAY);
                                   currentPost.setDownvoted(false);}
@@ -234,6 +274,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                       value=response.getString("votes");
                                       counter.setText(value);
                                       int newvotes=Integer.parseInt(value);
+                                      currentPost.setVotesCount(newvotes);
                                       if(newvotes<currentvotes){
                                           if(newvotes==currentvotes-2)//was upvoted and downvote clicked
                                           { up.setTextColor(Color.GRAY);
@@ -348,15 +389,11 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
      * @param jsonValue
      * @param callback
      */
-  public void upVotePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
+    public void upVotePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://35.232.3.8/api/vote";
-    StringRequest stringRequest =
-            new StringRequest(
-                    Request.Method.POST,
-                    url,
+    StringRequest stringRequest = new StringRequest(Request.Method.POST, Routes.vote,
                     new Response.Listener<String>() {
                       @Override
                       public void onResponse(String response) {
@@ -366,7 +403,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           // if no error in response
                           if (response != null) {
                               callback.onSuccessResponse(response);
-                              Toast.makeText(context, "you upvoted the post", Toast.LENGTH_SHORT).show();
 
                           } else {
                             Toast.makeText(
@@ -379,9 +415,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           e.printStackTrace();
                         }
                       }
-                    },
-                    new Response.ErrorListener() {
-                      @Override
+                    }, new Response.ErrorListener() {@Override
                       public void onErrorResponse(VolleyError error) {
                         Toast.makeText(
                                 context,
@@ -401,15 +435,14 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-  public void downVotePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
+    public void downVotePost(String postID,int method, JSONObject jsonValue, final VolleyCallback callback){
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://35.232.3.8/api/vote";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
-                    url,
+                    Routes.vote,
                     new Response.Listener<String>() {
                       @Override
                       public void onResponse(String response) {
@@ -419,7 +452,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           // if no error in response
                           if (response != null) {
                               callback.onSuccessResponse(response);
-                            Toast.makeText(context, "you downvoted the post", Toast.LENGTH_SHORT).show();
                           }
                           else {
                             Toast.makeText(
@@ -465,11 +497,10 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://35.232.3.8/api/save";
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,
-                    url,
+                    Routes.savePost,
                     new Response.Listener<String>() {
                       @Override
                       public void onResponse(String response) {
@@ -479,7 +510,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           // if no error in response
                           if (response != null) {
                               callback.onSuccessResponse(response);
-                              Toast.makeText(context, "Post is saved ", Toast.LENGTH_SHORT).show();
                           } else {
                             Toast.makeText(
                                     context,
@@ -524,12 +554,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final String postId=postID;
     User user = SharedPrefmanager.getInstance(context).getUser();
     final String token=user.getToken();
-    String url = "http://35.232.3.8/api/Hide";
-    StringRequest stringRequest =
-            new StringRequest(
-                    Request.Method.POST,
-                    url,
-                    new Response.Listener<String>() {
+    StringRequest stringRequest = new StringRequest(Request.Method.POST,Routes.hidePost, new Response.Listener<String>() {
                       @Override
                       public void onResponse(String response) {
                         try {
@@ -538,7 +563,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                           // if no error in response
                           if (response != null) {
                               callback.onSuccessResponse(response);
-                              Toast.makeText(context, "Post is hidden", Toast.LENGTH_SHORT).show();
                           } else {
                             Toast.makeText(
                                     context,
@@ -571,5 +595,56 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
+
+    public void reportPost(String postID, int method, JSONObject jsonValue, final VolleyCallback callback, final String reason){
+        final String postId=postID;
+        User user = SharedPrefmanager.getInstance(context).getUser();
+        final String token=user.getToken();
+        StringRequest stringRequest =
+                new StringRequest(
+                        Request.Method.POST,
+                        Routes.report,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    // converting response to json object
+                                    JSONObject obj = new JSONObject(response);
+                                    // if no error in response
+                                    if (response != null) {
+                                        callback.onSuccessResponse(response);
+                                    } else {
+                                        Toast.makeText(
+                                               context,
+                                                "something went wrong.. try again",
+                                                Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(
+                                        context,
+                                        "something went wrong with the connection",
+                                        Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("name", postId);
+                        params.put("token", token);
+                        params.put("content",reason);
+                        return params;
+                    }
+                };
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
 
 }

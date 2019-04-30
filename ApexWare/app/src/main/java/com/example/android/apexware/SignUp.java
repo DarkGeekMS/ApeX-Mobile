@@ -131,7 +131,6 @@ public class SignUp extends AppCompatActivity {
       editTextPassword.requestFocus();
       return;
     }
-    String url = "http://35.232.3.8/api/sign_up";
     getResponse(Request.Method.POST, Routes.signUp,null, new VolleyCallback(){
             @Override
             public void onSuccessResponse(String response) {

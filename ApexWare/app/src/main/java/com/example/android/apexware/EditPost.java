@@ -1,41 +1,36 @@
 package com.example.android.apexware;
 
-import android.annotation.TargetApi;
 import android.content.DialogInterface;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-public class addCommentActivity extends AppCompatActivity {
-    EditText comment;
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+public class EditPost extends AppCompatActivity {
+    EditText body;
+    Button post;
+    String beforeEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /** set the view */
         setContentView(R.layout.add_comment_activity);
-        Window window = this.getWindow();
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        // finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorGray));
+        post=findViewById(R.id.postcomment);
+        TextView title=findViewById(R.id.activitytitle);
+        title.setText("Edit post");
         Gson gson = new Gson();
-        String ID = getIntent().getStringExtra("postID");
-        //postid will be used in the request
-        final String postid = gson.fromJson(ID, String.class);
-        comment=findViewById(R.id.addCommenttopost) ;
+        String postAsString = getIntent().getStringExtra("postToDisplay");
+        final Post post1 = gson.fromJson(postAsString, Post.class);
+         beforeEdit=post1.getTextPostcontent();
+         body=findViewById(R.id.addCommenttopost);
+         body.setText(beforeEdit);
+        if(!TextUtils.isEmpty(body.getText())){post.setEnabled(false);}
         ImageButton cancel=findViewById(R.id.cancelcomment);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,15 +38,16 @@ public class addCommentActivity extends AppCompatActivity {
                 cancelcomment(v);
             }
         });
+
     }
-
     public void cancelcomment(View v)
-    {
-        if(!TextUtils.isEmpty(comment.getText()) )
-        {
-            new AlertDialog.Builder(addCommentActivity.this)
-                    .setMessage("Discard comment?")
-
+    { if(body.getText().toString()== beforeEdit){finish(); }
+        else if(!TextUtils.isEmpty(body.getText())){post.setEnabled(false);}
+        else
+      {
+            new AlertDialog.Builder(EditPost.this)
+                    .setTitle("Discard changes?")
+                    .setMessage("Do you want to discard your changes?")
                     // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
                     .setPositiveButton("DISCARD", new DialogInterface.OnClickListener() {
@@ -60,11 +56,10 @@ public class addCommentActivity extends AppCompatActivity {
                             finish();
                         }
                     })
-
                     // A null listener allows the button to dismiss the dialog and take no further action.
-                    .setNegativeButton("EDIT", null)
+                    .setNegativeButton("KEEP EDITING", null)
                     .show();
         }
-        else finish();
+
     }
 }
