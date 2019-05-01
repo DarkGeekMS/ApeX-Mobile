@@ -1,3 +1,4 @@
+/*
 package com.example.android.apexware;
 
 import android.os.StrictMode;
@@ -22,11 +23,13 @@ import javax.mail.internet.MimeMessage;
 
 import static com.android.volley.VolleyLog.TAG;
 
+*/
 /**
  * class to send automatic email to someone
  *
  * @author mostafa
- */
+ *//*
+
 class GMailSender extends javax.mail.Authenticator {
   private String mailhost = "smtp.gmail.com";
   private String user;
@@ -116,3 +119,4 @@ class GMailSender extends javax.mail.Authenticator {
     }
   }
 }
+*/

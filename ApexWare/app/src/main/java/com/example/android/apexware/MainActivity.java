@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
   }
   /** opens the activity sign up on pressing the button sign up */
   public void openActivity_sign_up() {
-    startActivity(new Intent(this, SignUp.class));
+    startActivity(new Intent(this, test.class));
   }
   /** toggle button affect viewing password as text or as dots */
   public void onToggleClick(View v) {

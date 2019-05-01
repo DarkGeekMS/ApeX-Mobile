@@ -167,9 +167,9 @@ public class ForgotPass extends AppCompatActivity {
   public void verify_forget_pass_Mock(String email, String username) {
     // COMPLETED TODO send automatic email with unified code
     try {
-      String senderEmail = "apex.sw19";
+      /*String senderEmail = "apex.sw19";
       GMailSender sender = new GMailSender(senderEmail, "apex1234");
-      sender.sendMail("verification code", "your code is" + magic_code, senderEmail,email);
+      sender.sendMail("verification code", "your code is" + magic_code, senderEmail,email);*/
     } catch (Exception e) {
       Log.e("SendMail", e.getMessage(), e);
     }

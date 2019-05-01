@@ -44,8 +44,8 @@ public class MyHolder extends TreeNode.BaseNodeViewHolder<MyHolder.IconTreeItem>
         }
         view.setPadding(leftMargin, getDimens(R.dimen.treeview_top_padding), getDimens(R.dimen.treeview_right_padding), getDimens(R.dimen.treeview_bottom_padding));
 
-        img = (ImageView) view.findViewById(R.id.image);
-        tvValue = (TextView) view.findViewById(R.id.text);
+        img = (ImageView) view.findViewById(R.id.image);// todo :change xml design of it
+        tvValue = (TextView) view.findViewById(R.id.text);// todo :change xml design of it
         img.setImageResource(value.icon);
         tvValue.setText(value.text);
         return view;

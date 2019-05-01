@@ -77,11 +77,11 @@ public class MockRestService implements DataSupplier {
       magic_code = "123456789";
       try {
         String senderEmail ="apex.sw19@gmail.com";
-        GMailSender sender = new GMailSender(senderEmail, "apex1234");
+        /*GMailSender sender = new GMailSender(senderEmail, "apex1234");
         sender.sendMail("verification code",
                 "your code is"+magic_code,
                 senderEmail,
-                email);
+                email);*/
       } catch (Exception e) {
         Log.e("SendMail", e.getMessage(), e);
       }

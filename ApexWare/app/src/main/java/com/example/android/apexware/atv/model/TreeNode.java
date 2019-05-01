@@ -221,7 +221,7 @@ public class TreeNode {
     }
 
     public static abstract class BaseNodeViewHolder<E> {
-        protected AndroidTreeView tView;
+        public static AndroidTreeView tView;
         protected TreeNode mNode;
         private View mView;
         protected int containerStyle;

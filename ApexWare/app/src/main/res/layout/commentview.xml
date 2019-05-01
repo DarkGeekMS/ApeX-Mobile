@@ -46,7 +46,7 @@ android:orientation="horizontal"
     android:layout_height="match_parent"
     android:layout_marginTop="2dp"
     android:layout_weight="1"
-    android:paddingBottom="0dp"
+    android:paddingBottom="3dp"
     android:text="@string/votecounter"
     android:textAlignment="center"
     android:textColor="#C0C0C0"
@@ -76,7 +76,7 @@ android:orientation="horizontal"
     android:text="replay"
     android:textColor="#C0C0C0"
     android:focusable="false"/>
-    <Button
+<Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/commentoptions"

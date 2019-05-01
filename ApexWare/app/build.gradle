@@ -65,7 +65,7 @@ dependencies {
     testImplementation 'androidx.test:core:1.1.0'
     // Optional -- Mockito framework
     testImplementation 'org.mockito:mockito-core:1.10.19'
-    implementation files('E:/projects/ApeX-Mobile (software)/ApexWare/libs/mail.jar')
+    /*implementation files('E:/projects/ApeX-Mobile (software)/ApexWare/libs/mail.jar')
     implementation files('E:/projects/ApeX-Mobile (software)/ApexWare/libs/additionnal.jar')
-    implementation files('E:/projects/ApeX-Mobile (software)/ApexWare/libs/activation.jar')
+    implementation files('E:/projects/ApeX-Mobile (software)/ApexWare/libs/activation.jar')*/
 }

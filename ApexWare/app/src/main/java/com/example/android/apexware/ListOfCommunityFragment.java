@@ -100,16 +100,16 @@ public class ListOfCommunityFragment extends Fragment {
                                     for(int i=0;i<jsonArray.length();i++){
                                         CommunityInfo tenp=new CommunityInfo();
                                         JSONObject current=jsonArray.getJSONObject(i);
-                                        /*tenp.setBackground("");
-                                        tenp.setCommunityLogo("");
-                                        tenp.setCommunityName("");
-                                        tenp.setComID();*/
+                                        tenp.setBackground("https://imgur.com/gallery/cniisLx");
+                                        tenp.setCommunityLogo("https://imgur.com/gallery/cniisLx");
+                                        tenp.setCommunityName(current.getString("name"));
+                                        tenp.setComID(current.getString("id"));
                                         commlist.add(tenp);
                                     }
+                                    Toast.makeText(getContext(),"All apexcom get",Toast.LENGTH_SHORT).show();
                                     adapter=new CommAdapter((Activity) getContext(),commlist);
                                     list.setAdapter(adapter);
                                 } else {
-                                    int x=0;
                                     Toast.makeText(
                                             activity.getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
                                             .show();
