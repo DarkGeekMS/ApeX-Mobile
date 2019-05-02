@@ -1,8 +1,10 @@
 package com.example.android.apexware;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Debug;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +32,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.android.apexware.Routes.active_mock;
+
 /**
  * first activity in the program and contains login form which the user fill with his data to enter
  * th app
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
   Button login;
   Button signup;
   Button forgot_pass;
+
   ToggleButton toggle_btn;
   EditText editTextPassword;
   EditText editTextUsername;
@@ -72,9 +78,8 @@ public class MainActivity extends AppCompatActivity {
     /*
      * use either mock service or back end service
      * */
-    boolean debug = false;
     DepandantClass restClient = null;
-    if (debug) {
+    if (active_mock) {
       restClient = new DepandantClass(new MockRestService());
     } else {
       restClient = new DepandantClass(new RestService());
@@ -101,30 +106,64 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onClick(View v) {
             if (passwordCheck()) {
-              if(
-                  finalRestClient.login(
+                login.setEnabled(false); // disable button to avoid multiple requests
+                if (!active_mock) {
+                try {
+                  getResponse(
+                      Request.Method.GET,
+                      Routes.signIn,
+                      null,
+                      new VolleyCallback() {
+                        @Override
+                        public void onSuccessResponse(String result) {
+                          try {
+                            JSONObject response = new JSONObject(result);
+                            String token = response.getString("token");
+                            if (token != null) {
+                              // creating a new user object
+                              User user = new User(response.getString("token"));
+                              // storing the user in shared preferences
+                              SharedPrefmanager.getInstance(getApplicationContext())
+                                  .userLogin(user);
+                              Toast.makeText(
+                                      getApplicationContext(),
+                                      "Login Successfully",
+                                      Toast.LENGTH_SHORT)
+                                  .show();
+                              Intent i = new Intent(getApplicationContext(), HomePage.class);
+                              getApplicationContext().startActivity(i);
+                            }
+                          } catch (JSONException e) {
+                            e.printStackTrace();
+                          }
+                        }
+                      },
                       editTextUsername.getText().toString(),
                       editTextPassword.getText().toString(),
-                      getApplicationContext()))
-              {
-                  Intent i=new Intent(getApplicationContext(), HomePage.class);//only used when debug
-                  startActivity(i);}
+                      getApplicationContext());
+
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+              }
+              if (active_mock) {
+                Intent i =
+                    new Intent(getApplicationContext(), HomePage.class); // only used when debug
+                startActivity(i);
+              }
             } else {
               Toast.makeText(
                       getApplicationContext(),
-                      "Password or username don't meet the standers",
+                      "Password or username don't meet the standards",
                       Toast.LENGTH_SHORT)
                   .show();
             }
           }
         });
   }
-  /*
-   * opens the activity sign up on pressing the button sign up
-   */
+  /** opens the activity sign up on pressing the button sign up */
   public void openActivity_sign_up() {
-    Intent intent = new Intent(this, SignUp.class);
-    startActivity(intent);
+    startActivity(new Intent(this, test.class));
   }
   /** toggle button affect viewing password as text or as dots */
   public void onToggleClick(View v) {
@@ -146,11 +185,16 @@ public class MainActivity extends AppCompatActivity {
       toggle_btn.setBackground(img);
     }
   }
-  public boolean passwordCheck()
-  {
-      // first getting the values
-      final String username = editTextUsername.getText().toString();
-      final String password = editTextPassword.getText().toString();
+
+  /**
+   * check username and password
+   *
+   * @return true if username and password are valid
+   */
+  public boolean passwordCheck() {
+    // first getting the values
+    final String username = editTextUsername.getText().toString();
+    final String password = editTextPassword.getText().toString();
 
       // validating inputs
       if (TextUtils.isEmpty(username)) {
@@ -164,5 +208,60 @@ public class MainActivity extends AppCompatActivity {
           return false;
       }
       return true;
+  }
+
+  /** go to another activity to reset password and enter other data (email and pass) * */
+  public void forgot_user_name(View view) {
+    // COMPLETED TODO IMPLEMENT
+    Intent intent = new Intent(MainActivity.this, ForgotPass.class);
+    intent.putExtra("type", "user");
+    startActivity(intent);
+  }
+
+  /** go to another activity to reset password and enter other data (email and username) * */
+  public void forgot_password(View view) {
+    // COMPLETED TODO IMPLEMENT
+    Intent intent = new Intent(MainActivity.this, ForgotPass.class);
+    intent.putExtra("type", "pass");
+    startActivity(intent);
+  }
+  public void getResponse(
+      int method,
+      String url,
+      JSONObject jsonValue,
+      final VolleyCallback callback,
+      final String username,
+      final String password,
+      final Context context) {
+    // if everything is fine
+    StringRequest stringRequest =
+        new StringRequest(
+            Request.Method.POST,
+            url,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                // if no error in response
+                if (response != null) {
+                  callback.onSuccessResponse(response);
+                }
+              }
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "ServerError", Toast.LENGTH_SHORT).show();
+                error.getMessage();
+              }
+            }) {
+          @Override
+          protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("username", username);
+            params.put("password", password);
+            return params;
+          }
+        };
+    VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
 }

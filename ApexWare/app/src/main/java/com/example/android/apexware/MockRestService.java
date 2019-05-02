@@ -1,6 +1,10 @@
 package com.example.android.apexware;
 
 import android.content.Context;
+import android.util.Log;
+
+import static com.example.android.apexware.ForgotPass.magic_code;
+
 
 /**
  * this class is a simulation to the back end service that sends dummy objects and responses to the
@@ -50,4 +54,48 @@ public class MockRestService implements DataSupplier {
     public boolean createPost_interface(String type, String title, String mainPost, int communityID) {
         return true;
     }
+
+  /**
+   * used in cases of forgetting password to send verify mail to the user
+   *
+   * @param email    user email
+   * @param username user name
+   */
+  @Override
+  public void verify_forget_pass_interface(String email, String username,final Context context) {
+    magic_code = "0123";
+  }
+
+    /**
+     * used in cases of forgetting username to send verify mail to the user
+     *
+     * @param email    user email
+     * @param password the password user knows
+     */
+    @Override
+    public void verify_forget_user_interface(String email, String password,final Context context) {
+      magic_code = "123456789";
+      try {
+        String senderEmail ="apex.sw19@gmail.com";
+        /*GMailSender sender = new GMailSender(senderEmail, "apex1234");
+        sender.sendMail("verification code",
+                "your code is"+magic_code,
+                senderEmail,
+                email);*/
+      } catch (Exception e) {
+        Log.e("SendMail", e.getMessage(), e);
+      }
+        // COMPLETED todo send automatic mail with code let it be 0123
+    }
+
+  /**
+   * @param email email of user
+   * @param code  code he entered and sent to be checked
+   * @return user name of the user if correct
+   */
+  @Override
+  public String confirmCode_interface(String email, String code,final Context context) {
+    if (code.equals("0123")) return "mock user";
+     return "wrong code";
+  }
 }

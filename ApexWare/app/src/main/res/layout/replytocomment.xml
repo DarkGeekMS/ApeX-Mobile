@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarForaddcomment"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/myblue"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+            <ImageButton
+                android:id="@+id/cancelreplytocomment"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_weight="0.5"
+                android:background="?android:attr/selectableItemBackground"
+                android:textSize="30dp"
+                app:srcCompat="@drawable/close"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:text="Reply"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif"
+                    android:layout_marginTop="11dp"
+                    />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="POST"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/commentownernametoreply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="comment owner name"
+                android:textColor="@color/colorGray"/>
+            <TextView
+                android:id="@+id/commentcontenttoreply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="comment content"
+                android:textSize="20dp"
+                android:textColor="@color/Black"/>
+
+        </LinearLayout>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your reply"
+            android:id="@+id/yourREply"
+            android:textSize="25dp"
+            />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

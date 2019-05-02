@@ -1,5 +1,4 @@
 package com.example.android.apexware;
-
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
@@ -13,17 +12,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.Toolbar;
-
-
 public class Profile extends AppCompatActivity {
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
     private ViewPager viewPager;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private LinearLayout linearLayout;
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +51,7 @@ public class Profile extends AppCompatActivity {
                     linearLayout.setVisibility(View.INVISIBLE);
                     isShow = true;
                 } else if(isShow) {
-                    collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
+                    collapsingToolbarLayout.setTitle(" ");//careFull there should be a space between double quote otherwise it won`t work
                     isShow = false;
                     linearLayout.setVisibility(View.VISIBLE);
                 }
@@ -68,7 +62,6 @@ public class Profile extends AppCompatActivity {
         viewPagerAdapter.addFragment(new PostFragment(),"Post");
         viewPagerAdapter.addFragment(new CommentFragment(),"Comment");
         viewPagerAdapter.addFragment(new AboutFragment(),"About");
-
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 

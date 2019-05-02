@@ -1,12 +1,17 @@
 package com.example.android.apexware;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,10 +20,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +131,9 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
   @Override
   public View getGroupView(
       int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+      // get user token
+      final User user = SharedPrefmanager.getInstance(context).getUser();
+      final String token = user.getToken();
     if (convertView == null)
       convertView = LayoutInflater.from(context).inflate(R.layout.commentview, parent, false);
    final Comment currentComment = commentList.get(groupPosition);
@@ -201,6 +211,94 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                     });
         }
     });
+      final Button commentoptions=convertView.findViewById(R.id.commentoptions);
+      commentoptions.setOnClickListener(
+              new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      PopupMenu popup = new PopupMenu(context, commentoptions);
+                      if(currentComment.getCommentOwner()==user.getUsername())//if it is my comment
+                      {
+                          popup.getMenuInflater().inflate(R.menu.mycommentoptions, popup.getMenu());
+                          popup.setOnMenuItemClickListener(
+                                  new PopupMenu.OnMenuItemClickListener() {
+                                      @Override
+                                      public boolean onMenuItemClick(MenuItem item) {
+                                          if(item.getItemId()==R.id.EditMyComment){
+
+                                          }
+                                          // we can use item name to make intent for the new responces
+                                          if(item.getItemId()==R.id.SaveMyComment){
+
+                                          }
+                                          if(item.getItemId()==R.id.DeleteMyComment){
+
+                                          }
+                                          return true;
+                                      }
+                                  });
+                          popup.show(); // showing popup menu}
+                      }else{//if it`s others comment
+                          popup.getMenuInflater().inflate(R.menu.commentoptions, popup.getMenu());
+                          popup.setOnMenuItemClickListener(
+                                  new PopupMenu.OnMenuItemClickListener() {
+                                      @Override
+                                      public boolean onMenuItemClick(MenuItem item) {
+                                          if(item.getItemId()==R.id.Savecomment){}
+                                          // we can use item name to make intent for the new responces
+                                          if(item.getItemId()==R.id.reportcomment){
+                                              final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                              AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                              builder.setTitle("report");
+                                              builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                                  @Override
+                                                  public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                                      if (isChecked) {
+                                                          // If the user checked the item, add it to the selected items
+                                                          selectedItems.add(which);
+                                                      } else if (selectedItems.contains(which)) {
+                                                          // Else, if the item is already in the array, remove it
+                                                          selectedItems.remove(Integer.valueOf(which));
+                                                      }
+                                                  }
+                                              });
+                                              builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(DialogInterface dialog, int id) {
+                                                      // User clicked send, we should send the selectedItems results to the server
+                                                      Toast.makeText(context,"comment is reported",Toast.LENGTH_SHORT).show();
+
+                                                  }
+                                              })
+                                                      .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(DialogInterface dialog, int id) {
+                                                              //report canceled
+                                                              Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
+
+                                                          }
+                                                      });
+
+                                              builder.show();
+                                          }
+                                          return true;
+                                      }
+                                  });
+                          popup.show(); // showing popup menu}
+                      }
+                  }
+              });
+      final Button replytocomment=convertView.findViewById(R.id.commentreply);
+      replytocomment.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              Intent intent = new Intent(context,replytocomment.class);
+              Gson gson = new Gson();
+              String comment = gson.toJson(currentComment);
+              intent.putExtra("Comment", comment); // sending the post to next activity
+              context.startActivity(intent);
+          }
+      });
 
     return convertView;
   }
@@ -222,12 +320,10 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
       boolean isLastChild,
       View convertView,
       ViewGroup parent) {
-
     if (convertView == null)
       convertView = LayoutInflater.from(context).inflate(R.layout.replyview, parent, false);
    final Comment currentComment = replies.get(childPosition);
-    TextView commentOwnerandDte =
-        (TextView) convertView.findViewById(R.id.replyOwnerNameAndTimeCreated);
+    TextView commentOwnerandDte =convertView.findViewById(R.id.replyOwnerNameAndTimeCreated);
     commentOwnerandDte.setText(
         currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
     TextView commentContent = convertView.findViewById(R.id.replyContents);
@@ -300,8 +396,6 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                       });
           }
       });
-
-
       return convertView;
   }
 
@@ -309,15 +403,21 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
   public boolean isChildSelectable(int groupPosition, int childPosition) {
     return true;
   }
+    /**
+     * upvote request for comment/reply
+     * @param ID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
     public void upVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback){
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
-        String url = "http://34.66.175.211/api/vote";
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
-                        url,
+                        Routes.vote,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -361,15 +461,21 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                 };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
+    /**
+     * downvote request for comment/reply
+     * @param ID
+     * @param method
+     * @param jsonValue
+     * @param callback
+     */
     public void downVote(String ID,int method, JSONObject jsonValue, final VolleyCallback callback){
         final String Id=ID;
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
-        String url = "http://34.66.175.211/api/vote";
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
-                        url,
+                        Routes.vote,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

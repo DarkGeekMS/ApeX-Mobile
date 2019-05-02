@@ -24,7 +24,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:srcCompat="@drawable/back"
+        app:srcCompat="@drawable/close"
         android:contentDescription="@string/back_arrow" />
 
     <TextView

@@ -7,22 +7,38 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/logo_new"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/security_config"
         android:roundIcon="@mipmap/logo_new_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".LoadingScreen"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".EditPost"></activity>
+        <activity android:name=".NotificationSettings" />
+        <activity android:name=".Settings" />
+        <activity android:name=".NewPass" />
+        <activity android:name=".replytocomment" />
+        <activity android:name=".test"></activity>
+        <activity android:name=".VerifyCode" />
+        <activity android:name=".ForgotPass" />
+        <activity android:name=".WriteMessage" />
+        <activity android:name=".LoadingScreen" />
         <activity android:name=".UserCommunities" />
         <activity android:name=".CreatePost" />
         <activity android:name=".Profile" />
         <activity android:name=".SignUp" />
         <activity android:name=".postsandcomments" />
         <activity android:name=".HomePage" />
+        <activity android:name=".apexLists" />
+        <activity android:name=".addCommentActivity" />
+        <activity android:name=".RestService" />
+        <activity android:name=".Community" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +46,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RestService" />
     </application>
 
 </manifest>

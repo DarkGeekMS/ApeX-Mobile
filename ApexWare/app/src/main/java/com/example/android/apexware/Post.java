@@ -22,7 +22,7 @@ public class Post implements Parcelable {
   private String ApexcomLogo = null;
   private String apexcomName = null;
   private String postOwner = null;
-  private int postCreateDate = 0;
+  private String postCreateDate = null;
   private String postTitle = null;
   private String videoURL = null;
   private String ImageURL = null;
@@ -66,8 +66,8 @@ public class Post implements Parcelable {
    * @param postCreateDate int (0~23) to set the date if the param isn't within range it wont be
    *     assigned
    */
-  public void setPostCreateDate(int postCreateDate) {
-    if (postCreateDate >= 0 && postCreateDate <= 23) this.postCreateDate = postCreateDate;
+  public void setPostCreateDate(String postCreateDate) {
+     this.postCreateDate = postCreateDate;
   }
 
   /**
@@ -176,7 +176,7 @@ public class Post implements Parcelable {
   }
 
   /** this method return post creation date as intger with 24 Hr format */
-  public int getPostCreateDate() {
+  public String getPostCreateDate() {
     return postCreateDate;
   }
 
@@ -245,7 +245,7 @@ public class Post implements Parcelable {
     ApexcomLogo = in.readString();
     apexcomName = in.readString();
     postOwner = in.readString();
-    postCreateDate = in.readInt();
+    postCreateDate = in.readString();
     postTitle = in.readString();
     videoURL = in.readString();
     ImageURL = in.readString();
@@ -276,7 +276,7 @@ public class Post implements Parcelable {
     dest.writeString(ApexcomLogo);
     dest.writeString(apexcomName);
     dest.writeString(postOwner);
-    dest.writeInt(postCreateDate);
+    dest.writeString(postCreateDate);
     dest.writeString(postTitle);
     dest.writeString(videoURL);
     dest.writeString(ImageURL);
