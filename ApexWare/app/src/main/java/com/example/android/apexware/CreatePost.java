@@ -34,8 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
@@ -81,7 +84,7 @@ public class CreatePost extends AppCompatActivity {
   EditText post_title;
   TextView title;
   ConstraintLayout choose_image;
-  String communityID = "t5_1";
+  String communityID = "t5_2";
   private String galleyFilePath = "";
   private String cameraFilePath = "";
 
@@ -195,7 +198,43 @@ public class CreatePost extends AppCompatActivity {
                 cameraFilePath)) {
               switch (type) {
                 case "image":
-                  // send image request
+                  String currentPath=null;
+                  if(galleyFilePath.isEmpty()){
+                    currentPath=galleyFilePath;
+                  }
+                  else{
+                    currentPath=cameraFilePath;
+                  }
+                  getuploadResponce(Request.Method.POST,
+                          Routes.submit_post,
+                          null,
+                          new VolleyCallback() {
+                            @Override
+                            public void onSuccessResponse(String response) {
+                              try {
+                                // converting response to json object
+                                JSONObject obj = new JSONObject(response);
+
+                                // if no error in response
+                                if (response != null) {
+                                  Toast.makeText(getApplicationContext(), "Post Successful", Toast.LENGTH_SHORT)
+                                          .show();
+                                  finish();
+                                  startActivity(new Intent(getApplicationContext(), HomePage.class));
+                                } else {
+                                  Toast.makeText(
+                                          getApplicationContext(), "Unsuccessful onsuccess ", Toast.LENGTH_SHORT)
+                                          .show();
+                                }
+
+                              } catch (JSONException e) {
+                                e.printStackTrace();
+                              }
+                            }
+                          },token,
+                          post_title.getText().toString(),
+                          currentPath
+                          );
                   break;
                 default:
                   takeData(
@@ -475,7 +514,7 @@ public class CreatePost extends AppCompatActivity {
           break;
 
         case TAKE_PICTURE:
-          cameraFilePath = cameraFilePath.substring(cameraFilePath.indexOf(':') + 4); // cut url
+          cameraFilePath = cameraFilePath.substring(cameraFilePath.indexOf(':') + 3); // cut url
           preview.setImageURI(Uri.parse(cameraFilePath));
           Toast.makeText(this, cameraFilePath, Toast.LENGTH_SHORT).show();
           break;
@@ -517,5 +556,74 @@ public class CreatePost extends AppCompatActivity {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
+  }
+  public void getuploadResponce(int method,
+                                String url,
+                                JSONObject jsonValue,
+                                final VolleyCallback callback,final String token,final String title,final String imagePath){
+    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Routes.submit_post, new Response.Listener<NetworkResponse>() {
+      @Override
+      public void onResponse(NetworkResponse response) {
+          int x=0;
+        callback.onSuccessResponse(response.toString());
+      }
+    }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
+          int x=0;
+        NetworkResponse networkResponse = error.networkResponse;
+        String errorMessage = "Unknown error";
+        if (networkResponse == null) {
+          if (error.getClass().equals(TimeoutError.class)) {
+            errorMessage = "Request timeout";
+          } else if (error.getClass().equals(NoConnectionError.class)) {
+            errorMessage = "Failed to connect server";
+          }
+        } else {
+          String result = new String(networkResponse.data);
+          try {
+            JSONObject response = new JSONObject(result);
+            String status = response.getString("status");
+            String message = response.getString("message");
+
+            Log.e("Error Status", status);
+            Log.e("Error Message", message);
+
+            if (networkResponse.statusCode == 404) {
+              errorMessage = "Resource not found";
+            } else if (networkResponse.statusCode == 401) {
+              errorMessage = message+" Please login again";
+            } else if (networkResponse.statusCode == 400) {
+              errorMessage = message+ " Check your inputs";
+            } else if (networkResponse.statusCode == 500) {
+              errorMessage = message+" Something is getting wrong";
+            }
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
+        }
+        Log.i("Error", errorMessage);
+        error.printStackTrace();
+      }
+    }) {
+      @Override
+      protected Map<String, String> getParams() {
+        Map<String, String> params = new HashMap<>();
+        params.put("ApexCom_id",communityID);
+        params.put("title",title);
+        params.put("token",token);
+        return params;
+      }
+      @Override
+      protected Map<String, DataPart> getByteData() {
+        Map<String, DataPart> params = new HashMap<>();
+        // file name could found file base or direct access from real path
+        // for now just get bitmap data from ImageView
+        params.put("img_name", new DataPart(imagePath, AppHelper.getFileDataFromDrawable(getBaseContext(), preview.getDrawable()), "image/jpeg"));
+        return params;
+      }
+    };
+    VolleySingletonForImage.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+
   }
 }

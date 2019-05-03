@@ -41,6 +41,7 @@ import static java.lang.StrictMath.abs;
 
 public class ReadMessage extends AppCompatActivity {
     String messageSubject;
+    String messageId;
     ArrayList<Replays> replaysArrayList;
     CustomAdapterForReplayMessages adapterForReplays;
     ListView listView;
@@ -89,7 +90,7 @@ public class ReadMessage extends AppCompatActivity {
                             if (response != null) {
                                 JSONObject jsonMessageSubject=obj.getJSONObject("message");
                                 messageSubject=jsonMessageSubject.getString("subject");
-
+                                messageId=jsonMessageSubject.getString("id");
                                 View headerView = getLayoutInflater().inflate(R.layout.replay_message_header, null);
                                 TextView subject=headerView.findViewById(R.id.hirarcheyMessagesubject);
                                 subject.setText(messageSubject);
@@ -255,6 +256,7 @@ public class ReadMessage extends AppCompatActivity {
 
     public void addRepaly(View view) {
         Intent i=new Intent(ReadMessage.this,WriteReplay.class);
+        i.putExtra("messageID",messageId);
         //TODO what to send message or previous replay id
         startActivity(i);
 

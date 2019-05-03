@@ -43,8 +43,31 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.StrictMath.abs;
 
 /**
  * main page of the whole application
@@ -56,7 +79,8 @@ public class HomePage extends AppCompatActivity {
   // The "x" and "y" position of the "Show Button" on screen.
   Point p;
   CustomAdapterForHomePage adapter;
-
+  final User user = SharedPrefmanager.getInstance(this).getUser();
+  final String token=user.getToken();
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -104,12 +128,30 @@ public class HomePage extends AppCompatActivity {
               startActivity(new Intent(getApplicationContext(), Profile.class));
             if (menuItem.getItemId() == R.id.setting)
               startActivity(new Intent(getApplicationContext(), Settings.class));
+            if(menuItem.getItemId() == R.id.logout){
+              getResponse(
+                      Request.Method.POST,
+                      Routes.information,
+                      null,
+                      new VolleyCallback() {
+                        @Override
+                        public void onSuccessResponse(String response) {
+                          try {
+                            // converting response to json object
+                            JSONObject obj = new JSONObject(response);
+                            Toast.makeText(HomePage.this,"Logout Successful",Toast.LENGTH_SHORT).show();
+                            Intent i=new Intent(HomePage.this,MainActivity.class);
+                          } catch (JSONException e) {
+                            e.printStackTrace();
+                          }
+                        }
+                      },
+                      token);
+            }
             // close drawer when item is tapped
             drawerLayout.closeDrawers();
-
             // Add code here to update the UI based on the item selected
             // For example, swap UI fragments here
-
             return true;
           }
         });
@@ -267,5 +309,69 @@ public class HomePage extends AppCompatActivity {
   public void onBackPressed() {
     Log.d("CDA", "onBackPressed Called");
     // do nothing
+  }
+  public void getResponse(
+          int method,
+          String url,
+          JSONObject jsonValue,
+          final VolleyCallback callback,
+          final String token) {
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        int x=0;
+                        callback.onSuccessResponse(response);
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        String errorMessage = "Unknown error";
+                        if (networkResponse == null) {
+                          if (error.getClass().equals(TimeoutError.class)) {
+                            errorMessage = "Request timeout";
+                          } else if (error.getClass().equals(NoConnectionError.class)) {
+                            errorMessage = "Failed to connect server";
+                          }
+                        } else {
+                          String result = new String(networkResponse.data);
+                          try {
+                            JSONObject response = new JSONObject(result);
+                            String status = response.getString("status");
+                            String message = response.getString("message");
+
+                            Log.e("Error Status", status);
+                            Log.e("Error Message", message);
+
+                            if (networkResponse.statusCode == 404) {
+                              errorMessage = "Resource not found";
+                            } else if (networkResponse.statusCode == 401) {
+                              errorMessage = message+" Please login again";
+                            } else if (networkResponse.statusCode == 400) {
+                              errorMessage = message+ " Check your inputs";
+                            } else if (networkResponse.statusCode == 500) {
+                              errorMessage = message+" Something is getting wrong";
+                            }
+                          } catch (JSONException e) {
+                            e.printStackTrace();
+                          }
+                        }
+                        Log.i("Error", errorMessage);
+                        error.printStackTrace();
+                      }
+                    }){
+              @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token",token);
+                return params;
+              }
+            };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
 }

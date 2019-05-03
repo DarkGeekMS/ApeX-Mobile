@@ -1,5 +1,6 @@
 package com.example.android.apexware;
 
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
@@ -31,6 +32,7 @@ public class WriteReplay extends AppCompatActivity {
     EditText replayContent;
     User user = SharedPrefmanager.getInstance(WriteReplay.this).getUser();
     final String token=user.getToken();
+    String messageId;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class WriteReplay extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         // finally change the color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
+
+        Intent i=getIntent();
+        messageId=i.getStringExtra("messageID");
 
         Toolbar toolbar =findViewById(R.id.WriteReplayToolbar);
         setSupportActionBar(toolbar);
@@ -69,7 +74,7 @@ public class WriteReplay extends AppCompatActivity {
     }
     public void replayMessage(MenuItem item){
         getResponse(Request.Method.POST,
-                Routes.compose,
+                Routes.addReplay,
                 null,
                 new VolleyCallback(){
                     @Override
@@ -99,7 +104,7 @@ public class WriteReplay extends AppCompatActivity {
                         }
                     }
                 },replayContent.getText().toString().trim(),
-                "to send id paren",
+                messageId,
                 token);
 
     }

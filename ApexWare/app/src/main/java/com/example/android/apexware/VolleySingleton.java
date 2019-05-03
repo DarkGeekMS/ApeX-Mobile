@@ -13,7 +13,6 @@ public class VolleySingleton {
   private static VolleySingleton mInstance;
   private RequestQueue mRequestQueue;
   private static Context mCtx;
-
   private VolleySingleton(Context context) {
     mCtx = context;
     mRequestQueue = getRequestQueue();

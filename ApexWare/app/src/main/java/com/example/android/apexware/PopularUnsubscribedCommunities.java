@@ -165,18 +165,18 @@ public class PopularUnsubscribedCommunities extends Fragment {
                                         }
 
                                         String type=current.getString("content");
-                                        String type1=current.getString("img");
+                                        String type1="http://35.232.3.8"+current.getString("img");
                                         String type2=current.getString("videolink");
-                                        if(type!=null){//text post
-                                            temp.setTextPostcontent(current.getString("type"));
+                                        if(type!="null"){//text post
+                                            temp.setTextPostcontent(type);
                                             temp.setPostType(0);
                                         }
-                                        else if(type1!=null){//image post
-                                            temp.setTextPostcontent(current.getString("type1"));
+                                        else if(type1!="null"){//image post
+                                            temp.setImageURL(type1);
                                             temp.setPostType(1);
                                         }
-                                        else if(type2!=null){
-                                            temp.setTextPostcontent(current.getString("type2"));
+                                        else if(type2!="null"){
+                                            temp.setVideoURL(type2);
                                             temp.setPostType(2);
                                         }
                                         postArrayList.add(temp);
@@ -255,6 +255,7 @@ public class PopularUnsubscribedCommunities extends Fragment {
 
         }
     }//onActivityResult
+
 
     public void getResponse(
             int method,

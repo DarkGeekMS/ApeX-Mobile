@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SerachList">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/searchToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/myblue"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+    <EditText
+        android:layout_below="@+id/searchToolbar"
+        android:hint="Search Here"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/searchFilter"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/searchFilter"
+        android:id="@+id/theList"/>
+</RelativeLayout>

@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Movie;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
@@ -191,6 +195,25 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                           });
 
                                   builder.show();
+
+                              }
+                              if(item.getItemId()==R.id.deletpost){
+                                  deletePost(currentPost.getPostId(),Request.Method.GET, null,
+                                          new  VolleyCallback(){
+                                              @Override
+                                              public void onSuccessResponse(String result) {
+                                                  try {
+                                                      JSONObject response = new JSONObject(result);
+                                                      value=response.getString("value");
+                                                      if(value=="true")
+                                                          Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
+                                                      else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
+
+                                                  } catch (JSONException e) {
+                                                      e.printStackTrace();
+                                                  }
+                                              }
+                                          },currentPost.getPostId());
 
                               }
                             return true;
@@ -646,5 +669,63 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                 };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
+    public void deletePost(String postID, int method, JSONObject jsonValue, final VolleyCallback callback,final String postname){
+        User user = SharedPrefmanager.getInstance(context).getUser();
+        final String token=user.getToken();
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, Routes.delete,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        callback.onSuccessResponse(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        String errorMessage = "Unknown error";
+                        if (networkResponse == null) {
+                            if (error.getClass().equals(TimeoutError.class)) {
+                                errorMessage = "Request timeout";
+                            } else if (error.getClass().equals(NoConnectionError.class)) {
+                                errorMessage = "Failed to connect server";
+                            }
+                        } else {
+                            String result = new String(networkResponse.data);
+                            try {
+                                JSONObject response = new JSONObject(result);
+                                String status = response.getString("status");
+                                String message = response.getString("message");
 
+                                Log.e("Error Status", status);
+                                Log.e("Error Message", message);
+
+                                if (networkResponse.statusCode == 404) {
+                                    errorMessage = "Resource not found";
+                                } else if (networkResponse.statusCode == 401) {
+                                    errorMessage = message+" Please login again";
+                                } else if (networkResponse.statusCode == 400) {
+                                    errorMessage = message+ " Check your inputs";
+                                } else if (networkResponse.statusCode == 500) {
+                                    errorMessage = message+" Something is getting wrong";
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.i("Error", errorMessage);
+                        error.printStackTrace();
+                    }
+                }){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("username", postname);
+            params.put("token", token);
+            return params;}
+        };
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
 }

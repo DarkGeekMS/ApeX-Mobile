@@ -1,6 +1,7 @@
 package com.example.android.apexware;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -67,10 +68,11 @@ public class HomeFragment extends Fragment {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(activity.getApplicationContext(), "you type", Toast.LENGTH_LONG).show();
+                            Intent i=new Intent(getContext(),SerachList.class);
+                            startActivity(i);
                         }
                     });
-            mSearchView.setOnQueryTextListener(
+            /*mSearchView.setOnQueryTextListener(
                     new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
@@ -80,11 +82,14 @@ public class HomeFragment extends Fragment {
 
                         @Override
                         public boolean onQueryTextChange(String newText) {
+                            if(newText.length()>2){
+                                //Todo send request to get data
+                            }
                             Toast.makeText(activity.getApplicationContext(), "you type" + newText, Toast.LENGTH_LONG)
                                     .show();AppCompatActivity activity = (AppCompatActivity) getActivity();
                             return false;
                         }
-                    });
+                    });*/
         } catch (Exception e) {
             e.printStackTrace();
         }

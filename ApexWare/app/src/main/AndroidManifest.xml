@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WriteReplay"></activity>
+        <activity android:name=".SerachList"></activity>
+        <activity android:name=".WriteReplay" />
         <activity android:name=".ReadMessage" />
         <activity android:name=".EditPost" />
         <activity android:name=".NotificationSettings" />
