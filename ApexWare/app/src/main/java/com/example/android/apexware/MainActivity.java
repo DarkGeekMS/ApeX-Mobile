@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                           } catch (JSONException e) {
                             e.printStackTrace();
+                              login.setEnabled(true); // retry
                           }
                         }
                       },
@@ -151,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                   e.printStackTrace();
+                    login.setEnabled(true); // retry
+
                 }
               }
               if (active_mock) {
@@ -259,6 +262,8 @@ public class MainActivity extends AppCompatActivity {
               public void onErrorResponse(VolleyError error) {
                 Toast.makeText(MainActivity.this, "ServerError", Toast.LENGTH_SHORT).show();
                 error.getMessage();
+                  login.setEnabled(true); // retry
+
               }
             }) {
           @Override

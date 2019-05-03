@@ -22,8 +22,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -248,5 +250,22 @@ public class HomePage extends AppCompatActivity {
     transaction.replace(R.id.content_frame, fragment);
     transaction.addToBackStack(null);
     transaction.commit();
+  }
+
+  /** overrride the back button to do nothing instead of returning to login activity*/
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event)  {
+    if (keyCode == KeyEvent.KEYCODE_BACK
+            && event.getRepeatCount() == 0) {
+      Log.d("CDA", "onKeyDown Called");
+      onBackPressed();
+      return true;
+    }
+    return super.onKeyDown(keyCode, event);
+  }
+  @Override
+  public void onBackPressed() {
+    Log.d("CDA", "onBackPressed Called");
+    // do nothing
   }
 }
