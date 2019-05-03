@@ -174,15 +174,15 @@ public class HomeSubscribedCommunities extends Fragment {
                                           String type1=current.getString("img");
                                           String type2=current.getString("videolink");
                                           if(type!=null){//text post
-                                              temp.setTextPostcontent("type");
+                                              temp.setTextPostcontent(current.getString("type"));
                                               temp.setPostType(0);
                                           }
                                           else if(type1!=null){//image post
-                                              temp.setTextPostcontent("type1");
+                                              temp.setTextPostcontent(current.getString("type1"));
                                               temp.setPostType(1);
                                           }
                                           else if(type2!=null){
-                                              temp.setTextPostcontent("type2");
+                                              temp.setTextPostcontent(current.getString("type2"));
                                               temp.setPostType(2);
                                           }
                                           postArrayList.add(temp);
@@ -291,6 +291,7 @@ public class HomeSubscribedCommunities extends Fragment {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("token", token);
+                        params.put("subscribedApexCom","true");
                         return params;
                     }
                 };

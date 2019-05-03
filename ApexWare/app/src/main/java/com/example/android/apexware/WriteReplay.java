@@ -1,15 +1,13 @@
 package com.example.android.apexware;
 
-import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -29,17 +27,15 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WriteMessage extends AppCompatActivity {
-    EditText editTextReciever;
-    EditText editTextSubject;
-    EditText editTextContent;
-    User user = SharedPrefmanager.getInstance(this).getUser();
+public class WriteReplay extends AppCompatActivity {
+    EditText replayContent;
+    User user = SharedPrefmanager.getInstance(WriteReplay.this).getUser();
     final String token=user.getToken();
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_write_message);
+        setContentView(R.layout.activity_write_replay);
 
         Window window = this.getWindow();
         // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -49,14 +45,13 @@ public class WriteMessage extends AppCompatActivity {
         // finally change the color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
-        //get edit text value
-        editTextReciever=(EditText)findViewById(R.id.username_reciever_userinput);
-        editTextSubject=(EditText)findViewById(R.id.subject_userinput);
-        editTextContent=(EditText)findViewById(R.id.message_content);
-
-        Toolbar toolbar =findViewById(R.id.WriteMessagesToolbar);
+        Toolbar toolbar =findViewById(R.id.WriteReplayToolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setTitle("Replay to message");
+
+        ActionBar actionbar =WriteReplay.this.getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.close);//------> make it change with profile picture
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,14 +59,15 @@ public class WriteMessage extends AppCompatActivity {
                 finish();
             }
         });
+        replayContent=findViewById(R.id.replayContent);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.send_option, menu);
+        getMenuInflater().inflate(R.menu.replay_option, menu);
         return true;
     }
-    public void sendMessage (MenuItem item){
+    public void replayMessage(MenuItem item){
         getResponse(Request.Method.POST,
                 Routes.compose,
                 null,
@@ -85,7 +81,7 @@ public class WriteMessage extends AppCompatActivity {
                             // if no error in response
                             if (response != null) {
                                 // getting the result from the response
-                                String temp=obj.getString("id");
+                                String temp=obj.getString("id");//TODO what i do with returned id ??
                                 if(temp!="Receiver id is not found"){
                                     int x=0;
                                     Toast.makeText(getApplicationContext(),"Successfuly sent",Toast.LENGTH_SHORT).show();
@@ -102,18 +98,18 @@ public class WriteMessage extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                },editTextReciever.getText().toString().trim(),
-                editTextSubject.getText().toString().trim(),
-                editTextContent.getText().toString().trim(),token);
+                },replayContent.getText().toString().trim(),
+                "to send id paren",
+                token);
+
     }
     public void getResponse(
             int method,
             String url,
             JSONObject jsonValue,
             final VolleyCallback callback,
-            final String username,
-            final String subject,
             final String content,
+            final String parent,
             final String token) {
         StringRequest stringRequest =
                 new StringRequest(
@@ -138,9 +134,8 @@ public class WriteMessage extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        params.put("receiver", username);
-                        params.put("subject", subject);
                         params.put("content", content);
+                        params.put("parent", parent);
                         params.put("token",token);
                         return params;
                     }

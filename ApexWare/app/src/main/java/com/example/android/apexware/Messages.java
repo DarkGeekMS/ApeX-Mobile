@@ -1,15 +1,43 @@
 package com.example.android.apexware;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class Messages {
+public class Messages implements Parcelable {
     private String id;
     private String subject;
     private String content;
     private int isRead;
     private String sender;
     private String createdAgo ;
+
+    protected Messages(Parcel in) {
+        id = in.readString();
+        subject = in.readString();
+        content = in.readString();
+        isRead = in.readInt();
+        sender = in.readString();
+        createdAgo = in.readString();
+    }
+
+    public static final Creator<Messages> CREATOR = new Creator<Messages>() {
+        @Override
+        public Messages createFromParcel(Parcel in) {
+            return new Messages(in);
+        }
+
+        @Override
+        public Messages[] newArray(int size) {
+            return new Messages[size];
+        }
+    };
+
+    public Messages() {
+
+    }
 
     public String getId() {
         return id;
@@ -57,5 +85,20 @@ public class Messages {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(subject);
+        dest.writeString(content);
+        dest.writeInt(isRead);
+        dest.writeString(sender);
+        dest.writeString(createdAgo);
     }
 }

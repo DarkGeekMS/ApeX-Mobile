@@ -19,12 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EditPost"></activity>
+        <activity android:name=".WriteReplay"></activity>
+        <activity android:name=".ReadMessage" />
+        <activity android:name=".EditPost" />
         <activity android:name=".NotificationSettings" />
         <activity android:name=".Settings" />
         <activity android:name=".NewPass" />
         <activity android:name=".replytocomment" />
-        <activity android:name=".test"></activity>
+        <activity android:name=".test" />
         <activity android:name=".VerifyCode" />
         <activity android:name=".ForgotPass" />
         <activity android:name=".WriteMessage" />

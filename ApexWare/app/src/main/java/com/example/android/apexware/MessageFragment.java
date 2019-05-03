@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -186,7 +188,7 @@ public class MessageFragment extends Fragment {
                     }
                     for(int i=0;i<recivedMessage.length();i++){
                         JSONObject current=recivedMessage.getJSONObject(i);
-                        Messages temp=new Messages();
+                        Messages temp=new Messages();//---------------------->check this
                         temp.setSubject(current.getString("subject"));
                         temp.setRead(current.getInt("read"));
                         temp.setContent(current.getString("content"));
@@ -259,7 +261,16 @@ public class MessageFragment extends Fragment {
             }
           },token);
         }
-        // TO DO ADD CLICK LISTNER
+        listView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent i=new Intent(activity.getApplicationContext(),ReadMessage.class);
+                        i.putExtra("selectedMessage",messagesArrayList.get(position));
+                        startActivity(i);
+                    }
+                });
+        // COMPLETED : TODO ADD CLICK LISTNER
         return view;
     }
     @Override

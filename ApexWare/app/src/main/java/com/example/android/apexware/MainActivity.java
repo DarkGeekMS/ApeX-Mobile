@@ -26,6 +26,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.onesignal.OneSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.ic_launcher_background));
+
+      // OneSignal Initialization
+      OneSignal.startInit(this)
+              .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+              .unsubscribeWhenNotificationsAreDisabled(true)
+              .init();
 
     /*// if the token is saved
     if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
@@ -123,15 +130,15 @@ public class MainActivity extends AppCompatActivity {
                               // creating a new user object
                               User user = new User(response.getString("token"));
                               // storing the user in shared preferences
-                              SharedPrefmanager.getInstance(getApplicationContext())
+                              SharedPrefmanager.getInstance(MainActivity.this)
                                   .userLogin(user);
                               Toast.makeText(
-                                      getApplicationContext(),
+                                      MainActivity.this,
                                       "Login Successfully",
                                       Toast.LENGTH_SHORT)
                                   .show();
-                              Intent i = new Intent(getApplicationContext(), HomePage.class);
-                              getApplicationContext().startActivity(i);
+                              Intent i = new Intent(MainActivity.this, HomePage.class);
+                                MainActivity.this.startActivity(i);
                             }
                           } catch (JSONException e) {
                             e.printStackTrace();
@@ -148,12 +155,12 @@ public class MainActivity extends AppCompatActivity {
               }
               if (active_mock) {
                 Intent i =
-                    new Intent(getApplicationContext(), HomePage.class); // only used when debug
+                    new Intent(MainActivity.this, HomePage.class); // only used when debug
                 startActivity(i);
               }
             } else {
               Toast.makeText(
-                      getApplicationContext(),
+                      MainActivity.this,
                       "Password or username don't meet the standards",
                       Toast.LENGTH_SHORT)
                   .show();
@@ -163,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
   }
   /** opens the activity sign up on pressing the button sign up */
   public void openActivity_sign_up() {
-    startActivity(new Intent(this, test.class));
+    startActivity(new Intent(this, SignUp.class));
   }
   /** toggle button affect viewing password as text or as dots */
   public void onToggleClick(View v) {
@@ -250,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "ServerError", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "ServerError", Toast.LENGTH_SHORT).show();
                 error.getMessage();
               }
             }) {
@@ -262,6 +269,6 @@ public class MainActivity extends AppCompatActivity {
             return params;
           }
         };
-    VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    VolleySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
   }
 }
