@@ -75,7 +75,7 @@ public class CreatePost extends AppCompatActivity {
   boolean storage_approved = false;
   private static final String TAG = "create post";
   public static String communityName = "choose a community from here";
-  public static String communityID = "t5_1";
+  public static String communityID = "t5_2";
   ImageButton back_btn;
   ImageButton gallery_btn;
   ImageButton camera_btn;
@@ -86,7 +86,6 @@ public class CreatePost extends AppCompatActivity {
   EditText post_title;
   TextView title;
   ConstraintLayout choose_image;
-  String communityID = "t5_2";
   private String galleyFilePath = "";
   private String cameraFilePath = "";
 
