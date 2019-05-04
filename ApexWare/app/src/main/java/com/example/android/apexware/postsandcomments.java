@@ -45,15 +45,22 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static android.view.View.GONE;
+import static java.lang.StrictMath.abs;
+
 /**
  * this class is to handle the data of post and it`s comments
  * @author Omar
@@ -63,8 +70,16 @@ public class postsandcomments extends AppCompatActivity {
    int position;
    int mSelected = -1;
     Point p;
-
+     Post post1=new Post();
+    TextView textPost;
+    final ArrayList<Comment> commentArrayList = new ArrayList();
+    final ArrayList<Comment> repliesArrayList = new ArrayList();
+    final HashMap<Comment, List<Comment>> listHashMap = new HashMap<>();
+    User user = SharedPrefmanager.getInstance(postsandcomments.this).getUser();
+    final String token=user.getToken();
     CustomAdapterForComments adapter; // adapter for the data in the list
+    List<ArrayList<Comment>> allreplies;
+    ArrayList<Comment> repliesOFOneComment=new ArrayList();
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -78,54 +93,208 @@ public class postsandcomments extends AppCompatActivity {
     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorGray));
-    ExpandableListView commentsList =  findViewById(R.id.listofcomments);
-    final ArrayList<Comment> commentArrayList = new ArrayList();
-    ArrayList<Comment> repliesArrayList = new ArrayList();
-    HashMap<Comment, List<Comment>> listHashMap = new HashMap<>();
+    final ExpandableListView commentsList =  findViewById(R.id.listofcomments);
+
     /** * fake data */
     /** extracting info was sent with the intent to the post */
     Gson gson = new Gson();
     String postAsString = getIntent().getStringExtra("postToDisplay");
     position=getIntent().getIntExtra("itemPos",0);
-    final Post post1 = gson.fromJson(postAsString, Post.class);
+     post1 = gson.fromJson(postAsString, Post.class);
     /** some comments */
-    Comment comment1 = new Comment("1");
+    /*Comment comment1 = new Comment(post1.getPostId());
     comment1.setId("1");
-    comment1.setCommentCreateDate(125);
+    comment1.setCommentCreateDate( "1265");
     comment1.setCommentOwner("Omar229");
     comment1.setCommentContent(
             "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     commentArrayList.add(comment1);
-    Comment comment2 = new Comment("1");
+    final Comment comment2 = new Comment("1");
     comment2.setId("2");
-    comment2.setCommentCreateDate(2132);
+    comment2.setCommentCreateDate("1265");
     comment2.setCommentOwner("mostafa");
     comment2.setCommentContent(
             "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     commentArrayList.add(comment2);
     Comment rply1 = new Comment("1");
-    /** some replys */
+    *//** some replys *//*
     rply1.setId("3");
-    rply1.setCommentCreateDate(12665);
+    rply1.setCommentCreateDate("1265");
     rply1.setCommentOwner("bla7");
     rply1.setCommentContent(
             "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     repliesArrayList.add(rply1);
     Comment rply2 = new Comment("1");
     rply2.setId("4");
-    rply2.setCommentCreateDate(12665);
+    rply2.setCommentCreateDate("1265");
     rply2.setCommentOwner("bla bla bllllla");
     rply2.setCommentContent(
             "lknlscnsln jjcnsljncl slxiklm pscmscm skcskc scjosijcoskn ss;l,pokpsm79 s98cu9sjcosjnci cih9sjoksc sisisisisis ");
     repliesArrayList.add(rply2);
     listHashMap.put(commentArrayList.get(0), repliesArrayList);
     listHashMap.put(commentArrayList.get(1), repliesArrayList);
-    /**
-     * here we send the comments and their replys to the adapter which assigns the to the proper
-     * view
-     */
-    adapter = new CustomAdapterForComments(this, repliesArrayList, listHashMap, commentArrayList);
-    commentsList.setAdapter(adapter);
+*/      getResponse(Request.Method.POST,
+              Routes.moreComments,
+              null,
+              new VolleyCallback(){
+                  @Override
+                  public void onSuccessResponse(String response) {
+                      try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+                          JSONArray jsonArray=obj.getJSONArray("comments");
+                          // if no error in response
+                          if (response != null) {
+                              for(int i=0;i<jsonArray.length();i++){
+                                  JSONObject current=jsonArray.getJSONObject(i);
+                                  if(current.getString("parent")=="null")
+                                  { Comment temp=new Comment(post1.getPostId());
+                                  temp.setId(current.getString("id"));
+                                  temp.setPostId(current.getString("root"));
+                                  temp.setCommentOwner(current.getString("writerUsername"));
+                                  temp.setCommentContent(current.getString("content"));
+                                  temp.setVotesCount(current.getInt("votes"));
+                                  int vot=current.getInt("userVote");
+
+                                  Date currentTime = Calendar.getInstance().getTime();
+                                  String currendate="20"+Integer.toString(currentTime.getYear()-100);
+                                  if(currentTime.getMonth()>9){
+                                      currendate+="-"+Integer.toString(currentTime.getMonth());
+                                  }
+                                  else{
+                                      currendate+="-"+"0"+Integer.toString(currentTime.getMonth()+1);
+                                  }
+                                  currendate+="-"+Integer.toString(currentTime.getDate())+" ";
+                                  currendate+=Integer.toString(currentTime.getHours());
+                                  currendate+=":"+Integer.toString(currentTime.getMinutes());
+                                  currendate+=":"+Integer.toString(currentTime.getSeconds());
+                                  String createdDate=current.getString("created_at");
+                                  // Custom date format
+                                  SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+
+                                  //Calculate difference between current and created time
+                                  Date d1 = null;
+                                  Date d2 = null;
+                                  try {
+                                      d2 = format.parse(currendate);
+                                      d1 = format.parse(createdDate);
+                                  } catch (ParseException e) {
+                                      e.printStackTrace();
+                                  }
+                                  // Get msec from each, and subtract.
+                                  long diffTime = abs(d2.getTime() - d1.getTime());
+                                  long diffSeconds = diffTime / 1000 % 60;
+                                  long diffMinutes = diffTime / (60 * 1000);
+                                  long diffHours = diffTime / (60 * 60 * 1000);
+                                  long diffDays=d2.getDate()-d1.getDate();
+                                  long diffWeeks=diffDays/7;
+                                  if(diffMinutes<=59){
+                                      temp.setCommentCreateDate(Long.toString(diffMinutes)+" min ago");
+                                  }
+                                  else if(diffHours<23){
+                                      temp.setCommentCreateDate(Long.toString(diffHours)+" hr ago");
+                                  }
+                                  else if(diffDays<7){
+                                      temp.setCommentCreateDate(Long.toString(diffDays)+" days ago");
+                                  }
+                                  else{
+                                      temp.setCommentCreateDate(Long.toString(diffWeeks)+" weeks ago");
+                                  }
+
+
+                                      commentArrayList.add(temp);}
+                                else{
+                                      Comment reply=new Comment(post1.getPostId());
+                                      reply.setId(current.getString("id"));
+                                      reply.setPostId(current.getString("root"));
+                                      reply.setCommentOwner(current.getString("writerUsername"));
+                                      reply.setCommentContent(current.getString("content"));
+                                      reply.setVotesCount(current.getInt("votes"));
+                                      reply.setParentID(current.getString("parent"));
+                                      int vot=current.getInt("userVote");
+
+                                      Date currentTime = Calendar.getInstance().getTime();
+                                      String currendate="20"+Integer.toString(currentTime.getYear()-100);
+                                      if(currentTime.getMonth()>9){
+                                          currendate+="-"+Integer.toString(currentTime.getMonth());
+                                      }
+                                      else{
+                                          currendate+="-"+"0"+Integer.toString(currentTime.getMonth()+1);
+                                      }
+                                      currendate+="-"+Integer.toString(currentTime.getDate())+" ";
+                                      currendate+=Integer.toString(currentTime.getHours());
+                                      currendate+=":"+Integer.toString(currentTime.getMinutes());
+                                      currendate+=":"+Integer.toString(currentTime.getSeconds());
+                                      String createdDate=current.getString("created_at");
+                                      // Custom date format
+                                      SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+
+                                      //Calculate difference between current and created time
+                                      Date d1 = null;
+                                      Date d2 = null;
+                                      try {
+                                          d2 = format.parse(currendate);
+                                          d1 = format.parse(createdDate);
+                                      } catch (ParseException e) {
+                                          e.printStackTrace();
+                                      }
+                                      // Get msec from each, and subtract.
+                                      long diffTime = abs(d2.getTime() - d1.getTime());
+                                      long diffSeconds = diffTime / 1000 % 60;
+                                      long diffMinutes = diffTime / (60 * 1000);
+                                      long diffHours = diffTime / (60 * 60 * 1000);
+                                      long diffDays=d2.getDate()-d1.getDate();
+                                      long diffWeeks=diffDays/7;
+                                      if(diffMinutes<=59){
+                                          reply.setCommentCreateDate((diffMinutes)+" min ago");
+                                      }
+                                      else if(diffHours<23){
+                                          reply.setCommentCreateDate((diffHours)+" hr ago");
+                                      }
+                                      else if(diffDays<7){
+                                          reply.setCommentCreateDate((diffDays)+" days ago");
+                                      }
+                                      else{
+                                          reply.setCommentCreateDate((diffWeeks)+" weeks ago");
+                                      }
+
+                                      repliesArrayList.add(reply);
+                                  }
+                              }
+                              for(int k=0;k<commentArrayList.size();k++)
+                              {
+                                  for(int l=0;l<repliesArrayList.size();l++)
+                                  {
+                                      if(commentArrayList.get(k).getId().equals(repliesArrayList.get(l).getParentID()))
+                                      repliesOFOneComment.add(repliesArrayList.get(l));
+                                  }
+                                  listHashMap.put(commentArrayList.get(k), repliesOFOneComment);
+
+                              }
+
+                              adapter = new CustomAdapterForComments(postsandcomments.this, repliesArrayList, listHashMap, commentArrayList);
+                              commentsList.setAdapter(adapter);
+                              Toast.makeText(postsandcomments.this,"Home done retrived",Toast.LENGTH_SHORT).show();
+                          } else {
+                              int x=0;
+                              Toast.makeText(
+                                    postsandcomments.this, "Unsuccessful operation", Toast.LENGTH_SHORT)
+                                      .show();
+                          }
+
+                      } catch (JSONException e) {
+                          e.printStackTrace();
+                      }
+                  }
+              },token,post1.getPostId());
+      /*adapter = new CustomAdapterForComments(postsandcomments.this, repliesArrayList, listHashMap, commentArrayList);
+      commentsList.setAdapter(adapter);*/
+
+      /**
+       * here we send the comments and their replys to the adapter which assigns the to the proper
+       * view
+       */
+
     /** here we add the post to the top of comments */
     View po = getLayoutInflater().inflate(R.layout.homepgaelistview, null);
     commentsList.addHeaderView(po);
@@ -138,7 +307,7 @@ public class postsandcomments extends AppCompatActivity {
                 PopupMenu popup = new PopupMenu(postsandcomments.this, button);
                   User user = SharedPrefmanager.getInstance(postsandcomments.this).getUser();
                   final String token = user.getToken();
-                  if(user.getUsername()==post1.getPostOwner()){
+                  if(user.getUsername().equals(post1.getPostOwner())){
                       popup.getMenuInflater().inflate(R.menu.mypostoptions, popup.getMenu());
                       popup.setOnMenuItemClickListener(
                               new PopupMenu.OnMenuItemClickListener() {
@@ -153,6 +322,7 @@ public class postsandcomments extends AppCompatActivity {
                                           startActivityForResult(intent,10);}
                                       }
                                       // we can use item name to make intent for the new responces
+/*
                                       if(item.getItemId()==R.id.hidepost){
                                           hidePost(post1.getPostId(),Request.Method.GET, null,
                                                   new  VolleyCallback(){
@@ -176,6 +346,8 @@ public class postsandcomments extends AppCompatActivity {
                                                       }
                                                   });
                                       }
+*/
+/*
                                       if(item.getItemId()==R.id.reportpost){
                                           final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
                                           final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
@@ -234,6 +406,7 @@ public class postsandcomments extends AppCompatActivity {
                                           builder.show();
 
                                       }
+*/
                                       return true;
                                   }
                               });
@@ -323,7 +496,7 @@ public class postsandcomments extends AppCompatActivity {
                                                           try {
                                                               JSONObject response = new JSONObject(result);
                                                               value=response.getString("reported");
-                                                              if(value=="true")
+                                                              if(value.equals("true"))
                                                                   Toast.makeText(postsandcomments.this,"Post Is Reported",Toast.LENGTH_SHORT).show();
                                                               else  Toast.makeText(postsandcomments.this,"error,not reported",Toast.LENGTH_SHORT).show();
                                                           } catch (JSONException e) {
@@ -387,7 +560,7 @@ public class postsandcomments extends AppCompatActivity {
             "posted by " + post1.getPostOwner() + "." + post1.getPostCreateDate());
     TextView Title = findViewById(R.id.PostTitle);
     Title.setText(post1.getPostTitle());
-    TextView textPost = (TextView) findViewById(R.id.TextPostBody);
+     textPost = (TextView) findViewById(R.id.TextPostBody);
     WebView videoLinkView = (WebView) findViewById(R.id.videoWebView);
     ImageView uploadedImageView = (ImageView) findViewById(R.id.imageUploadedView);
     textPost.setText(post1.getTextPostcontent());
@@ -503,10 +676,18 @@ addcomment.setOnClickListener(new View.OnClickListener() {
         Gson gson = new Gson();
         String ID = gson.toJson(post1.getPostId());
         intent.putExtra("postID", ID); // sending the post to next activity
-        startActivity(intent);
+        startActivityForResult(intent,9);
     }
 });
 
+    /*  commentsList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+          @Override
+          public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+              Log.d("onGroupClick:", "worked");
+              parent.expandGroup(groupPosition);
+              return false;
+          }
+      });*/
 
   }
 
@@ -932,7 +1113,83 @@ addcomment.setOnClickListener(new View.OnClickListener() {
                 });
         VolleySingleton.getInstance(postsandcomments.this).addToRequestQueue(stringRequest);
     }
+    public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback,final  String token,final String id) {
+        StringRequest stringRequest =
+                new StringRequest(
+                        Request.Method.POST,
+                        url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                callback.onSuccessResponse(response);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                int x=0;
+                                Toast.makeText(
+                                        postsandcomments.this.getApplicationContext(), "Server Error", Toast.LENGTH_SHORT)
+                                        .show();
+                                error.getMessage();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("token", token);
+                        params.put("parent",id);
+                        return params;
+                    }
+                };
+        VolleySingleton.getInstance(postsandcomments.this.getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+//related 2 add comment
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==9&&resultCode==RESULT_OK)
+        {
+            Gson gson = new Gson();
+            String newcom = data.getStringExtra("newcomment");
+            final Comment Comment1 = gson.fromJson(newcom, Comment.class);
+            if(Comment1!= null)
+            {commentArrayList.add(Comment1);
+                adapter.notifyDataSetChanged();}
+           /* if(id!="300000")
+            {
+                for(int i = 0 ; i < postArrayList.size() ; i++){
+                    if(id.equalsIgnoreCase(postArrayList.get(i).getPostId())){
+                        postArrayList.remove(i);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getContext(),"post is hidden",Toast.LENGTH_SHORT).show();
+            }
+            else  Toast.makeText(getContext(),"what tf",Toast.LENGTH_SHORT).show();*/
+
+        }
+        if(requestCode==10&&resultCode==RESULT_OK){
+            String edited = data.getStringExtra("edited");
+            post1.setTextPostcontent(edited);
+            textPost.setText(post1.getTextPostcontent());
+
+        }
+        if(requestCode==11&&resultCode==RESULT_OK)
+        {
+            Gson gson = new Gson();
+            String commentAsString = getIntent().getStringExtra("commentEdited");
+            final Comment comment = gson.fromJson(commentAsString, Comment.class);
+            String id=comment.getId();
+            for(int i=0;i<commentArrayList.size();i++)
+            {
+                if(commentArrayList.get(i).getId().equals(id))
+                {commentArrayList.get(i).setCommentContent(comment.getCommentContent());}
+            }
+        }
+    }
+    //onActivityResult
+
+
+
 }
-
-
-

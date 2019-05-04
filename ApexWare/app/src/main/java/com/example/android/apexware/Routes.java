@@ -33,6 +33,7 @@ public interface Routes {
     String addModerator=serverAddress+"AddModerator?";//post
 
     //Links,Comments and Posts
+    String ADD=serverAddress+"AddReply?";//add
     String comment=serverAddress+"comment?";//post
     String delete=serverAddress+"Delete?";//delete
     String edit=serverAddress+"EditText?";//patch

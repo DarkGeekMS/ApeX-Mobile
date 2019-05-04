@@ -50,7 +50,8 @@ public class HomeSubscribedCommunities extends Fragment {
     ListView list;
     CustomAdapterForHomePage adapter;
     ArrayList<Post> postArrayList = new ArrayList();
-
+    User user = SharedPrefmanager.getInstance(this.getContext()).getUser();
+    final String token = user.getToken();
 
     public HomeSubscribedCommunities() {
         // Required empty public constructor
@@ -70,7 +71,7 @@ public class HomeSubscribedCommunities extends Fragment {
           if(Routes.active_mock){
               // create array adapter list for the view
               Post testpost = new Post();
-              testpost.setPostId("1");
+              testpost.setPostId("t1_6");
               testpost.setPostType(0);
               testpost.setPostOwner("Mazen");
               testpost.setPostCreateDate("19");
@@ -261,6 +262,16 @@ public class HomeSubscribedCommunities extends Fragment {
             else  Toast.makeText(getContext(),"what tf",Toast.LENGTH_SHORT).show();
 
         }
+
+        if(requestCode==10&&resultCode==RESULT_OK){
+            String id=data.getStringExtra("postid");
+            for(int i = 0 ; i < postArrayList.size() ; i++){
+                if(id.equalsIgnoreCase(postArrayList.get(i).getPostId()))
+                    postArrayList.get(i).setTextPostcontent(data.getStringExtra("edited"));
+                }
+                adapter.notifyDataSetChanged();}
+
+
     }//onActivityResult
     public void getResponse(
             int method,

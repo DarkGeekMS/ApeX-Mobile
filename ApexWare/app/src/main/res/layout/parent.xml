@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,8 +14,8 @@
     <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_drop_down" />
+        android:layout_height="113dp"
+        app:srcCompat="@drawable/ic_arrow_drop_down" />
 
     <TextView
         android:layout_toRightOf="@id/image"

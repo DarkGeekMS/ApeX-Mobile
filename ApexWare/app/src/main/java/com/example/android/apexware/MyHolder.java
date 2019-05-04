@@ -15,7 +15,6 @@ import com.example.android.apexware.atv.model.TreeNode;
  */
 public class MyHolder extends TreeNode.BaseNodeViewHolder<MyHolder.IconTreeItem> {
     public static final int DEFAULT = 0;
-
     ImageView img;
     TextView tvValue;
     boolean toggle;
@@ -59,6 +58,8 @@ public class MyHolder extends TreeNode.BaseNodeViewHolder<MyHolder.IconTreeItem>
     public static class IconTreeItem {
         public int icon;
         public String text;
+        public String Createdate;
+        public String Owner;
 
         public IconTreeItem(int icon, String text) {
             this.icon = icon;
@@ -70,4 +71,6 @@ public class MyHolder extends TreeNode.BaseNodeViewHolder<MyHolder.IconTreeItem>
         return (int) (context.getResources().getDimension(resId) / context.getResources().getDisplayMetrics().density)
                 ;
     }
+
+
 }

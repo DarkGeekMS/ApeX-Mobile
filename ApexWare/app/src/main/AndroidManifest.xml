@@ -23,6 +23,7 @@
         <activity android:name=".EditProfile"></activity>
         <activity android:name=".ExploreUserProfile" />
         <activity android:name=".SerachList" />
+        <activity android:name=".EditComment"></activity>
         <activity android:name=".WriteReplay" />
         <activity android:name=".ReadMessage" />
         <activity android:name=".EditPost" />
@@ -60,7 +61,8 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>
+                android:resource="@xml/file_paths"></provider>
+
     </application>
 
 </manifest>

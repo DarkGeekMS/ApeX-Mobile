@@ -115,10 +115,13 @@ public class Community extends AppCompatActivity {
             }
         });
         ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new PostsFragment(),"posts");
+        viewPagerAdapter.addFragment(new PostsFragment(comm1.getComID()),"posts");
         viewPagerAdapter.addFragment(new AboutFragmentforcommunity(),"About");
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
+
+
        final Button options = findViewById(R.id.commOptions);
         options.setOnClickListener(
                 new View.OnClickListener() {
@@ -142,6 +145,7 @@ public class Community extends AppCompatActivity {
                         popup.show(); // showing popup menu
                     }
                 });
+
 
         sub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,12 +280,13 @@ public class Community extends AppCompatActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("ApexCom_id", comid);
-                        params.put("token", token);
                         return params;
                     }
                 };
         VolleySingleton.getInstance(Community.this).addToRequestQueue(stringRequest);
     }
+
+
 
 
 

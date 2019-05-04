@@ -328,7 +328,6 @@ public class CreatePost extends AppCompatActivity {
             try {
               // converting response to json object
               JSONObject obj = new JSONObject(response);
-
               // if no error in response
               if (response != null) {
                 Toast.makeText(getApplicationContext(), "Post Successful", Toast.LENGTH_SHORT)

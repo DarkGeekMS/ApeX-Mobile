@@ -7,7 +7,7 @@
         android:title="Report"
         />
     <item
-        android:id="@+id/delete_comment"
+        android:id="@+id/Delete_comment"
         android:title="Delete"/>
 
 </menu>

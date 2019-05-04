@@ -2,6 +2,7 @@ package com.example.android.apexware;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,8 @@ public class PostFragment extends Fragment {
             ArrayList<Post> postArrayList=profile.postArrayList;
             adapter = new CustomAdapterForHomePage((Activity) getContext(), postArrayList);
             list.setAdapter(adapter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                list.setNestedScrollingEnabled(true);
         }
         catch (Exception e){
             e.printStackTrace();

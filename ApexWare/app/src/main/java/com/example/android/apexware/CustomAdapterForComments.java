@@ -69,7 +69,9 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
    */
   @Override
   public int getChildrenCount(int groupPosition) {
+    if (listHashMap.get(commentList.get(groupPosition)) !=null)
     return listHashMap.get(commentList.get(groupPosition)).size();
+    else return 0;
   }
 
   /**
@@ -141,14 +143,10 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
     if (convertView == null)
       convertView = LayoutInflater.from(context).inflate(R.layout.commentview, parent, false);
    final Comment currentComment = commentList.get(groupPosition);
-    TextView commentOwnerandDte =
-        (TextView) convertView.findViewById(R.id.commentOwnerNameAndTimeCreated);
-    commentOwnerandDte.setText(
-        currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
+    TextView commentOwnerandDte =convertView.findViewById(R.id.commentOwnerNameAndTimeCreated);
+    commentOwnerandDte.setText(currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
     TextView commentContent = convertView.findViewById(R.id.commentContents);
     commentContent.setText(currentComment.getCommentContent());
-    View tempView = convertView;
-
     final Button upcomment = convertView.findViewById(R.id.upvotecomment);
     final Button downcomment = convertView.findViewById(R.id.downvotecomment);
     final TextView votecounterforcomment = convertView.findViewById(R.id.votecounterforcomment);
@@ -183,7 +181,6 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                   });
       }
     });
-
     downcomment.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -216,6 +213,219 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
         }
     });
       final Button commentoptions=convertView.findViewById(R.id.commentoptions);
+      commentoptions.setOnClickListener(
+              new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      PopupMenu popup = new PopupMenu(context, commentoptions);
+                      if(currentComment.getCommentOwner().equals("hellie"))//if it is my comment
+                      {
+                          popup.getMenuInflater().inflate(R.menu.mycommentoptions, popup.getMenu());
+                          popup.setOnMenuItemClickListener(
+                                  new PopupMenu.OnMenuItemClickListener() {
+                                      @Override
+                                      public boolean onMenuItemClick(MenuItem item) {
+                                          if(item.getItemId()==R.id.EditMyComment){
+                                              Intent intent = new Intent( CustomAdapterForComments.this.context,EditComment.class);
+                                              Gson gson = new Gson();
+                                              String commentAsString = gson.toJson(currentComment);
+                                              intent.putExtra("commentToEdit", commentAsString); // sending the post to next activity
+                                              context.startActivityForResult(intent,11);}
+
+                                          // we can use item name to make intent for the new responces
+                                          if(item.getItemId()==R.id.SaveMyComment){
+
+                                          }
+                                          if(item.getItemId()==R.id.DeleteMyComment){
+                                              deleteComment(currentComment.getPostId(),Request.Method.GET, null,
+                                                      new  VolleyCallback(){
+                                                          @Override
+                                                          public void onSuccessResponse(String result) {
+                                                              try {
+                                                                  JSONObject response = new JSONObject(result);
+                                                                  value=response.getString("deleted");
+                                                                  if(value.equals("true"))
+                                                                      Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
+                                                                  else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
+
+                                                              } catch (JSONException e) {
+                                                                  e.printStackTrace();
+                                                              }
+                                                          }
+                                                      },currentComment.getPostId());
+                                          }
+                                          return true;
+                                      }
+                                  });
+                          popup.show(); // showing popup menu}
+                      }else{//if it`s others comment
+                          popup.getMenuInflater().inflate(R.menu.commentoptions, popup.getMenu());
+                          popup.setOnMenuItemClickListener(
+                                  new PopupMenu.OnMenuItemClickListener() {
+                                      @Override
+                                      public boolean onMenuItemClick(MenuItem item) {
+                                          if(item.getItemId()==R.id.Savecomment){}
+                                          // we can use item name to make intent for the new responces
+                                          if(item.getItemId()==R.id.reportcomment){
+                                              final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                              AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                              builder.setTitle("report");
+                                              builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                                  @Override
+                                                  public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                                      if (isChecked) {
+                                                          // If the user checked the item, add it to the selected items
+                                                          selectedItems.add(which);
+                                                      } else if (selectedItems.contains(which)) {
+                                                          // Else, if the item is already in the array, remove it
+                                                          selectedItems.remove(Integer.valueOf(which));
+                                                      }
+                                                  }
+                                              });
+                                              builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(DialogInterface dialog, int id) {
+                                                      // User clicked send, we should send the selectedItems results to the server
+                                                      Toast.makeText(context,"comment is reported",Toast.LENGTH_SHORT).show();
+
+                                                  }
+                                              })
+                                                      .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(DialogInterface dialog, int id) {
+                                                              //report canceled
+                                                              Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
+
+                                                          }
+                                                      });
+
+                                              builder.show();
+                                          }
+                                          if(item.getItemId()==R.id.Delete_comment){
+
+                                          }
+                                          return true;
+                                      }
+                                  });
+                          popup.show(); // showing popup menu}
+                      }
+                  }
+              });
+      final Button replytocomment=convertView.findViewById(R.id.commentreply);
+      replytocomment.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              Intent intent = new Intent(context,replytocomment.class);
+              Gson gson = new Gson();
+              String comment = gson.toJson(currentComment);
+              intent.putExtra("Comment", comment); // sending the post to next activity
+              context.startActivity(intent);
+          }
+      });
+
+    return convertView;
+  }
+
+  /**
+   * this method is to get the appearance of the child/reply
+   *
+   * @param groupPosition
+   * @param childPosition
+   * @param isLastChild
+   * @param convertView
+   * @param parent
+   * @return
+   */
+  @Override
+  public View getChildView(
+      int groupPosition,
+      int childPosition,
+      boolean isLastChild,
+      View convertView,
+      ViewGroup parent) {
+    if (convertView == null)
+      convertView = LayoutInflater.from(context).inflate(R.layout.replyview, parent, false);
+   final Comment currentComment = replies.get(childPosition);
+    TextView commentOwnerandDte =convertView.findViewById(R.id.replyOwnerNameAndTimeCreated);
+    commentOwnerandDte.setText(
+        currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
+    TextView commentContent = convertView.findViewById(R.id.replyContents);
+    commentContent.setText(currentComment.getCommentContent());
+      final Button upreply = convertView.findViewById(R.id.upvotereply);
+      final Button downreply = convertView.findViewById(R.id.downvotereply);
+      final TextView votecounterforcomment = convertView.findViewById(R.id.votecounterforreply);
+      upreply.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
+              upVote(currentComment.getId(),Request.Method.POST, null,
+                      new  VolleyCallback(){
+                          @Override
+                          public void onSuccessResponse(String result) {
+                              try {
+                                  JSONObject response = new JSONObject(result);
+                                  value=response.getString("votes");
+                                  votecounterforcomment.setText(value);
+                                  int newvotes=Integer.parseInt(value);
+                                  if(newvotes>currentvotes){
+                                      if(newvotes==currentvotes+2)//was downvoted and upvote clicked
+                                      { downreply.setTextColor(Color.GRAY);
+                                          currentComment.setDownvoted(false);}
+                                      upreply.setTextColor(Color.BLUE);
+                                      currentComment.setUpvoted(true);}
+                                  else if (newvotes<currentvotes)//was upvoted & upvote clicked
+                                  {
+                                      upreply.setTextColor(Color.GRAY);
+                                      currentComment.setUpvoted(false);
+                                  }
+                              } catch (JSONException e) {
+                                  e.printStackTrace();
+                              }
+                          }
+                      });
+          }
+      });
+      downreply.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
+              downVote(currentComment.getId(),Request.Method.GET, null,
+                      new  VolleyCallback(){
+                          @Override
+                          public void onSuccessResponse(String result) {
+                              try {
+                                  JSONObject response = new JSONObject(result);
+                                  value=response.getString("votes");
+                                  votecounterforcomment.setText(value);
+                                  int newvotes=Integer.parseInt(value);
+                                  if(newvotes<currentvotes){
+                                      if(newvotes==currentvotes-2)//was upvoted and downvote clicked
+                                      { upreply.setTextColor(Color.GRAY);
+                                          currentComment.setUpvoted(false);}
+                                      downreply.setTextColor(Color.RED);
+                                      currentComment.setDownvoted(true);}
+                                  else if (newvotes>currentvotes)//was downvoted & downvote clicked(cancel downvote)
+                                  {
+                                      downreply.setTextColor(Color.GRAY);
+                                      currentComment.setDownvoted(false);
+                                  }
+                              } catch (JSONException e) {
+                                  e.printStackTrace();
+                              }
+                          }
+                      });
+          }
+      });
+      final Button addreply =convertView.findViewById(R.id.commentreplys);
+      addreply.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+
+          }
+      });
+      final User user = SharedPrefmanager.getInstance(context).getUser();
+      final String token = user.getToken();
+      final Button commentoptions=convertView.findViewById(R.id.replyoptions);
       commentoptions.setOnClickListener(
               new View.OnClickListener() {
                   @Override
@@ -279,13 +489,11 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                                                           public void onClick(DialogInterface dialog, int id) {
                                                               //report canceled
                                                               Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
-
                                                           }
                                                       });
-
                                               builder.show();
                                           }
-                                          if(item.getItemId()==R.id.delete_comment){
+                                          if(item.getItemId()==R.id.Delete_comment){
                                               deleteComment(currentComment.getPostId(),Request.Method.GET, null,
                                                       new  VolleyCallback(){
                                                           @Override
@@ -310,114 +518,7 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
                       }
                   }
               });
-      final Button replytocomment=convertView.findViewById(R.id.commentreply);
-      replytocomment.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              Intent intent = new Intent(context,replytocomment.class);
-              Gson gson = new Gson();
-              String comment = gson.toJson(currentComment);
-              intent.putExtra("Comment", comment); // sending the post to next activity
-              context.startActivity(intent);
-          }
-      });
 
-    return convertView;
-  }
-
-  /**
-   * this method is to get the appearance of the child/reply
-   *
-   * @param groupPosition
-   * @param childPosition
-   * @param isLastChild
-   * @param convertView
-   * @param parent
-   * @return
-   */
-  @Override
-  public View getChildView(
-      int groupPosition,
-      int childPosition,
-      boolean isLastChild,
-      View convertView,
-      ViewGroup parent) {
-    if (convertView == null)
-      convertView = LayoutInflater.from(context).inflate(R.layout.replyview, parent, false);
-   final Comment currentComment = replies.get(childPosition);
-    TextView commentOwnerandDte =convertView.findViewById(R.id.replyOwnerNameAndTimeCreated);
-    commentOwnerandDte.setText(
-        currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
-    TextView commentContent = convertView.findViewById(R.id.replyContents);
-    commentContent.setText(currentComment.getCommentContent());
-    View tempView = convertView;
-
-      final Button upreply = convertView.findViewById(R.id.upvotereply);
-      final Button downreply = convertView.findViewById(R.id.downvotereply);
-      final TextView votecounterforcomment = convertView.findViewById(R.id.votecounterforreply);
-      upreply.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
-              upVote(currentComment.getId(),Request.Method.POST, null,
-                      new  VolleyCallback(){
-                          @Override
-                          public void onSuccessResponse(String result) {
-                              try {
-                                  JSONObject response = new JSONObject(result);
-                                  value=response.getString("votes");
-                                  votecounterforcomment.setText(value);
-                                  int newvotes=Integer.parseInt(value);
-                                  if(newvotes>currentvotes){
-                                      if(newvotes==currentvotes+2)//was downvoted and upvote clicked
-                                      { downreply.setTextColor(Color.GRAY);
-                                          currentComment.setDownvoted(false);}
-                                      upreply.setTextColor(Color.BLUE);
-                                      currentComment.setUpvoted(true);}
-                                  else if (newvotes<currentvotes)//was upvoted & upvote clicked
-                                  {
-                                      upreply.setTextColor(Color.GRAY);
-                                      currentComment.setUpvoted(false);
-                                  }
-                              } catch (JSONException e) {
-                                  e.printStackTrace();
-                              }
-                          }
-                      });
-          }
-      });
-
-      downreply.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
-              downVote(currentComment.getId(),Request.Method.GET, null,
-                      new  VolleyCallback(){
-                          @Override
-                          public void onSuccessResponse(String result) {
-                              try {
-                                  JSONObject response = new JSONObject(result);
-                                  value=response.getString("votes");
-                                  votecounterforcomment.setText(value);
-                                  int newvotes=Integer.parseInt(value);
-                                  if(newvotes<currentvotes){
-                                      if(newvotes==currentvotes-2)//was upvoted and downvote clicked
-                                      { upreply.setTextColor(Color.GRAY);
-                                          currentComment.setUpvoted(false);}
-                                      downreply.setTextColor(Color.RED);
-                                      currentComment.setDownvoted(true);}
-                                  else if (newvotes>currentvotes)//was downvoted & downvote clicked(cancel downvote)
-                                  {
-                                      downreply.setTextColor(Color.GRAY);
-                                      currentComment.setDownvoted(false);
-                                  }
-                              } catch (JSONException e) {
-                                  e.printStackTrace();
-                              }
-                          }
-                      });
-          }
-      });
       return convertView;
   }
 
