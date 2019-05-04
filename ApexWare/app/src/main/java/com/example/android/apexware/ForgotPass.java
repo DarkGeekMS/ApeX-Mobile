@@ -16,8 +16,11 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
@@ -111,7 +114,7 @@ public class ForgotPass extends AppCompatActivity {
   }
   /** open login form again */
   public void openActivity_login(View view) {
-    startActivity(new Intent(this, MainActivity.class));
+    finish();
   }
 
   /** send request to get the verify code sent */
@@ -239,6 +242,7 @@ public class ForgotPass extends AppCompatActivity {
 
               // if no error in response
               if (response != null) {
+                Toast.makeText(getApplicationContext(),"check your mail .. a code was sent successfully",Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onSuccessResponse: a");
               } else {
                 Log.d(TAG, "onFailResponse: ");
@@ -311,16 +315,48 @@ public class ForgotPass extends AppCompatActivity {
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "ServerError", Toast.LENGTH_SHORT).show();
                 error.getMessage();
                 verify.setEnabled(true); // get button back to verify again
+                NetworkResponse networkResponse = error.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                  if (error.getClass().equals(TimeoutError.class)) {
+                    errorMessage = "Request timeout";
+                  } else if (error.getClass().equals(NoConnectionError.class)) {
+                    errorMessage = "Failed to connect server";
+                  }
+                } else {
+                  String result = new String(networkResponse.data);
+                  try {
+                    JSONObject response = new JSONObject(result);
+                    String status = response.getString("status");
+                    String message = response.getString("message");
+
+                    Log.e("Error Status", status);
+                    Log.e("Error Message", message);
+
+                    if (networkResponse.statusCode == 404) {
+                      errorMessage = "Resource not found";
+                    } else if (networkResponse.statusCode == 401) {
+                      errorMessage = message+" Please login again";
+                    } else if (networkResponse.statusCode == 400) {
+                      errorMessage = message+ " Check your inputs";
+                    } else if (networkResponse.statusCode == 500) {
+                      errorMessage = message+" Something is getting wrong";
+                    }
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+                }
+                Log.i("Error", errorMessage);
+                error.printStackTrace();
               }
             }) {
           @Override
           protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
-            params.put("email", email);
             params.put("username", username);
+            params.put("email", email);
             return params;
           }
         };
@@ -351,16 +387,48 @@ public class ForgotPass extends AppCompatActivity {
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "ServerError", Toast.LENGTH_SHORT).show();
                 error.getMessage();
                 verify.setEnabled(true); // get button back to verify again
+                NetworkResponse networkResponse = error.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                  if (error.getClass().equals(TimeoutError.class)) {
+                    errorMessage = "Request timeout";
+                  } else if (error.getClass().equals(NoConnectionError.class)) {
+                    errorMessage = "Failed to connect server";
+                  }
+                } else {
+                  String result = new String(networkResponse.data);
+                  try {
+                    JSONObject response = new JSONObject(result);
+                    String status = response.getString("status");
+                    String message = response.getString("message");
+
+                    Log.e("Error Status", status);
+                    Log.e("Error Message", message);
+
+                    if (networkResponse.statusCode == 404) {
+                      errorMessage = "Resource not found";
+                    } else if (networkResponse.statusCode == 401) {
+                      errorMessage = message+" Please login again";
+                    } else if (networkResponse.statusCode == 400) {
+                      errorMessage = message+ " Check your inputs";
+                    } else if (networkResponse.statusCode == 500) {
+                      errorMessage = message+" Something is getting wrong";
+                    }
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+                }
+                Log.i("Error", errorMessage);
+                error.printStackTrace();
               }
             }) {
           @Override
           protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
-            params.put("email", email);
             params.put("password", password);
+            params.put("email", email);
             return params;
           }
         };

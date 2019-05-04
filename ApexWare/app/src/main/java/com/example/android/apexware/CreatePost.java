@@ -183,26 +183,27 @@ public class CreatePost extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              if (!active_mock) {
-                  // get user token
-                  User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
-                  final String token = user.getToken();
-            if (checkValidation(
-                type,
-                post_title.getText().toString(),
-                main_post.getText().toString(),
-                galleyFilePath,
-                cameraFilePath)) {
-              switch (type) {
-                case "image":
-                  String currentPath=null;
-                  if(galleyFilePath.isEmpty()){
-                    currentPath=galleyFilePath;
-                  }
-                  else{
-                    currentPath=cameraFilePath;
-                  }
-                  getuploadResponce(Request.Method.POST,
+            if (!active_mock) {
+              // get user token
+              User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
+              final String token = user.getToken();
+              if (checkValidation(
+                  type,
+                  post_title.getText().toString(),
+                  main_post.getText().toString(),
+                  galleyFilePath,
+                  cameraFilePath)) {
+                switch (type) {
+                  case "image":
+                    {
+                      String currentPath = null;
+                      if (galleyFilePath.isEmpty()) {
+                        currentPath = galleyFilePath;
+                      } else {
+                        currentPath = cameraFilePath;
+                      }
+                      getuploadResponce(
+                          Request.Method.POST,
                           Routes.submit_post,
                           null,
                           new VolleyCallback() {
@@ -214,38 +215,48 @@ public class CreatePost extends AppCompatActivity {
 
                                 // if no error in response
                                 if (response != null) {
-                                  Toast.makeText(getApplicationContext(), "Post Successful", Toast.LENGTH_SHORT)
-                                          .show();
+                                  Toast.makeText(
+                                          getApplicationContext(),
+                                          "Post Successful",
+                                          Toast.LENGTH_SHORT)
+                                      .show();
                                   finish();
-                                  startActivity(new Intent(getApplicationContext(), HomePage.class));
+                                  startActivity(
+                                      new Intent(getApplicationContext(), HomePage.class));
                                 } else {
                                   Toast.makeText(
-                                          getApplicationContext(), "Unsuccessful onsuccess ", Toast.LENGTH_SHORT)
-                                          .show();
+                                          getApplicationContext(),
+                                          "Unsuccessful onsuccess ",
+                                          Toast.LENGTH_SHORT)
+                                      .show();
                                 }
 
                               } catch (JSONException e) {
                                 e.printStackTrace();
                               }
                             }
-                          },token,
+                          },
+                          token,
                           post_title.getText().toString(),
-                          currentPath
-                          );
-                  break;
-                default:
-                  takeData(
-                      type,
-                      post_title.getText().toString(),
-                      main_post.getText().toString(),
-                      communityID,
-                      token);
+                          currentPath);
+                      post_btn.setEnabled(false); // turn off button to avoid multiple requests
+                      startActivity(new Intent(getApplicationContext(),HomePage.class));
+                    }
+                    break;
+                  default:
+                    takeData(
+                        type,
+                        post_title.getText().toString(),
+                        main_post.getText().toString(),
+                        communityID,
+                        token);
+                }
+                post_btn.setEnabled(false); // turn off button to avoid multiple requests
               }
-              post_btn.setEnabled(false); // turn off button to avoid multiple requests
-            }} else {
-                Toast.makeText(
-                        getApplicationContext(), "post published succesfully", Toast.LENGTH_SHORT)
-                        .show();
+            } else { // if mock
+              Toast.makeText(
+                      getApplicationContext(), "post published succesfully", Toast.LENGTH_SHORT)
+                  .show();
             }
           }
         });
@@ -567,8 +578,8 @@ public class CreatePost extends AppCompatActivity {
     VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Routes.submit_post, new Response.Listener<NetworkResponse>() {
       @Override
       public void onResponse(NetworkResponse response) {
-          int x=0;
         callback.onSuccessResponse(response.toString());
+        Toast.makeText(getApplicationContext(),"post uploaded successfully",Toast.LENGTH_SHORT).show();
       }
     }, new Response.ErrorListener() {
       @Override

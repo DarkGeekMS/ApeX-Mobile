@@ -7,6 +7,19 @@
     android:background="@android:color/white"
     tools:context=".NewPass">
 
+    <Button
+        android:id="@+id/save_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/myblue"
+        android:fontFamily="sans-serif"
+        android:onClick="save"
+        android:text="@string/savepost"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="360dp"
@@ -29,18 +42,18 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif"
-        android:text="enter new password"
+        android:text="enter your new password"
         android:textColor="@color/light_grey"
         android:textSize="22sp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/ver_code"
+        app:layout_constraintBottom_toTopOf="@+id/new_pass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
     <EditText
-        android:id="@+id/ver_code"
+        android:id="@+id/new_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -63,7 +76,7 @@
         android:layout_marginEnd="8dp"
         android:background="@android:color/white"
         android:fontFamily="sans-serif"
-        android:onClick="save"
+        android:onClick="to_login"
         android:text="save"
         android:textColor="@color/myblue"
         android:textSize="15sp"

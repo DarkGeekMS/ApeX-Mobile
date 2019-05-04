@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -20,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static android.support.constraint.Constraints.TAG;
@@ -32,9 +34,10 @@ public class VerifyCode extends AppCompatActivity {
   String type;
   DepandantClass restClient = null;
   String email;
-  String userName;
+  TextView username;
   EditText code_et;
   Button check_btn;
+  Intent new_pass;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +47,13 @@ public class VerifyCode extends AppCompatActivity {
     Intent intent = getIntent();
     type = intent.getStringExtra("type");
     email = intent.getStringExtra("email");
+
+    new_pass = new Intent(this, NewPass.class);
+
     code_et = (EditText) findViewById(R.id.ver_code);
     check_btn = (Button) findViewById(R.id.check_code);
+    username = (TextView) findViewById(R.id.username_response);
+    username.setVisibility(View.INVISIBLE);
     /*
      * use either mock service or back end service
      * */
@@ -56,7 +64,7 @@ public class VerifyCode extends AppCompatActivity {
     }
   }
 
-  /** on button verify pressed .. check code*/
+  /** on button verify pressed .. check code */
   public void confirm_code(View view) {
     if (Verified()) {
       check_btn.setEnabled(false); // disable button to avoid multiple requests
@@ -64,7 +72,7 @@ public class VerifyCode extends AppCompatActivity {
       if (active_mock) {
         confirmCode_Mock(email, code);
       } else {
-        userName = confirmCode_Rest(email, code);
+        confirmCode_Rest(email, code);
       }
       // userName = restClient.confirmCode(email, code,this);
       // todo move to new pass if password then to login carrying data to login
@@ -83,12 +91,9 @@ public class VerifyCode extends AppCompatActivity {
     if (code.equals(magic_code)) {
       Toast.makeText(this, "Login Successfully", Toast.LENGTH_SHORT).show();
       startActivity(new Intent(this, HomePage.class));
-    }
-    else
-    {
+    } else {
       Toast.makeText(this, "Wrong code", Toast.LENGTH_SHORT).show();
       check_btn.setEnabled(true); // enable button for retry
-
     }
   }
 
@@ -116,11 +121,12 @@ public class VerifyCode extends AppCompatActivity {
 
   /**
    * check code written is the same sent by the server
+   *
    * @param email user email
    * @param code code received by user email
    * @return username
    */
-  public String confirmCode_Rest(String email, String code) {
+  public void confirmCode_Rest(String email, final String code) {
     getResponse4(
         Request.Method.POST,
         Routes.checkCode,
@@ -134,8 +140,21 @@ public class VerifyCode extends AppCompatActivity {
 
               // if no error in response
               if (response != null) {
+                Iterator<String> keys = obj.keys();
+                String valueString = "";
+                while (keys.hasNext()) {
+                  String keyValue = (String) keys.next();
+                  valueString = obj.getString(keyValue);
+                }
+                if (type.equals("user")) {
+                  username.setVisibility(View.VISIBLE);
+                  username.setText("your user name is" + valueString);
+                } else {
+                  new_pass.putExtra("username", valueString);
+                  new_pass.putExtra("code", code);
+                  startActivity(new_pass);
+                }
                 Log.d(TAG, "onSuccessResponse: a");
-                // todo get user name from response
               } else {
                 Log.d(TAG, "onFailResponse: ");
                 check_btn.setEnabled(true); // enable button for retry
@@ -148,7 +167,6 @@ public class VerifyCode extends AppCompatActivity {
         },
         email,
         code);
-    return "debug"; // for debug todo
   }
 
   public void getResponse4(
@@ -175,7 +193,8 @@ public class VerifyCode extends AppCompatActivity {
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "ServerError", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Error .. try again", Toast.LENGTH_SHORT)
+                    .show();
                 error.getMessage();
                 check_btn.setEnabled(true); // enable button for retry
               }
@@ -183,11 +202,16 @@ public class VerifyCode extends AppCompatActivity {
           @Override
           protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
-            params.put("email", email);
             params.put("code", code);
+            params.put("email", email);
             return params;
           }
         };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+  }
+
+  /** go to login page after restoring the user name */
+  public void to_login(View view) {
+    startActivity(new Intent(this, MainActivity.class));
   }
 }
