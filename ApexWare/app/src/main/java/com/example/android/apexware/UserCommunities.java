@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.android.apexware.CreatePost.COMMUNITY_CHOSEN;
 import static com.example.android.apexware.Routes.active_mock;
 
 /**
@@ -60,8 +61,6 @@ public class UserCommunities extends AppCompatActivity {
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
-    User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
-    final String token = user.getToken();
     listView = (ListView) findViewById(R.id.listcommunitiesid);
 
     if (active_mock) {
@@ -95,6 +94,8 @@ public class UserCommunities extends AppCompatActivity {
       adapter = new CommAdapter(this, commlist);
       listView.setAdapter(adapter);
     } else {
+      User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
+      final String token = user.getToken();
       getResponse(
           Request.Method.POST,
           Routes.getApexcom,
@@ -117,9 +118,9 @@ public class UserCommunities extends AppCompatActivity {
                     tenp.setComID(current.getString("id"));
                     commlist.add(tenp);
                   }
-                  Toast.makeText(getApplicationContext(), "All apexcom get", Toast.LENGTH_SHORT)
+                  Toast.makeText(UserCommunities.this, "All apexcom get", Toast.LENGTH_SHORT)
                       .show();
-                  adapter = new CommAdapter((Activity) getApplicationContext(), commlist);
+                  adapter = new CommAdapter(UserCommunities.this, commlist);
                   listView.setAdapter(adapter);
                 } else {
                   Toast.makeText(
@@ -142,7 +143,8 @@ public class UserCommunities extends AppCompatActivity {
             CommunityInfo c1 = (CommunityInfo) current;
             CreatePost.communityID = c1.getComID();
             CreatePost.communityName = c1.getCommunityName();
-            startActivity(new Intent(getApplicationContext(),CreatePost.class));
+            Intent intent = new Intent(getApplicationContext(),CreatePost.class);
+            startActivityForResult(intent,COMMUNITY_CHOSEN);
           }
         });
   }
