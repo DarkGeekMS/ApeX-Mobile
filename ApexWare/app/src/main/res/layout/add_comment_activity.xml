@@ -64,5 +64,4 @@
             android:id="@+id/addCommenttopost"
             />
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

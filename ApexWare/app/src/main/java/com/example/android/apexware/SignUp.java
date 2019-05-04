@@ -47,16 +47,12 @@ public class SignUp extends AppCompatActivity {
     editTextEmail = (EditText) findViewById(R.id.email_text_input);
     editTextUsername = (EditText) findViewById(R.id.username_text_input);
     editTextPassword = (EditText) findViewById(R.id.password_text_input);
-
-    final String username = editTextUsername.getText().toString().trim();
-    final String email = editTextEmail.getText().toString().trim();
-    final String password = editTextPassword.getText().toString().trim();
     try {
       create_acc.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              if (registerUser(username, email, password)) {
+              if (registerUser(editTextUsername.getText().toString().trim(),editTextEmail.getText().toString(),editTextPassword.getText().toString().trim())) {
                 getResponse(
                     Request.Method.POST,
                     Routes.signUp,
@@ -90,7 +86,9 @@ public class SignUp extends AppCompatActivity {
                             SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
                             // starting the profile activity
                             finish();
-                            startActivity(new Intent(getApplicationContext(), HomePage.class));
+                            Intent i=new Intent(getApplicationContext(), HomePage.class);
+                            i.putExtra("username",user.getUsername());
+                            startActivity(i);
                           } else {
                             Toast.makeText(
                                     getApplicationContext(),
@@ -104,9 +102,9 @@ public class SignUp extends AppCompatActivity {
                         }
                       }
                     },
-                    username,
-                    password,
-                    email);
+                        editTextUsername.getText().toString().trim(),
+                        editTextPassword.getText().toString().trim(),
+                        editTextEmail.getText().toString().trim());
                 create_acc.setEnabled(false); // to avoid multiple requests
               }
             }

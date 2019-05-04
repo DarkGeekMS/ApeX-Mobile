@@ -1,22 +1,56 @@
 package com.example.android.apexware;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * this class is to save the data of comments and replys of the post
  * @author Omar
  */
-public class Comment {
-
+public class Comment implements Parcelable {
   /** data members */
   private String Id;
-
   private String postId;
   private String commentOwner = null;
   private String commentContent;
-  private int commentCreateDate = 0;
+  private String  commentCreateDate ;
   private boolean Upvoted=false;
   private boolean Downvoted=false;
+  private String parentID=null;
 
-  public boolean isUpvoted() {
+    public String getParentID() {
+        return parentID;
+    }
+
+    public void setParentID(String parentID) {
+        this.parentID = parentID;
+    }
+
+    protected Comment(Parcel in) {
+        Id = in.readString();
+        postId = in.readString();
+        commentOwner = in.readString();
+        commentContent = in.readString();
+        commentCreateDate = in.readString();
+        Upvoted = in.readByte() != 0;
+        Downvoted = in.readByte() != 0;
+        votesCount = in.readInt();
+        parentID=in.readString();
+    }
+
+    public static final Creator<Comment> CREATOR = new Creator<Comment>() {
+        @Override
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
+        }
+
+        @Override
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
+
+    public boolean isUpvoted() {
     return Upvoted;
   }
 
@@ -64,7 +98,7 @@ public class Comment {
   }
 
   /** this method is to get comment create date name for commentCreateDate */
-  public int getCommentCreateDate() {
+  public String getCommentCreateDate() {
     return commentCreateDate;
   }
   /** set functions */
@@ -109,11 +143,29 @@ public class Comment {
    *
    * @param commentCreateDate
    */
-  public void setCommentCreateDate(int commentCreateDate) {
+  public void setCommentCreateDate(String commentCreateDate) {
     this.commentCreateDate = commentCreateDate;
   }
 
   public void setVotesCount(int votesCount) {
     this.votesCount = votesCount;
   }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(Id);
+        dest.writeString(postId);
+        dest.writeString(commentOwner);
+        dest.writeString(commentContent);
+        dest.writeString(commentCreateDate);
+        dest.writeByte((byte) (Upvoted ? 1 : 0));
+        dest.writeByte((byte) (Downvoted ? 1 : 0));
+        dest.writeInt(votesCount);
+        dest.writeString(parentID);
+    }
 }

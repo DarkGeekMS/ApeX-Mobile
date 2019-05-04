@@ -1,12 +1,20 @@
 package com.example.android.apexware;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Movie;
+import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,14 +27,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -43,6 +57,10 @@ import static android.view.View.GONE;
 public class CustomAdapterForHomePage extends ArrayAdapter {
     List<Post> hiddenPotsList = new ArrayList<>();
     int mSelected = -1;
+   final User user = SharedPrefmanager.getInstance(this.getContext()).getUser();
+    final String token=user.getToken();
+    String userProfileToExplore;
+    String userIDBlocked;
 
     @Override
     public void remove( Object object) {
@@ -87,7 +105,8 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
               @Override
               public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(context, button);
-                popup.getMenuInflater().inflate(R.menu.option_menu, popup.getMenu());
+                if(currentPost.getPostOwner()==user.getUsername())
+                { popup.getMenuInflater().inflate(R.menu.mypostoptions, popup.getMenu());
                 popup.setOnMenuItemClickListener(
                         new PopupMenu.OnMenuItemClickListener() {
                           @Override
@@ -193,11 +212,167 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                   builder.show();
 
                               }
+                              if(item.getItemId()==R.id.deletpost){
+                                  deletePost(currentPost.getPostId(),Request.Method.GET, null,
+                                          new  VolleyCallback(){
+                                              @Override
+                                              public void onSuccessResponse(String result) {
+                                                  try {
+                                                      JSONObject response = new JSONObject(result);
+                                                      value=response.getString("deleted");
+                                                      if(value=="true")
+                                                      {Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
+                                                      notifyDataSetChanged();}
+                                                      else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
+
+                                                  } catch (JSONException e) {
+                                                      e.printStackTrace();
+                                                  }
+                                              }
+                                          },currentPost.getPostId());
+                              }
                             return true;
                           }
                         });
                 popup.show(); // showing popup menu
-              }
+              }else { popup.getMenuInflater().inflate(R.menu.mypostoptions, popup.getMenu());
+                    popup.setOnMenuItemClickListener(
+                            new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                   /* if(item.getItemId()==R.id.savepost){savePost(currentPost.getPostId(),Request.Method.GET, null,
+                                            new  VolleyCallback(){
+                                                @Override
+                                                public void onSuccessResponse(String result) {
+                                                    try {
+                                                        JSONObject response = new JSONObject(result);
+                                                        value=response.getString("value");
+                                                        if(value=="true")
+                                                            Toast.makeText(context,"Post is saved",Toast.LENGTH_SHORT).show();
+                                                        else  Toast.makeText(context,"error,not saved",Toast.LENGTH_SHORT).show();
+
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });}
+                                    if(item.getItemId()==R.id.hidepost){
+                                        hidePost(currentPost.getPostId(),Request.Method.GET, null, new  VolleyCallback(){
+                                            @Override
+                                            public void onSuccessResponse(String result) {
+                                                try {
+                                                    JSONObject response = new JSONObject(result);
+                                                    value=response.getString("hide");
+                                                    if(value=="true")
+                                                    {  hiddenPotsList.add(currentPost);
+                                                        remove(currentPost);
+                                                        Toast.makeText(context,"post is hidden",Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    else  Toast.makeText(context,"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
+
+
+                                                    *//* post.setVisibility(View.GONE);*//*
+                                                    // creating a new user object
+                                                    User user = new User(response.getString("token"));
+                                                    // storing the user in shared preferences
+                                                    SharedPrefmanager.getInstance(context).userLogin(user);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                    if(item.getItemId()==R.id.reportpost){
+                                        final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
+                                        final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                        builder.setTitle("report");
+                                        builder.setMultiChoiceItems(reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                                if (isChecked) {
+                                                    if ((mSelected != -1) && (mSelected != which)) {
+                                                        final int oldVal = mSelected;
+                                                        final AlertDialog alert = (AlertDialog)dialog;
+                                                        final ListView list = alert.getListView();
+                                                        list.setItemChecked(oldVal, false);}
+                                                    // If the user checked the item, add it to the selected items
+                                                    mSelected = which;
+                                                    selectedItems.add(mSelected);
+                                                } else if (selectedItems.contains(which)) {
+                                                    // Else, if the item is already in the array, remove it
+                                                    selectedItems.remove(Integer.valueOf(which));
+                                                }
+                                            }
+                                        });
+                                        builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                reportPost(currentPost.getPostId(),Request.Method.GET, null,
+                                                        new  VolleyCallback(){
+                                                            @Override
+                                                            public void onSuccessResponse(String result) {
+                                                                try {
+                                                                    JSONObject response = new JSONObject(result);
+                                                                    value=response.getString("reported");
+                                                                    if(value=="true")
+                                                                        Toast.makeText(context,"Post Is Reported",Toast.LENGTH_SHORT).show();
+                                                                    else  Toast.makeText(context,"error,not reported",Toast.LENGTH_SHORT).show();
+                                                                } catch (JSONException e) {
+                                                                    e.printStackTrace();
+                                                                }
+                                                            }
+                                                        },reason[mSelected]);
+                                                // User clicked send, we should send the selectedItems results to the server
+
+                                            }
+                                        })
+                                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        //report canceled
+
+                                                        Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
+
+                                                    }
+                                                });
+
+                                        builder.show();
+
+                                    }*/
+                                    if(item.getItemId()==R.id.editmypost){
+                                        if(currentPost.getPostType()!=1||currentPost.getPostType()!=2)//no edit to photos or videos
+                                        { Intent intent = new Intent( CustomAdapterForHomePage.this.context,EditPost.class);
+                                            Gson gson = new Gson();
+                                            String postAsString = gson.toJson(currentPost);
+                                            intent.putExtra("postToEdit", postAsString); // sending the post to next activity
+                                            context.startActivityForResult(intent,10);}
+                                    }
+                                    if(item.getItemId()==R.id.deletpost){
+                                        deletePost(currentPost.getPostId(),Request.Method.GET, null,
+                                                new  VolleyCallback(){
+                                                    @Override
+                                                    public void onSuccessResponse(String result) {
+                                                        try {
+                                                            JSONObject response = new JSONObject(result);
+                                                            value=response.getString("deleted");
+                                                            if(value=="true")
+                                                            {Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
+                                                                notifyDataSetChanged();}
+                                                            else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
+
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                },currentPost.getPostId());
+                                    }
+                                    return true;
+                                }
+                            });
+                    popup.show(); // showing popup menu
+                }}
             });
 
     // set apexcom logo
@@ -211,6 +386,15 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             (TextView) listItem.findViewById(R.id.apexcomOwnerNameAndTimeCreated);
     postOwnerAndCreatedTime.setText(
             "Posted by " + currentPost.getPostOwner() + "." + currentPost.getPostCreateDate());
+    userProfileToExplore=postOwnerAndCreatedTime.getText().toString();
+    postOwnerAndCreatedTime.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Point p=new Point(0,50);
+            // Open popup window
+            if (p != null) showPopup((Activity) getContext(), p);
+        }
+    });
 
     // set Title psot
     TextView postTitle = (TextView) listItem.findViewById(R.id.PostTitle);
@@ -225,6 +409,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final Button up = listItem.findViewById(R.id.upvote);
     final Button down = listItem.findViewById(R.id.downvote);
     final TextView counter = listItem.findViewById(R.id.votecounter);
+    counter.setText(String.valueOf(currentPost.getVotesCount()) );
     // upvote
     up.setOnClickListener(
             new View.OnClickListener() {
@@ -241,17 +426,20 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                               counter.setText(value);
                               int newvotes=Integer.parseInt(value);
                               currentPost.setVotesCount(newvotes);
-                                if(newvotes>currentvotes){
-                                if(newvotes==currentvotes+2)//was downvoted and upvote clicked
+                              if(up.getTextColors().getDefaultColor()==-1064793976&&down.getTextColors().getDefaultColor()==-1064793976)//not voted before
+                                  up.setTextColor(Color.BLUE);
+                              else {
+                                if(up.getTextColors().getDefaultColor()==Color.BLUE){
+                                if(down.getTextColors().getDefaultColor()==Color.RED)//was downvoted and upvote clicked
                                 { down.setTextColor(Color.GRAY);
                                   currentPost.setDownvoted(false);}
                                 up.setTextColor(Color.BLUE);
                                 currentPost.setUpvoted(true);}
-                              else if (newvotes<currentvotes)//was upvoted & upvote clicked
+                              else if (up.getTextColors().getDefaultColor()==Color.BLUE)//was upvoted & upvote clicked
                               {
                                 up.setTextColor(Color.GRAY);
                                 currentPost.setUpvoted(false);
-                              }
+                              }}
                             } catch (JSONException e) {
                               e.printStackTrace();
                             }
@@ -275,17 +463,20 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                       counter.setText(value);
                                       int newvotes=Integer.parseInt(value);
                                       currentPost.setVotesCount(newvotes);
-                                      if(newvotes<currentvotes){
-                                          if(newvotes==currentvotes-2)//was upvoted and downvote clicked
-                                          { up.setTextColor(Color.GRAY);
-                                              currentPost.setUpvoted(false);}
+                                      if(up.getTextColors().getDefaultColor()==-1064793976&&down.getTextColors().getDefaultColor()==-1064793976)//not voted before
                                           down.setTextColor(Color.RED);
-                                          currentPost.setDownvoted(true);}
-                                      else if (newvotes>currentvotes)//was downvoted & downvote clicked(cancel downvote)
-                                      {
-                                          down.setTextColor(Color.GRAY);
-                                          currentPost.setDownvoted(false);
-                                      }
+                                      else {
+                                          if(down.getTextColors().getDefaultColor()==Color.RED){
+                                             //was downvoted and down clicked
+                                              { down.setTextColor(Color.GRAY);
+                                                  currentPost.setDownvoted(false);}
+                                              currentPost.setUpvoted(false);}
+                                          else if (up.getTextColors().getDefaultColor()==Color.BLUE)//was upvoted & down clicked
+                                          {
+                                              up.setTextColor(Color.GRAY);
+                                              down.setTextColor(Color.RED);
+                                              currentPost.setUpvoted(false);
+                                          }}
                                   } catch (JSONException e) {
                                       e.printStackTrace();
                                   }
@@ -343,7 +534,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
       case 1:
         // set image of the post
         ImageView uploadedImage = (ImageView) listView.findViewById(R.id.imageUploadedView);
-        Picasso.get().load(tempPost.getImageURL()).into(uploadedImage);
+        Picasso.get().load(tempPost.getImageURL()).resize(500, 282).into(uploadedImage);
         // break;
       case 2:
         // set VideoLinks
@@ -646,5 +837,119 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                 };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
+    public void deletePost(String postID, int method, JSONObject jsonValue, final VolleyCallback callback,final String postname){
+        User user = SharedPrefmanager.getInstance(context).getUser();
+        final String token=user.getToken();
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, Routes.delete+"token="+token+"&name="+postname,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        callback.onSuccessResponse(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        String errorMessage = "Unknown error";
+                        if (networkResponse == null) {
+                            if (error.getClass().equals(TimeoutError.class)) {
+                                errorMessage = "Request timeout";
+                            } else if (error.getClass().equals(NoConnectionError.class)) {
+                                errorMessage = "Failed to connect server";
+                            }
+                        } else {
+                            String result = new String(networkResponse.data);
+                            try {
+                                JSONObject response = new JSONObject(result);
+                                String status = response.getString("status");
+                                String message = response.getString("message");
 
+                                Log.e("Error Status", status);
+                                Log.e("Error Message", message);
+
+                                if (networkResponse.statusCode == 404) {
+                                    errorMessage = "Resource not found";
+                                } else if (networkResponse.statusCode == 401) {
+                                    errorMessage = message+" Please login again";
+                                } else if (networkResponse.statusCode == 400) {
+                                    errorMessage = message+ " Check your inputs";
+                                } else if (networkResponse.statusCode == 500) {
+                                    errorMessage = message+" Something is getting wrong";
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.i("Error", errorMessage);
+                        error.printStackTrace();
+                    }
+                });
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
+    // Get the x and y position after the button is draw on screen
+    // (It's important to note that we can't get the position in the onCreate(),
+    // because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
+
+    // The method that displays the popup.
+    private void showPopup(final Activity context, Point p) {
+        Display display = context.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int popupWidth = size.x;
+        double y = 0.6 * size.y;
+        int popupHeight = (int) y;
+        // Inflate the popup_layout.xml
+        RelativeLayout viewGroup = (RelativeLayout) context.findViewById(R.id.select_option_menu);
+        LayoutInflater layoutInflater =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.view_user_profile, viewGroup);//TODO change layout
+
+        // Creating the PopupWindow
+        final PopupWindow popup = new PopupWindow(context);
+        popup.setContentView(layout);
+        popup.setWidth(popupWidth);
+        popup.setHeight(popupHeight);
+        popup.setFocusable(true);
+
+        // Some offset to align the popup a bit to the right, and a bit down, relative to button's
+        // position.
+        int OFFSET_X = -60;
+        int OFFSET_Y = 90;
+
+        // Clear the default translucent background
+        popup.setBackgroundDrawable(new BitmapDrawable());
+
+        // Displaying the popup at the specified location, + offsets.
+        popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
+
+        TextView viewProfileButton=(TextView) layout.findViewById(R.id.viewUserProfileData);
+        viewProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(context,ExploreUserProfile.class);
+                i.putExtra("username",userProfileToExplore);
+                context.startActivity(i);
+            }
+        });
+        TextView sendMessageToUser=(TextView) layout.findViewById(R.id.SendUserMessage);
+        sendMessageToUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(context,WriteMessage.class);
+                //i.putExtra("username",userProfileToExplore);
+                context.startActivity(i);
+            }
+        });
+        TextView blockThisUser=(TextView) layout.findViewById(R.id.blockuseroption);
+        blockThisUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"Come on next version",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
 }

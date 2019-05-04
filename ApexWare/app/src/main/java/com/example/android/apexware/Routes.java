@@ -5,7 +5,6 @@ package com.example.android.apexware;
 public interface Routes {
     //All variables are default to public,static,final
     boolean active_mock=false;
-
     //Server Base Address
     String serverAddress="http://35.232.3.8//api/";
 
@@ -34,6 +33,7 @@ public interface Routes {
     String addModerator=serverAddress+"AddModerator?";//post
 
     //Links,Comments and Posts
+    String ADD=serverAddress+"AddReply?";//add
     String comment=serverAddress+"comment?";//post
     String delete=serverAddress+"Delete?";//delete
     String edit=serverAddress+"EditText?";//patch
@@ -43,6 +43,7 @@ public interface Routes {
     String hidePost=serverAddress+"Hide?";//post
     String savePost=serverAddress+"Save?";//post
     String moreComments=serverAddress+"RetrieveComments?";//post
+    String addReplay=serverAddress+"AddReply?";
 
     //User
     String blockUser=serverAddress+"/BlockUser?";//post

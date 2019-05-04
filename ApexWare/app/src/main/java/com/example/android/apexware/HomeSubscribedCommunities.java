@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.android.apexware.MainActivity.login_guest;
 import static java.lang.StrictMath.abs;
 
 import static android.app.Activity.RESULT_OK;
@@ -49,7 +50,8 @@ public class HomeSubscribedCommunities extends Fragment {
     ListView list;
     CustomAdapterForHomePage adapter;
     ArrayList<Post> postArrayList = new ArrayList();
-
+    User user = SharedPrefmanager.getInstance(this.getContext()).getUser();
+    final String token = user.getToken();
 
     public HomeSubscribedCommunities() {
         // Required empty public constructor
@@ -60,14 +62,16 @@ public class HomeSubscribedCommunities extends Fragment {
         final AppCompatActivity activity=(AppCompatActivity)getActivity();
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home_subscriebed_communities, container, false);
-        User user = SharedPrefmanager.getInstance(getContext()).getUser();
-        final String token=user.getToken();
           // create list view object to handele given array adapter
           list = (ListView)view.findViewById(R.id.ListOFPosts);
+          if(login_guest){
+
+          }
+          else{
           if(Routes.active_mock){
               // create array adapter list for the view
               Post testpost = new Post();
-              testpost.setPostId("1");
+              testpost.setPostId("t1_6");
               testpost.setPostType(0);
               testpost.setPostOwner("Mazen");
               testpost.setPostCreateDate("19");
@@ -171,18 +175,18 @@ public class HomeSubscribedCommunities extends Fragment {
                                           }
 
                                           String type=current.getString("content");
-                                          String type1=current.getString("img");
+                                          String type1="http://35.232.3.8"+current.getString("img");
                                           String type2=current.getString("videolink");
-                                          if(type!=null){//text post
-                                              temp.setTextPostcontent("type");
+                                          if(type!="null"){//text post
+                                              temp.setTextPostcontent(type);
                                               temp.setPostType(0);
                                           }
-                                          else if(type1!=null){//image post
-                                              temp.setTextPostcontent("type1");
+                                          else if(type1!="null"){//image post
+                                              temp.setImageURL(type1);
                                               temp.setPostType(1);
                                           }
-                                          else if(type2!=null){
-                                              temp.setTextPostcontent("type2");
+                                          else if(type2!="null"){
+                                              temp.setVideoURL(type2);
                                               temp.setPostType(2);
                                           }
                                           postArrayList.add(temp);
@@ -201,14 +205,13 @@ public class HomeSubscribedCommunities extends Fragment {
                                   e.printStackTrace();
                               }
                           }
-                      },token);
-
+                      });
+          }
           }
         list.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
               @Override
               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Intent intent = new Intent( activity,postsandcomments.class);
                 Object current = parent.getItemAtPosition(position);
                 Post p1 = (Post) current;
@@ -241,7 +244,6 @@ public class HomeSubscribedCommunities extends Fragment {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyDataSetChanged()`
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if(requestCode==10&&resultCode==RESULT_OK)
@@ -260,13 +262,24 @@ public class HomeSubscribedCommunities extends Fragment {
             else  Toast.makeText(getContext(),"what tf",Toast.LENGTH_SHORT).show();
 
         }
-    }//onActivityResult
 
+        if(requestCode==10&&resultCode==RESULT_OK){
+            String id=data.getStringExtra("postid");
+            for(int i = 0 ; i < postArrayList.size() ; i++){
+                if(id.equalsIgnoreCase(postArrayList.get(i).getPostId()))
+                    postArrayList.get(i).setTextPostcontent(data.getStringExtra("edited"));
+                }
+                adapter.notifyDataSetChanged();}
+
+
+    }//onActivityResult
     public void getResponse(
             int method,
             String url,
             JSONObject jsonValue,
-            final VolleyCallback callback,final  String token) {
+            final VolleyCallback callback) {
+        User user = SharedPrefmanager.getInstance(getContext()).getUser();
+        final String token=user.getToken();
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
@@ -291,6 +304,7 @@ public class HomeSubscribedCommunities extends Fragment {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("token", token);
+                        params.put("subscribedApexCom","1");
                         return params;
                     }
                 };

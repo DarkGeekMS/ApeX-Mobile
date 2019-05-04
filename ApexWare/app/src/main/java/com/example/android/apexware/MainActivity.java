@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Debug;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,10 +15,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -37,15 +33,18 @@ import static com.example.android.apexware.Routes.active_mock;
 
 /**
  * first activity in the program and contains login form which the user fill with his data to enter
- * th app
+ * the app
  *
  * @author mostafa
  */
 public class MainActivity extends AppCompatActivity {
 
+   public static boolean login_guest=false;
+
   Button login;
   Button signup;
   Button forgot_pass;
+  Button loginAsGuest;
 
   ToggleButton toggle_btn;
   EditText editTextPassword;
@@ -88,10 +87,20 @@ public class MainActivity extends AppCompatActivity {
     login = (Button) findViewById(R.id.login_btn);
     signup = (Button) findViewById(R.id.signup_btn);
     forgot_pass = (Button) findViewById(R.id.forgot_pass_btn);
+    loginAsGuest=(Button) findViewById(R.id.login_guest);
     toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
     editTextPassword = (EditText) findViewById(R.id.password_text_input);
     editTextUsername = (EditText) findViewById(R.id.username_text_input);
 
+    loginAsGuest.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i=new Intent(MainActivity.this,HomePage.class);
+            i.putExtra("username","Guest");
+            login_guest=true;
+            startActivity(i);
+        }
+    });
     signup.setOnClickListener(
         new View.OnClickListener() {
           @Override
@@ -122,19 +131,22 @@ public class MainActivity extends AppCompatActivity {
                             if (token != null) {
                               // creating a new user object
                               User user = new User(response.getString("token"));
+                              user.setUsername(editTextUsername.getText().toString());
                               // storing the user in shared preferences
-                              SharedPrefmanager.getInstance(getApplicationContext())
+                              SharedPrefmanager.getInstance(MainActivity.this)
                                   .userLogin(user);
                               Toast.makeText(
-                                      getApplicationContext(),
+                                      MainActivity.this,
                                       "Login Successfully",
                                       Toast.LENGTH_SHORT)
                                   .show();
-                              Intent i = new Intent(getApplicationContext(), HomePage.class);
-                              getApplicationContext().startActivity(i);
+                              Intent i = new Intent(MainActivity.this, HomePage.class);
+                              i.putExtra("username",editTextUsername.getText().toString());
+                                MainActivity.this.startActivity(i);
                             }
                           } catch (JSONException e) {
                             e.printStackTrace();
+                              login.setEnabled(true); // retry
                           }
                         }
                       },
@@ -144,16 +156,18 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                   e.printStackTrace();
+                    login.setEnabled(true); // retry
+
                 }
               }
               if (active_mock) {
                 Intent i =
-                    new Intent(getApplicationContext(), HomePage.class); // only used when debug
+                    new Intent(MainActivity.this, HomePage.class); // only used when debug
                 startActivity(i);
               }
             } else {
               Toast.makeText(
-                      getApplicationContext(),
+                      MainActivity.this,
                       "Password or username don't meet the standards",
                       Toast.LENGTH_SHORT)
                   .show();
@@ -163,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
   }
   /** opens the activity sign up on pressing the button sign up */
   public void openActivity_sign_up() {
-    startActivity(new Intent(this, test.class));
+    startActivity(new Intent(this, SignUp.class));
   }
   /** toggle button affect viewing password as text or as dots */
   public void onToggleClick(View v) {
@@ -212,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
 
   /** go to another activity to reset password and enter other data (email and pass) * */
   public void forgot_user_name(View view) {
-    // COMPLETED TODO IMPLEMENT
     Intent intent = new Intent(MainActivity.this, ForgotPass.class);
     intent.putExtra("type", "user");
     startActivity(intent);
@@ -220,11 +233,11 @@ public class MainActivity extends AppCompatActivity {
 
   /** go to another activity to reset password and enter other data (email and username) * */
   public void forgot_password(View view) {
-    // COMPLETED TODO IMPLEMENT
     Intent intent = new Intent(MainActivity.this, ForgotPass.class);
     intent.putExtra("type", "pass");
     startActivity(intent);
   }
+
   public void getResponse(
       int method,
       String url,
@@ -250,8 +263,10 @@ public class MainActivity extends AppCompatActivity {
             new Response.ErrorListener() {
               @Override
               public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "ServerError", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "ServerError", Toast.LENGTH_SHORT).show();
                 error.getMessage();
+                  login.setEnabled(true); // retry
+
               }
             }) {
           @Override
@@ -262,6 +277,6 @@ public class MainActivity extends AppCompatActivity {
             return params;
           }
         };
-    VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    VolleySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
   }
 }

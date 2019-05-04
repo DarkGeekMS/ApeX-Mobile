@@ -32,6 +32,7 @@ public class NotificationFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.NotificationToolbar);
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle("Notification");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         ActionBar actionbar =activity.getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);

@@ -9,20 +9,26 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -63,6 +69,7 @@ public class MessageFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.MessagesToolbar);
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle("Messages");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         ActionBar actionbar =activity.getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -186,7 +193,7 @@ public class MessageFragment extends Fragment {
                     }
                     for(int i=0;i<recivedMessage.length();i++){
                         JSONObject current=recivedMessage.getJSONObject(i);
-                        Messages temp=new Messages();
+                        Messages temp=new Messages();//---------------------->check this
                         temp.setSubject(current.getString("subject"));
                         temp.setRead(current.getInt("read"));
                         temp.setContent(current.getString("content"));
@@ -259,7 +266,16 @@ public class MessageFragment extends Fragment {
             }
           },token);
         }
-        // TO DO ADD CLICK LISTNER
+        listView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent i=new Intent(activity.getApplicationContext(),ReadMessage.class);
+                        i.putExtra("selectedMessage",messagesArrayList.get(position));
+                        startActivity(i);
+                    }
+                });
+        // COMPLETED : TODO ADD CLICK LISTNER
         return view;
     }
     @Override
@@ -309,11 +325,39 @@ public class MessageFragment extends Fragment {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                int x=0;
-                                Toast.makeText(
-                                        getActivity().getApplicationContext(), "Server Error", Toast.LENGTH_SHORT)
-                                        .show();
-                                error.getMessage();
+                                NetworkResponse networkResponse = error.networkResponse;
+                                String errorMessage = "Unknown error";
+                                if (networkResponse == null) {
+                                    if (error.getClass().equals(TimeoutError.class)) {
+                                        errorMessage = "Request timeout";
+                                    } else if (error.getClass().equals(NoConnectionError.class)) {
+                                        errorMessage = "Failed to connect server";
+                                    }
+                                } else {
+                                    String result = new String(networkResponse.data);
+                                    try {
+                                        JSONObject response = new JSONObject(result);
+                                        String status = response.getString("status");
+                                        String message = response.getString("message");
+
+                                        Log.e("Error Status", status);
+                                        Log.e("Error Message", message);
+
+                                        if (networkResponse.statusCode == 404) {
+                                            errorMessage = "Resource not found";
+                                        } else if (networkResponse.statusCode == 401) {
+                                            errorMessage = message+" Please login again";
+                                        } else if (networkResponse.statusCode == 400) {
+                                            errorMessage = message+ " Check your inputs";
+                                        } else if (networkResponse.statusCode == 500) {
+                                            errorMessage = message+" Something is getting wrong";
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                Log.i("Error", errorMessage);
+                                error.printStackTrace();
                             }
                         }) {
                     @Override

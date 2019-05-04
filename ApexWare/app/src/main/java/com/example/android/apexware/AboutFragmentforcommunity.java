@@ -17,15 +17,30 @@ import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AboutFragmentforcommunity extends Fragment {
     View view;
-
+    String commid;
+    ListView moderats;
+    ExpandableListView Rules;
     public AboutFragmentforcommunity() {
+    }
+    @SuppressLint("ValidFragment")
+    public AboutFragmentforcommunity(String id) {
+        commid=id;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -33,8 +48,8 @@ public class AboutFragmentforcommunity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.aboutfragmentforcommunity,container,false);
-        ListView moderats= view.findViewById(R.id.moderators);
-        ExpandableListView Rules=view.findViewById(R.id.Ruleslist);
+         moderats= view.findViewById(R.id.moderators);
+         Rules=view.findViewById(R.id.Ruleslist);
         View rulestextview = getLayoutInflater().inflate(R.layout.rulestextview, null);
         Rules.addHeaderView(rulestextview);
         View moderatorstextview = getLayoutInflater().inflate(R.layout.modstextview, null);
@@ -102,4 +117,47 @@ public class AboutFragmentforcommunity extends Fragment {
         listView.setLayoutParams(params);
     }
 */
+
+
+
+    public void getabout(
+            int method,
+            String url,
+            JSONObject jsonValue,
+            final VolleyCallback callback, final String commID) {
+        User user = SharedPrefmanager.getInstance(AboutFragmentforcommunity.this.getActivity()).getUser();
+        final String token=user.getToken();
+        StringRequest stringRequest =
+                new StringRequest(
+                        method,
+                        url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                callback.onSuccessResponse(response);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                int x=0;
+                                Toast.makeText(
+                                        AboutFragmentforcommunity.this.getActivity(), "Server Error", Toast.LENGTH_SHORT)
+                                        .show();
+                                error.getMessage();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("apexComID",commID);
+                        params.put("token",token);
+                        return params;
+                    }
+                };
+        VolleySingleton.getInstance(AboutFragmentforcommunity.this.getActivity()).addToRequestQueue(stringRequest);
+    }
+
+
+
 }

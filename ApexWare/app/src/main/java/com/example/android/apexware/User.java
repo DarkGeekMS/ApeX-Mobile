@@ -12,6 +12,10 @@ public class User {
      *
      * @param token
      */
+    public User(String token,String username) {
+        this.token = token;
+        this.username=username;
+    }
     public User(String token) {
         this.token = token;
     }
@@ -28,6 +32,9 @@ public class User {
         this.email = email;
         this.token = token;
     }
+    public User(){
+
+    }
     /** This Method return id of user */
     public String getId() {
         return id;
@@ -43,5 +50,21 @@ public class User {
     /** This Method return token of user */
     public String getToken() {
         return token;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

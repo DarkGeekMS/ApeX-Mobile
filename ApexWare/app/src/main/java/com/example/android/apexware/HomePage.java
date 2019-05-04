@@ -22,8 +22,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,8 +43,34 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.android.apexware.MainActivity.login_guest;
+import static java.lang.StrictMath.abs;
 
 /**
  * main page of the whole application
@@ -54,14 +82,22 @@ public class HomePage extends AppCompatActivity {
   // The "x" and "y" position of the "Show Button" on screen.
   Point p;
   CustomAdapterForHomePage adapter;
-
+  MainActivity loginAsGuestobj=new MainActivity();
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
-
-
+    Intent i=getIntent();
+    String username=i.getStringExtra("username");
+    if(login_guest){
+      // OneSignal Initialization
+      OneSignal.startInit(this)
+              .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+              .unsubscribeWhenNotificationsAreDisabled(true)
+              .init();
+      //OneSignal.setSubscription(allow_all); //turn notifications on and off
+    }
     Window window = this.getWindow();
     // clear FLAG_TRANSLUCENT_STATUS flag:
     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -75,39 +111,94 @@ public class HomePage extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View arg0) {
-
-            // Open popup window
-            if (p != null) showPopup(HomePage.this, p);
+            if(login_guest){
+              Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+            }else{
+              // Open popup window
+              if (p != null) showPopup(HomePage.this, p);
+            }
           }
         });
     BottomNavigationViewEx bnve = findViewById(R.id.bnve);
     bnve.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     drawerLayout = findViewById(R.id.drawer_layout);
-
     // Enable Navigation bar
     NavigationView navigationView = findViewById(R.id.nav_view);
+    View headView=navigationView.getHeaderView(0);
+    TextView userNameView=headView.findViewById(R.id.username_text_input);
+    userNameView.setText(username);
+
     navigationView.setNavigationItemSelectedListener(
         new NavigationView.OnNavigationItemSelectedListener() {
           @Override
           public boolean onNavigationItemSelected(MenuItem menuItem) {
             // set item as selected to persist highlight
-            menuItem.setChecked(true);
-            if (menuItem.getItemId() == R.id.history)
-              Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            if (menuItem.getItemId() == R.id.save)
-              Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            if (menuItem.getItemId() == R.id.myProfile)
-              startActivity(new Intent(getApplicationContext(), Profile.class));
-            if (menuItem.getItemId() == R.id.setting)
-              startActivity(new Intent(getApplicationContext(), Settings.class));
+            if(login_guest)
+              menuItem.setChecked(false);
+            else
+              menuItem.setChecked(false);
+            if (menuItem.getItemId() == R.id.history){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
+                        .show();
+              }
+            }
+            if (menuItem.getItemId() == R.id.save){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
+                        .show();
+              }
+            }
+            if (menuItem.getItemId() == R.id.myProfile){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                startActivity(new Intent(getApplicationContext(), Profile.class));
+              }
+            }
+            if (menuItem.getItemId() == R.id.setting){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                startActivity(new Intent(getApplicationContext(), Settings.class));
+              }
+
+            }
+            if(menuItem.getItemId() == R.id.logout){
+              if(login_guest){
+                menuItem.setVisible(false);
+                return true;
+              }
+              else{
+              getResponse(
+                      Request.Method.POST,
+                      Routes.information,
+                      null,
+                      new VolleyCallback() {
+                        @Override
+                        public void onSuccessResponse(String response) {
+                          try {
+                            // converting response to json object
+                            JSONObject obj = new JSONObject(response);
+                            Toast.makeText(HomePage.this,"Logout Successful",Toast.LENGTH_SHORT).show();
+                            Intent i=new Intent(HomePage.this,MainActivity.class);
+                            startActivity(i);
+                          } catch (JSONException e) {
+                            e.printStackTrace();
+                          }
+                        }
+                      });
+            }
+          }
             // close drawer when item is tapped
             drawerLayout.closeDrawers();
 
             // Add code here to update the UI based on the item selected
             // For example, swap UI fragments here
-
             return true;
           }
         });
@@ -143,10 +234,18 @@ public class HomePage extends AppCompatActivity {
                   loadFragment(fragment);
                   return true;
                 case R.id.i_notifications:
+                  if(login_guest){
+                    Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+                    return true;
+                  }
                     fragment = new NotificationFragment();
                     loadFragment(fragment);
                   return true;
                 case R.id.i_inbox:
+                  if(login_guest){
+                    Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+                    return true;
+                  }
                     fragment=new MessageFragment();
                     loadFragment(fragment);
                   return true;
@@ -248,5 +347,87 @@ public class HomePage extends AppCompatActivity {
     transaction.replace(R.id.content_frame, fragment);
     transaction.addToBackStack(null);
     transaction.commit();
+  }
+
+  /** overrride the back button to do nothing instead of returning to login activity*/
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event)  {
+    if (keyCode == KeyEvent.KEYCODE_BACK
+            && event.getRepeatCount() == 0) {
+      Log.d("CDA", "onKeyDown Called");
+      onBackPressed();
+      return true;
+    }
+    return super.onKeyDown(keyCode, event);
+  }
+  @Override
+  public void onBackPressed() {
+    Log.d("CDA", "onBackPressed Called");
+    // do nothing
+  }
+  public void getResponse(
+          int method,
+          String url,
+          JSONObject jsonValue,
+          final VolleyCallback callback) {
+    final User user = SharedPrefmanager.getInstance(this).getUser();
+    final String token=user.getToken();
+    StringRequest stringRequest =
+            new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                      @Override
+                      public void onResponse(String response) {
+                        int x=0;
+                        callback.onSuccessResponse(response);
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        String errorMessage = "Unknown error";
+                        if (networkResponse == null) {
+                          if (error.getClass().equals(TimeoutError.class)) {
+                            errorMessage = "Request timeout";
+                          } else if (error.getClass().equals(NoConnectionError.class)) {
+                            errorMessage = "Failed to connect server";
+                          }
+                        } else {
+                          String result = new String(networkResponse.data);
+                          try {
+                            JSONObject response = new JSONObject(result);
+                            String status = response.getString("status");
+                            String message = response.getString("message");
+
+                            Log.e("Error Status", status);
+                            Log.e("Error Message", message);
+
+                            if (networkResponse.statusCode == 404) {
+                              errorMessage = "Resource not found";
+                            } else if (networkResponse.statusCode == 401) {
+                              errorMessage = message+" Please login again";
+                            } else if (networkResponse.statusCode == 400) {
+                              errorMessage = message+ " Check your inputs";
+                            } else if (networkResponse.statusCode == 500) {
+                              errorMessage = message+" Something is getting wrong";
+                            }
+                          } catch (JSONException e) {
+                            e.printStackTrace();
+                          }
+                        }
+                        Log.i("Error", errorMessage);
+                        error.printStackTrace();
+                      }
+                    }){
+              @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token",token);
+                return params;
+              }
+            };
+    VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
 }

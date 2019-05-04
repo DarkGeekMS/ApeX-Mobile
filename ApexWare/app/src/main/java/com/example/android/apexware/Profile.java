@@ -1,23 +1,60 @@
 package com.example.android.apexware;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import static java.lang.StrictMath.abs;
+
 public class Profile extends AppCompatActivity {
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
     private ViewPager viewPager;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private LinearLayout linearLayout;
+    public static ArrayList<Post> postArrayList=new ArrayList<>();
+    ArrayList<Comment> commentArrayList=new ArrayList<>();
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +94,208 @@ public class Profile extends AppCompatActivity {
                 }
             }
         });
+        final TextView displayName=(TextView) findViewById(R.id.profile_user_name);
+        final TextView username=(TextView) findViewById(R.id.profile_tag_name);
+        final TextView karmaCounterAndFollowers=(TextView) findViewById(R.id.profile_creation_info);
+        final ImageView profilepicture=(ImageView) findViewById(R.id.profilepicture);
+        if(Routes.active_mock){
+            displayName.setText("Mazen");
+            username.setText("u/mazen");
+            karmaCounterAndFollowers.setText("1 Karma .1m . 0 followers");
+            Picasso.get().load(R.drawable.profilepic).resize(50, 50).into(profilepicture);
+            ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
 
-        ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new PostFragment(),"Post");
-        viewPagerAdapter.addFragment(new CommentFragment(),"Comment");
-        viewPagerAdapter.addFragment(new AboutFragment(),"About");
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+            viewPagerAdapter.addFragment(new PostFragment(),"Post");
+            viewPagerAdapter.addFragment(new CommentFragment(),"Comment");
+            viewPagerAdapter.addFragment(new AboutFragment(),"About");
+            viewPager.setAdapter(viewPagerAdapter);
+            tabLayout.setupWithViewPager(viewPager);
+        }else{
+      getResponse(
+          Request.Method.POST,
+          Routes.information,
+          null,
+          new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+              try {
+                // converting response to json object
+                JSONObject obj = new JSONObject(response);
+                JSONArray userInfo = obj.getJSONArray("user_info");
+
+                JSONObject usernameo=userInfo.getJSONObject(0);
+                displayName.setText(usernameo.getString("username"));
+                username.setText(usernameo.getString("username"));
+
+                JSONObject karmainfo=userInfo.getJSONObject(0);
+                String karma_followers = karmainfo.getString("karma");
+                karmaCounterAndFollowers.setText(karma_followers);
+
+                JSONObject avatro=userInfo.getJSONObject(0);
+                Picasso.get()
+                    .load("http://35.232.3.8"+avatro.getString("avatar"))
+                    .resize(50, 50)
+                    .into(profilepicture);
+                JSONArray post = obj.getJSONArray("posts");
+                for(int i=0;i<post.length();i++){
+                    JSONObject current=post.getJSONObject(i);
+                    Post temp=new Post();
+                    temp.setPostId(current.getString("id"));
+                    temp.setPostOwner(current.getString("post_writer_username"));
+                    temp.setPostTitle(current.getString("title"));
+                    temp.setApexcomName("apex_com_name");
+                    temp.setVotesCount(current.getInt("votes"));
+                    temp.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
+                    Date currentTime = Calendar.getInstance().getTime();
+                    String currendate="20"+Integer.toString(currentTime.getYear()-100);
+                    if(currentTime.getMonth()>9){
+                        currendate+="-"+Integer.toString(currentTime.getMonth());
+                    }
+                    else{
+                        currendate+="-"+"0"+Integer.toString(currentTime.getMonth()+1);
+                    }
+                    currendate+="-"+Integer.toString(currentTime.getDate())+" ";
+                    currendate+=Integer.toString(currentTime.getHours());
+                    currendate+=":"+Integer.toString(currentTime.getMinutes());
+                    currendate+=":"+Integer.toString(currentTime.getSeconds());
+                    String createdDate=current.getString("created_at");
+                    // Custom date format
+                    SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+
+                    //Calculate difference between current and created time
+                    Date d1 = null;
+                    Date d2 = null;
+                    try {
+                        d2 = format.parse(currendate);
+                        d1 = format.parse(createdDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    // Get msec from each, and subtract.
+                    long diffTime = abs(d2.getTime() - d1.getTime());
+                    long diffSeconds = diffTime / 1000 % 60;
+                    long diffMinutes = diffTime / (60 * 1000);
+                    long diffHours = diffTime / (60 * 60 * 1000);
+                    long diffDays=d2.getDate()-d1.getDate();
+                    long diffWeeks=diffDays/7;
+                    if(diffMinutes<=59){
+                        temp.setPostCreateDate(Long.toString(diffMinutes)+" min ago");
+                    }
+                    else if(diffHours<23){
+                        temp.setPostCreateDate(Long.toString(diffHours)+" hr ago");
+                    }
+                    else if(diffDays<7){
+                        temp.setPostCreateDate(Long.toString(diffDays)+" days ago");
+                    }
+                    else{
+                        temp.setPostCreateDate(Long.toString(diffWeeks)+" weeks ago");
+                    }
+
+                    String type=current.getString("content");
+                    String type1="http://35.232.3.8"+current.getString("img");
+                    String type2=current.getString("videolink");
+                    if(type!="null"){//text post
+                        temp.setTextPostcontent(type);
+                        temp.setPostType(0);
+                    }
+                    else if(type1!="null"){//image post
+                        temp.setImageURL(type1);
+                        temp.setPostType(1);
+                    }
+                    else if(type2!="null"){
+                        temp.setVideoURL(type2);
+                        temp.setPostType(2);
+                    }
+                    postArrayList.add(temp);
+                }
+                  //send data to the post fragment
+                  Bundle bundle = new Bundle();
+                  bundle.putParcelableArrayList("post", postArrayList);
+                  // set Fragmentclass Arguments
+                  PostFragment fragobj = new PostFragment();
+                  fragobj.setArguments(bundle);
+
+                  ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
+                  viewPagerAdapter.addFragment(new PostFragment(),"Post");
+                  viewPagerAdapter.addFragment(new CommentFragment(),"Comment");
+                  viewPagerAdapter.addFragment(new AboutFragment(),"About");
+                  viewPager.setAdapter(viewPagerAdapter);
+                  tabLayout.setupWithViewPager(viewPager);
+              } catch (JSONException e) {
+                e.printStackTrace();
+              }
+            }
+          });
+        }
+    }
+    public void getResponse(
+            int method,
+            String url,
+            JSONObject jsonValue,
+            final VolleyCallback callback) {
+        final User user = SharedPrefmanager.getInstance(this).getUser();
+        final String token=user.getToken();
+        StringRequest stringRequest =
+                new StringRequest(
+                        Request.Method.POST,
+                        url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                int x=0;
+                                callback.onSuccessResponse(response);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                NetworkResponse networkResponse = error.networkResponse;
+                                String errorMessage = "Unknown error";
+                                if (networkResponse == null) {
+                                    if (error.getClass().equals(TimeoutError.class)) {
+                                        errorMessage = "Request timeout";
+                                    } else if (error.getClass().equals(NoConnectionError.class)) {
+                                        errorMessage = "Failed to connect server";
+                                    }
+                                } else {
+                                    String result = new String(networkResponse.data);
+                                    try {
+                                        JSONObject response = new JSONObject(result);
+                                        String status = response.getString("status");
+                                        String message = response.getString("message");
+
+                                        Log.e("Error Status", status);
+                                        Log.e("Error Message", message);
+
+                                        if (networkResponse.statusCode == 404) {
+                                            errorMessage = "Resource not found";
+                                        } else if (networkResponse.statusCode == 401) {
+                                            errorMessage = message+" Please login again";
+                                        } else if (networkResponse.statusCode == 400) {
+                                            errorMessage = message+ " Check your inputs";
+                                        } else if (networkResponse.statusCode == 500) {
+                                            errorMessage = message+" Something is getting wrong";
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                Log.i("Error", errorMessage);
+                                error.printStackTrace();
+                            }
+                        }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("token",token);
+                        return params;
+                    }
+                };
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    public void Editmyprofile(View view) {
+        startActivity(new Intent(Profile.this,EditProfile.class));
 
     }
 }

@@ -7,6 +7,36 @@
     android:background="@android:color/white"
     tools:context=".VerifyCode">
 
+    <Button
+        android:id="@+id/verify_btn2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/myblue"
+        android:fontFamily="sans-serif"
+        android:onClick="confirm_code"
+        android:text="@string/verify"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/username_response"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/verify_form"
+        android:textAlignment="center"
+        android:textColor="@color/light_grey"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ver_code" />
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="360dp"
@@ -47,7 +77,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:gravity="center_horizontal"
-        android:inputType="number"
+        android:inputType="text"
         android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@+id/back_toLogin_btn"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,20 +89,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:background="@android:color/white"
         android:fontFamily="sans-serif"
-        android:onClick="confirm_code"
-        android:text="Verify"
+        android:text="To login"
+        android:onClick="to_login"
         android:textColor="@color/myblue"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ver_code" />
+        app:layout_constraintTop_toBottomOf="@+id/username_response" />
 
 
 </android.support.constraint.ConstraintLayout>
