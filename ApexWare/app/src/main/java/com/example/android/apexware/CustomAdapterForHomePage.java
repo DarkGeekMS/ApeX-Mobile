@@ -1,13 +1,20 @@
 package com.example.android.apexware;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Movie;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +27,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +56,8 @@ import static android.view.View.GONE;
 public class CustomAdapterForHomePage extends ArrayAdapter {
     List<Post> hiddenPotsList = new ArrayList<>();
     int mSelected = -1;
+    String userProfileToExplore;
+    String userIDBlocked;
 
     @Override
     public void remove( Object object) {
@@ -233,6 +244,15 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             (TextView) listItem.findViewById(R.id.apexcomOwnerNameAndTimeCreated);
     postOwnerAndCreatedTime.setText(
             "Posted by " + currentPost.getPostOwner() + "." + currentPost.getPostCreateDate());
+    userProfileToExplore=postOwnerAndCreatedTime.getText().toString();
+    postOwnerAndCreatedTime.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Point p=new Point(0,50);
+            // Open popup window
+            if (p != null) showPopup((Activity) getContext(), p);
+        }
+    });
 
     // set Title psot
     TextView postTitle = (TextView) listItem.findViewById(R.id.PostTitle);
@@ -365,7 +385,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
       case 1:
         // set image of the post
         ImageView uploadedImage = (ImageView) listView.findViewById(R.id.imageUploadedView);
-        Picasso.get().load(tempPost.getImageURL()).into(uploadedImage);
+        Picasso.get().load(tempPost.getImageURL()).resize(500, 282).into(uploadedImage);
         // break;
       case 2:
         // set VideoLinks
@@ -719,5 +739,68 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                     }
                 });
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
+    // Get the x and y position after the button is draw on screen
+    // (It's important to note that we can't get the position in the onCreate(),
+    // because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
+
+    // The method that displays the popup.
+    private void showPopup(final Activity context, Point p) {
+        Display display = context.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int popupWidth = size.x;
+        double y = 0.6 * size.y;
+        int popupHeight = (int) y;
+        // Inflate the popup_layout.xml
+        RelativeLayout viewGroup = (RelativeLayout) context.findViewById(R.id.select_option_menu);
+        LayoutInflater layoutInflater =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.view_user_profile, viewGroup);//TODO change layout
+
+        // Creating the PopupWindow
+        final PopupWindow popup = new PopupWindow(context);
+        popup.setContentView(layout);
+        popup.setWidth(popupWidth);
+        popup.setHeight(popupHeight);
+        popup.setFocusable(true);
+
+        // Some offset to align the popup a bit to the right, and a bit down, relative to button's
+        // position.
+        int OFFSET_X = -60;
+        int OFFSET_Y = 90;
+
+        // Clear the default translucent background
+        popup.setBackgroundDrawable(new BitmapDrawable());
+
+        // Displaying the popup at the specified location, + offsets.
+        popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
+
+        TextView viewProfileButton=(TextView) layout.findViewById(R.id.viewUserProfileData);
+        viewProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(context,ExploreUserProfile.class);
+                i.putExtra("username",userProfileToExplore);
+                context.startActivity(i);
+            }
+        });
+        TextView sendMessageToUser=(TextView) layout.findViewById(R.id.SendUserMessage);
+        sendMessageToUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(context,WriteMessage.class);
+                //i.putExtra("username",userProfileToExplore);
+                context.startActivity(i);
+            }
+        });
+        TextView blockThisUser=(TextView) layout.findViewById(R.id.blockuseroption);
+        blockThisUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"Come on next version",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

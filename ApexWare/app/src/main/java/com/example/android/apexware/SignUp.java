@@ -86,7 +86,9 @@ public class SignUp extends AppCompatActivity {
                             SharedPrefmanager.getInstance(getApplicationContext()).userLogin(user);
                             // starting the profile activity
                             finish();
-                            startActivity(new Intent(getApplicationContext(), HomePage.class));
+                            Intent i=new Intent(getApplicationContext(), HomePage.class);
+                            i.putExtra("username",user.getUsername());
+                            startActivity(i);
                           } else {
                             Toast.makeText(
                                     getApplicationContext(),

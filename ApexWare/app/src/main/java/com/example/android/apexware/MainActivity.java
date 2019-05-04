@@ -43,9 +43,12 @@ import static com.example.android.apexware.Routes.active_mock;
  */
 public class MainActivity extends AppCompatActivity {
 
+   public static boolean login_guest=false;
+
   Button login;
   Button signup;
   Button forgot_pass;
+  Button loginAsGuest;
 
   ToggleButton toggle_btn;
   EditText editTextPassword;
@@ -88,10 +91,20 @@ public class MainActivity extends AppCompatActivity {
     login = (Button) findViewById(R.id.login_btn);
     signup = (Button) findViewById(R.id.signup_btn);
     forgot_pass = (Button) findViewById(R.id.forgot_pass_btn);
+    loginAsGuest=(Button) findViewById(R.id.login_guest);
     toggle_btn = (ToggleButton) findViewById(R.id.toggle_pass_btn);
     editTextPassword = (EditText) findViewById(R.id.password_text_input);
     editTextUsername = (EditText) findViewById(R.id.username_text_input);
 
+    loginAsGuest.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i=new Intent(MainActivity.this,HomePage.class);
+            i.putExtra("username","Guest");
+            login_guest=true;
+            startActivity(i);
+        }
+    });
     signup.setOnClickListener(
         new View.OnClickListener() {
           @Override
@@ -122,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                             if (token != null) {
                               // creating a new user object
                               User user = new User(response.getString("token"));
+                              user.setUsername(editTextUsername.getText().toString());
                               // storing the user in shared preferences
                               SharedPrefmanager.getInstance(MainActivity.this)
                                   .userLogin(user);
@@ -131,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                                       Toast.LENGTH_SHORT)
                                   .show();
                               Intent i = new Intent(MainActivity.this, HomePage.class);
+                              i.putExtra("username",editTextUsername.getText().toString());
                                 MainActivity.this.startActivity(i);
                             }
                           } catch (JSONException e) {

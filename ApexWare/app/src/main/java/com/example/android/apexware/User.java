@@ -12,6 +12,10 @@ public class User {
      *
      * @param token
      */
+    public User(String token,String username) {
+        this.token = token;
+        this.username=username;
+    }
     public User(String token) {
         this.token = token;
     }

@@ -69,6 +69,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.android.apexware.MainActivity.login_guest;
 import static java.lang.StrictMath.abs;
 
 /**
@@ -81,21 +82,22 @@ public class HomePage extends AppCompatActivity {
   // The "x" and "y" position of the "Show Button" on screen.
   Point p;
   CustomAdapterForHomePage adapter;
+  MainActivity loginAsGuestobj=new MainActivity();
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
-
+    Intent i=getIntent();
+    String username=i.getStringExtra("username");
+    if(login_guest){
       // OneSignal Initialization
       OneSignal.startInit(this)
               .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
               .unsubscribeWhenNotificationsAreDisabled(true)
               .init();
-
-    //OneSignal.setSubscription(allow_all); //turn notifications on and off
-
-
+      //OneSignal.setSubscription(allow_all); //turn notifications on and off
+    }
     Window window = this.getWindow();
     // clear FLAG_TRANSLUCENT_STATUS flag:
     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -109,34 +111,69 @@ public class HomePage extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View arg0) {
-
-            // Open popup window
-            if (p != null) showPopup(HomePage.this, p);
+            if(login_guest){
+              Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+            }else{
+              // Open popup window
+              if (p != null) showPopup(HomePage.this, p);
+            }
           }
         });
     BottomNavigationViewEx bnve = findViewById(R.id.bnve);
     bnve.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     drawerLayout = findViewById(R.id.drawer_layout);
-
     // Enable Navigation bar
     NavigationView navigationView = findViewById(R.id.nav_view);
+    View headView=navigationView.getHeaderView(0);
+    TextView userNameView=headView.findViewById(R.id.username_text_input);
+    userNameView.setText(username);
+
     navigationView.setNavigationItemSelectedListener(
         new NavigationView.OnNavigationItemSelectedListener() {
           @Override
           public boolean onNavigationItemSelected(MenuItem menuItem) {
             // set item as selected to persist highlight
-            menuItem.setChecked(true);
-            if (menuItem.getItemId() == R.id.history)
-              Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            if (menuItem.getItemId() == R.id.save)
-              Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
-                  .show();
-            if (menuItem.getItemId() == R.id.myProfile)
-              startActivity(new Intent(getApplicationContext(), Profile.class));
-            if (menuItem.getItemId() == R.id.setting)
-              startActivity(new Intent(getApplicationContext(), Settings.class));
+            if(login_guest)
+              menuItem.setChecked(false);
+            else
+              menuItem.setChecked(false);
+            if (menuItem.getItemId() == R.id.history){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
+                        .show();
+              }
+            }
+            if (menuItem.getItemId() == R.id.save){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
+                        .show();
+              }
+            }
+            if (menuItem.getItemId() == R.id.myProfile){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                startActivity(new Intent(getApplicationContext(), Profile.class));
+              }
+            }
+            if (menuItem.getItemId() == R.id.setting){
+              if(login_guest){
+                menuItem.setVisible(false);
+              }else{
+                startActivity(new Intent(getApplicationContext(), Settings.class));
+              }
+
+            }
             if(menuItem.getItemId() == R.id.logout){
+              if(login_guest){
+                menuItem.setVisible(false);
+                return true;
+              }
+              else{
               getResponse(
                       Request.Method.POST,
                       Routes.information,
@@ -156,6 +193,7 @@ public class HomePage extends AppCompatActivity {
                         }
                       });
             }
+          }
             // close drawer when item is tapped
             drawerLayout.closeDrawers();
 
@@ -196,10 +234,18 @@ public class HomePage extends AppCompatActivity {
                   loadFragment(fragment);
                   return true;
                 case R.id.i_notifications:
+                  if(login_guest){
+                    Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+                    return true;
+                  }
                     fragment = new NotificationFragment();
                     loadFragment(fragment);
                   return true;
                 case R.id.i_inbox:
+                  if(login_guest){
+                    Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+                    return true;
+                  }
                     fragment=new MessageFragment();
                     loadFragment(fragment);
                   return true;

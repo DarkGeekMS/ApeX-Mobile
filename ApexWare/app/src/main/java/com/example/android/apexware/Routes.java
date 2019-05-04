@@ -5,7 +5,6 @@ package com.example.android.apexware;
 public interface Routes {
     //All variables are default to public,static,final
     boolean active_mock=false;
-
     //Server Base Address
     String serverAddress="http://35.232.3.8//api/";
 
