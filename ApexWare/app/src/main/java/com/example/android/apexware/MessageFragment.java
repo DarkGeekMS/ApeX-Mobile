@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,8 +21,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
@@ -321,11 +325,39 @@ public class MessageFragment extends Fragment {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                int x=0;
-                                Toast.makeText(
-                                        getActivity().getApplicationContext(), "Server Error", Toast.LENGTH_SHORT)
-                                        .show();
-                                error.getMessage();
+                                NetworkResponse networkResponse = error.networkResponse;
+                                String errorMessage = "Unknown error";
+                                if (networkResponse == null) {
+                                    if (error.getClass().equals(TimeoutError.class)) {
+                                        errorMessage = "Request timeout";
+                                    } else if (error.getClass().equals(NoConnectionError.class)) {
+                                        errorMessage = "Failed to connect server";
+                                    }
+                                } else {
+                                    String result = new String(networkResponse.data);
+                                    try {
+                                        JSONObject response = new JSONObject(result);
+                                        String status = response.getString("status");
+                                        String message = response.getString("message");
+
+                                        Log.e("Error Status", status);
+                                        Log.e("Error Message", message);
+
+                                        if (networkResponse.statusCode == 404) {
+                                            errorMessage = "Resource not found";
+                                        } else if (networkResponse.statusCode == 401) {
+                                            errorMessage = message+" Please login again";
+                                        } else if (networkResponse.statusCode == 400) {
+                                            errorMessage = message+ " Check your inputs";
+                                        } else if (networkResponse.statusCode == 500) {
+                                            errorMessage = message+" Something is getting wrong";
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                Log.i("Error", errorMessage);
+                                error.printStackTrace();
                             }
                         }) {
                     @Override

@@ -1,4 +1,5 @@
 package com.example.android.apexware;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
@@ -291,5 +292,10 @@ public class Profile extends AppCompatActivity {
                     }
                 };
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    public void Editmyprofile(View view) {
+        startActivity(new Intent(Profile.this,EditProfile.class));
+
     }
 }

@@ -114,8 +114,8 @@
                 </WebView>
                 <ImageView
                     android:id="@+id/imageUploadedView"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_width="500dp"
+                    android:layout_height="282dp"
                     android:contentDescription="@string/image_view_discreption_listitem"
                     android:scaleType="fitCenter"
                     android:clickable="false"

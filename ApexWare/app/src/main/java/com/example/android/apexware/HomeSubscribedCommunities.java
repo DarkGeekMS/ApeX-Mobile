@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.android.apexware.MainActivity.login_guest;
 import static java.lang.StrictMath.abs;
 
 import static android.app.Activity.RESULT_OK;
@@ -62,6 +63,10 @@ public class HomeSubscribedCommunities extends Fragment {
         View view= inflater.inflate(R.layout.fragment_home_subscriebed_communities, container, false);
           // create list view object to handele given array adapter
           list = (ListView)view.findViewById(R.id.ListOFPosts);
+          if(login_guest){
+
+          }
+          else{
           if(Routes.active_mock){
               // create array adapter list for the view
               Post testpost = new Post();
@@ -200,6 +205,7 @@ public class HomeSubscribedCommunities extends Fragment {
                               }
                           }
                       });
+          }
           }
         list.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {

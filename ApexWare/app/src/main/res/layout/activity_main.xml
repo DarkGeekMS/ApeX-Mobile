@@ -61,6 +61,23 @@
         app:layout_constraintTop_toTopOf="@+id/password_text_input" />
 
     <Button
+        android:id="@+id/login_guest"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:text="Login as guest"
+        android:textColor="@color/myblue"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/signup_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+    <Button
         android:id="@+id/signup_btn"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
