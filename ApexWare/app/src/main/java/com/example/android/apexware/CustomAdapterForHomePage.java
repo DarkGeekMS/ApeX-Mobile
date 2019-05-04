@@ -204,7 +204,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                               public void onSuccessResponse(String result) {
                                                   try {
                                                       JSONObject response = new JSONObject(result);
-                                                      value=response.getString("value");
+                                                      value=response.getString("deleted");
                                                       if(value=="true")
                                                           Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
                                                       else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
@@ -214,7 +214,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                                   }
                                               }
                                           },currentPost.getPostId());
-
                               }
                             return true;
                           }
@@ -672,7 +671,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     public void deletePost(String postID, int method, JSONObject jsonValue, final VolleyCallback callback,final String postname){
         User user = SharedPrefmanager.getInstance(context).getUser();
         final String token=user.getToken();
-        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, Routes.delete,
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, Routes.delete+"token="+token+"&name="+postname,
                 new Response.Listener<String>()
                 {
                     @Override
@@ -718,14 +717,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                         Log.i("Error", errorMessage);
                         error.printStackTrace();
                     }
-                }){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Map<String, String> params = new HashMap<>();
-            params.put("username", postname);
-            params.put("token", token);
-            return params;}
-        };
+                });
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 }

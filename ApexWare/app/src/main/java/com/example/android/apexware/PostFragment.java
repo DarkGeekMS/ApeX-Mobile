@@ -34,7 +34,7 @@ public class PostFragment extends Fragment {
         }
         catch (Exception e){
             e.printStackTrace();
-            Toast.makeText(getContext(),"feef",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Fragment crashed Peacfuly",Toast.LENGTH_SHORT).show();
         }
         return view;
     }

@@ -65,6 +65,7 @@ public class MessageFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.MessagesToolbar);
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle("Messages");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         ActionBar actionbar =activity.getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);

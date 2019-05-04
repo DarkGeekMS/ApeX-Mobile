@@ -81,8 +81,6 @@ public class HomePage extends AppCompatActivity {
   // The "x" and "y" position of the "Show Button" on screen.
   Point p;
   CustomAdapterForHomePage adapter;
-  final User user = SharedPrefmanager.getInstance(this).getUser();
-  final String token=user.getToken();
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -151,12 +149,12 @@ public class HomePage extends AppCompatActivity {
                             JSONObject obj = new JSONObject(response);
                             Toast.makeText(HomePage.this,"Logout Successful",Toast.LENGTH_SHORT).show();
                             Intent i=new Intent(HomePage.this,MainActivity.class);
+                            startActivity(i);
                           } catch (JSONException e) {
                             e.printStackTrace();
                           }
                         }
-                      },
-                      token);
+                      });
             }
             // close drawer when item is tapped
             drawerLayout.closeDrawers();
@@ -325,8 +323,9 @@ public class HomePage extends AppCompatActivity {
           int method,
           String url,
           JSONObject jsonValue,
-          final VolleyCallback callback,
-          final String token) {
+          final VolleyCallback callback) {
+    final User user = SharedPrefmanager.getInstance(this).getUser();
+    final String token=user.getToken();
     StringRequest stringRequest =
             new StringRequest(
                     Request.Method.POST,

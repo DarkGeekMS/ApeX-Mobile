@@ -55,8 +55,6 @@ public class PopularUnsubscribedCommunities extends Fragment {
         final AppCompatActivity activity=(AppCompatActivity)getActivity();
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_popular_unsubscribed_communities, container, false);
-        User user = SharedPrefmanager.getInstance(getContext()).getUser();
-        final String token=user.getToken();
         list = (ListView)view.findViewById(R.id.PopularPsots);
         if(Routes.active_mock){
             // create array adapter list for the view
@@ -195,7 +193,7 @@ public class PopularUnsubscribedCommunities extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                    },token);
+                    });
 
         }
         list.setOnItemClickListener(
@@ -261,7 +259,9 @@ public class PopularUnsubscribedCommunities extends Fragment {
             int method,
             String url,
             JSONObject jsonValue,
-            final VolleyCallback callback,final  String token) {
+            final VolleyCallback callback) {
+        User user = SharedPrefmanager.getInstance(getContext()).getUser();
+        final String token=user.getToken();
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,

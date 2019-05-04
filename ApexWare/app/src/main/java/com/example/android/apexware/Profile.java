@@ -67,9 +67,6 @@ public class Profile extends AppCompatActivity {
         // finally change the color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
-        final User user = SharedPrefmanager.getInstance(this).getUser();
-        final String token=user.getToken();
-
         tabLayout= (TabLayout) findViewById(R.id.profile_tab_layout);
         appBarLayout=(AppBarLayout) findViewById(R.id.profile_appbar_layout);
         viewPager=(ViewPager) findViewById(R.id.profile_viewpager);
@@ -227,16 +224,16 @@ public class Profile extends AppCompatActivity {
                 e.printStackTrace();
               }
             }
-          },
-          token);
+          });
         }
     }
     public void getResponse(
             int method,
             String url,
             JSONObject jsonValue,
-            final VolleyCallback callback,
-            final String token) {
+            final VolleyCallback callback) {
+        final User user = SharedPrefmanager.getInstance(this).getUser();
+        final String token=user.getToken();
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,

@@ -30,8 +30,6 @@ import java.util.Map;
 
 public class WriteReplay extends AppCompatActivity {
     EditText replayContent;
-    User user = SharedPrefmanager.getInstance(WriteReplay.this).getUser();
-    final String token=user.getToken();
     String messageId;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -53,6 +51,7 @@ public class WriteReplay extends AppCompatActivity {
         Toolbar toolbar =findViewById(R.id.WriteReplayToolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Replay to message");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         ActionBar actionbar =WriteReplay.this.getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -73,39 +72,45 @@ public class WriteReplay extends AppCompatActivity {
         return true;
     }
     public void replayMessage(MenuItem item){
-        getResponse(Request.Method.POST,
-                Routes.addReplay,
-                null,
-                new VolleyCallback(){
-                    @Override
-                    public void onSuccessResponse(String response) {
-                        try {
-                            // converting response to json object
-                            JSONObject obj = new JSONObject(response);
+        if(Routes.active_mock){
+            Toast.makeText(WriteReplay.this,"Your replay has been sent",Toast.LENGTH_SHORT).show();
+    } else {
+      getResponse(
+          Request.Method.POST,
+          Routes.addReplay,
+          null,
+          new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+              try {
+                // converting response to json object
+                JSONObject obj = new JSONObject(response);
 
-                            // if no error in response
-                            if (response != null) {
-                                // getting the result from the response
-                                String temp=obj.getString("id");//TODO what i do with returned id ??
-                                if(temp!="Receiver id is not found"){
-                                    int x=0;
-                                    Toast.makeText(getApplicationContext(),"Successfuly sent",Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            } else {
-                                int x=0;
-                                Toast.makeText(
-                                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
-                                        .show();
-                            }
+                // if no error in response
+                if (response != null) {
+                  // getting the result from the response
+                  String temp = obj.getString("id"); // TODO what i do with returned id ??
+                  if (temp != "Receiver id is not found") {
+                    int x = 0;
+                    Toast.makeText(getApplicationContext(), "Successfuly sent", Toast.LENGTH_SHORT)
+                        .show();
+                    finish();
+                  }
+                } else {
+                  int x = 0;
+                  Toast.makeText(
+                          getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                      .show();
+                }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },replayContent.getText().toString().trim(),
-                messageId,
-                token);
+              } catch (JSONException e) {
+                e.printStackTrace();
+              }
+            }
+          },
+          replayContent.getText().toString().trim(),
+          messageId);
+        }
 
     }
     public void getResponse(
@@ -114,8 +119,9 @@ public class WriteReplay extends AppCompatActivity {
             JSONObject jsonValue,
             final VolleyCallback callback,
             final String content,
-            final String parent,
-            final String token) {
+            final String parent) {
+        User user = SharedPrefmanager.getInstance(WriteReplay.this).getUser();
+        final String token=user.getToken();
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,

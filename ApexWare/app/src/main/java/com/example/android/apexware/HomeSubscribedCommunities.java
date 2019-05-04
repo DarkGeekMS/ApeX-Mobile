@@ -60,8 +60,6 @@ public class HomeSubscribedCommunities extends Fragment {
         final AppCompatActivity activity=(AppCompatActivity)getActivity();
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home_subscriebed_communities, container, false);
-        User user = SharedPrefmanager.getInstance(getContext()).getUser();
-        final String token=user.getToken();
           // create list view object to handele given array adapter
           list = (ListView)view.findViewById(R.id.ListOFPosts);
           if(Routes.active_mock){
@@ -201,7 +199,7 @@ public class HomeSubscribedCommunities extends Fragment {
                                   e.printStackTrace();
                               }
                           }
-                      },token);
+                      });
           }
         list.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
@@ -262,7 +260,9 @@ public class HomeSubscribedCommunities extends Fragment {
             int method,
             String url,
             JSONObject jsonValue,
-            final VolleyCallback callback,final  String token) {
+            final VolleyCallback callback) {
+        User user = SharedPrefmanager.getInstance(getContext()).getUser();
+        final String token=user.getToken();
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,

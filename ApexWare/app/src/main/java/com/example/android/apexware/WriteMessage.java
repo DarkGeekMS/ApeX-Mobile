@@ -33,8 +33,6 @@ public class WriteMessage extends AppCompatActivity {
     EditText editTextReciever;
     EditText editTextSubject;
     EditText editTextContent;
-    User user = SharedPrefmanager.getInstance(this).getUser();
-    final String token=user.getToken();
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,39 +70,45 @@ public class WriteMessage extends AppCompatActivity {
         return true;
     }
     public void sendMessage (MenuItem item){
-        getResponse(Request.Method.POST,
-                Routes.compose,
-                null,
-                new VolleyCallback(){
-                    @Override
-                    public void onSuccessResponse(String response) {
-                        try {
-                            // converting response to json object
-                            JSONObject obj = new JSONObject(response);
+        if(Routes.active_mock){
+            Toast.makeText(WriteMessage.this,"Your message Has bess sen",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            getResponse(Request.Method.POST,
+                    Routes.compose,
+                    null,
+                    new VolleyCallback(){
+                        @Override
+                        public void onSuccessResponse(String response) {
+                            try {
+                                // converting response to json object
+                                JSONObject obj = new JSONObject(response);
 
-                            // if no error in response
-                            if (response != null) {
-                                // getting the result from the response
-                                String temp=obj.getString("id");
-                                if(temp!="Receiver id is not found"){
+                                // if no error in response
+                                if (response != null) {
+                                    // getting the result from the response
+                                    String temp=obj.getString("id");
+                                    if(temp!="Receiver id is not found"){
+                                        int x=0;
+                                        Toast.makeText(getApplicationContext(),"Successfuly sent",Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                } else {
                                     int x=0;
-                                    Toast.makeText(getApplicationContext(),"Successfuly sent",Toast.LENGTH_SHORT).show();
-                                    finish();
+                                    Toast.makeText(
+                                            getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
+                                            .show();
                                 }
-                            } else {
-                                int x=0;
-                                Toast.makeText(
-                                        getApplicationContext(), "Unsuccessful operation", Toast.LENGTH_SHORT)
-                                        .show();
-                            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                },editTextReciever.getText().toString().trim(),
-                editTextSubject.getText().toString().trim(),
-                editTextContent.getText().toString().trim(),token);
+                    },editTextReciever.getText().toString().trim(),
+                    editTextSubject.getText().toString().trim(),
+                    editTextContent.getText().toString().trim());
+        }
+
     }
     public void getResponse(
             int method,
@@ -113,8 +117,9 @@ public class WriteMessage extends AppCompatActivity {
             final VolleyCallback callback,
             final String username,
             final String subject,
-            final String content,
-            final String token) {
+            final String content) {
+        User user = SharedPrefmanager.getInstance(this).getUser();
+        final String token=user.getToken();
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,

@@ -123,7 +123,7 @@ public class ListOfCommunityFragment extends Fragment {
                     CommunityInfo tenp = new CommunityInfo();
                     JSONObject current = jsonArray.getJSONObject(i);
                     tenp.setBackground("https://imgur.com/gallery/cniisLx");
-                    tenp.setCommunityLogo("https://imgur.com/gallery/cniisLx");
+                    tenp.setCommunityLogo("https://i.imgur.com/6z13lku.jpg");
                     tenp.setCommunityName(current.getString("name"));
                     tenp.setComID(current.getString("id"));
                     commlist.add(tenp);

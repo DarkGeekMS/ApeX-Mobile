@@ -59,13 +59,11 @@ public class ReadMessage extends AppCompatActivity {
         // finally change the color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.myblue));
 
-        User user = SharedPrefmanager.getInstance(ReadMessage.this).getUser();
-        final String token=user.getToken();
-
         Toolbar toolbar =findViewById(R.id.ReadMessagesToolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setTitle(user.getUsername());
+        toolbar.setTitle("Read message");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,13 +214,15 @@ public class ReadMessage extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                },token);
+                });
     }
     public void getResponseONMessageClick(
             final String messagId,
             String url,
             JSONObject jsonValue,
-            final VolleyCallback callback,final  String token) {
+            final VolleyCallback callback) {
+        User user = SharedPrefmanager.getInstance(ReadMessage.this).getUser();
+        final String token=user.getToken();
         StringRequest stringRequest =
                 new StringRequest(
                         Request.Method.POST,
