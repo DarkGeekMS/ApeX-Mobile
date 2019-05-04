@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
   Point p;
