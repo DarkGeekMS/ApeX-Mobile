@@ -78,7 +78,6 @@
         android:onClick="userCommunities"
         style="?android:attr/borderlessButtonStyle"
         android:background="@android:color/white"
-        android:text="@string/choose_community_post"
         android:textColor="@color/light_grey"
         app:layout_constraintBottom_toBottomOf="@+id/globeIMG"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"

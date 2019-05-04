@@ -56,6 +56,7 @@ import java.util.Map;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.example.android.apexware.Routes.active_mock;
 
 /**
  * gather all the data needed to create the post whatever it's kind is ..
@@ -73,7 +74,8 @@ public class CreatePost extends AppCompatActivity {
   boolean camera_approved = false;
   boolean storage_approved = false;
   private static final String TAG = "create post";
-  public static int stPosition = -1;
+  public static String communityName = "choose a community from here";
+  public static String communityID = "t5_1";
   ImageButton back_btn;
   ImageButton gallery_btn;
   ImageButton camera_btn;
@@ -119,9 +121,7 @@ public class CreatePost extends AppCompatActivity {
     post_title = (EditText) findViewById(R.id.Title_et);
     preview = (ImageView) findViewById(R.id.imagePreview);
 
-    // get user token
-    User user = SharedPrefmanager.getInstance(this).getUser();
-    final String token = user.getToken();
+    choose_community.setText(communityName);
 
     // check which button called the activity to determine post type
     switch (type) {
@@ -141,12 +141,6 @@ public class CreatePost extends AppCompatActivity {
         title.setText(getString(R.string.text_post));
         choose_image.setVisibility(View.GONE);
         break;
-    }
-
-    CustomAdapterForCommunities adapter = new CustomAdapterForCommunities(this);
-    if (stPosition != -1) {
-      choose_community.setText(adapter.getName(stPosition));
-      // communityID = adapter.getItem(stPosition).toString();
     }
 
     camera_btn.setOnClickListener(
@@ -190,6 +184,10 @@ public class CreatePost extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+              if (!active_mock) {
+                  // get user token
+                  User user = SharedPrefmanager.getInstance(getApplicationContext()).getUser();
+                  final String token = user.getToken();
             if (checkValidation(
                 type,
                 post_title.getText().toString(),
@@ -245,6 +243,10 @@ public class CreatePost extends AppCompatActivity {
                       token);
               }
               post_btn.setEnabled(false); // turn off button to avoid multiple requests
+            }} else {
+                Toast.makeText(
+                        getApplicationContext(), "post published succesfully", Toast.LENGTH_SHORT)
+                        .show();
             }
           }
         });
@@ -507,7 +509,9 @@ public class CreatePost extends AppCompatActivity {
             Toast.makeText(this, galleyFilePath, Toast.LENGTH_LONG).show(); // get file path
             // Set the image in ImageView
             preview.setVisibility(View.VISIBLE);
+            choose_image.setVisibility(View.INVISIBLE);
             preview.setImageURI(selectedImageUri);
+            choose_image.setVisibility(View.INVISIBLE);
           } catch (Exception e) {
             Log.e("FileSelectorActivity", "File select error", e);
           }

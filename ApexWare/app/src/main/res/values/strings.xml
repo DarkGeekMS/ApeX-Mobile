@@ -52,6 +52,8 @@
     <string name="verify_form">Enter your verification code</string>
     <string name="settings">Settings</string>
     <string name="general">General</string>
+    <string name="allow_all_notifications">allow all notifications</string>
+    <string name="disable_all_notifications">disable all notifications</string>
     <string-array name="report_reason">
         <item>"It's spam or abuse"</item>
         <item>"It breaks the rules"</item>

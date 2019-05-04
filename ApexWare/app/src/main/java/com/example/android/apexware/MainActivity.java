@@ -26,7 +26,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.onesignal.OneSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +37,7 @@ import static com.example.android.apexware.Routes.active_mock;
 
 /**
  * first activity in the program and contains login form which the user fill with his data to enter
- * th app
+ * the app
  *
  * @author mostafa
  */
@@ -68,12 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.ic_launcher_background));
-
-      // OneSignal Initialization
-      OneSignal.startInit(this)
-              .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-              .unsubscribeWhenNotificationsAreDisabled(true)
-              .init();
 
     /*// if the token is saved
     if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
@@ -222,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
 
   /** go to another activity to reset password and enter other data (email and pass) * */
   public void forgot_user_name(View view) {
-    // COMPLETED TODO IMPLEMENT
     Intent intent = new Intent(MainActivity.this, ForgotPass.class);
     intent.putExtra("type", "user");
     startActivity(intent);
@@ -230,11 +222,11 @@ public class MainActivity extends AppCompatActivity {
 
   /** go to another activity to reset password and enter other data (email and username) * */
   public void forgot_password(View view) {
-    // COMPLETED TODO IMPLEMENT
     Intent intent = new Intent(MainActivity.this, ForgotPass.class);
     intent.putExtra("type", "pass");
     startActivity(intent);
   }
+
   public void getResponse(
       int method,
       String url,

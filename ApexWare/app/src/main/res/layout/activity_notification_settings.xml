@@ -164,4 +164,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/mentions_tv"
         app:layout_constraintEnd_toEndOf="@+id/mentions_tv"
         app:layout_constraintTop_toTopOf="@+id/mentions_tv" />
+
+    <ToggleButton
+        android:id="@+id/disable_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_grey"
+        android:fontFamily="sans-serif"
+        android:textOff="@string/disable_all_notifications"
+        android:textOn="@string/allow_all_notifications"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:onClick="toggleAllow"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>

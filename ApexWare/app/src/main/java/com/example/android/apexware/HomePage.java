@@ -61,6 +61,8 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -86,6 +88,14 @@ public class HomePage extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
+
+      // OneSignal Initialization
+      OneSignal.startInit(this)
+              .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+              .unsubscribeWhenNotificationsAreDisabled(true)
+              .init();
+
+    //OneSignal.setSubscription(allow_all); //turn notifications on and off
 
 
     Window window = this.getWindow();
@@ -150,6 +160,7 @@ public class HomePage extends AppCompatActivity {
             }
             // close drawer when item is tapped
             drawerLayout.closeDrawers();
+
             // Add code here to update the UI based on the item selected
             // For example, swap UI fragments here
             return true;
