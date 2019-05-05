@@ -27,8 +27,8 @@
         <activity android:name=".NotificationSettings" />
         <activity android:name=".Settings" />
         <activity android:name=".NewPass" />
-        <activity android:name=".replytocomment" />
-        <activity android:name=".test" />
+        <activity android:name=".ReplyToComment" />
+        <activity android:name=".Test" />
         <activity android:name=".VerifyCode" />
         <activity android:name=".ForgotPass" />
         <activity android:name=".WriteMessage" />
@@ -39,8 +39,8 @@
         <activity android:name=".SignUp" />
         <activity android:name=".postsandcomments" />
         <activity android:name=".HomePage" />
-        <activity android:name=".apexLists" />
-        <activity android:name=".addCommentActivity" />
+        <activity android:name=".ApexLists" />
+        <activity android:name=".AddCommentActivity" />
         <activity android:name=".Community" />
         <activity android:name=".MainActivity">
             <intent-filter>

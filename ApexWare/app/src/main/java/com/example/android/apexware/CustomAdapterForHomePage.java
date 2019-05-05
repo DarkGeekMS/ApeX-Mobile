@@ -158,93 +158,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                             },
                             currentPost.getPostId());
                       }
-
-                      // we can use item name to make intent for the new responces
-                      /*
-                                                            if(item.getItemId()==R.id.hidepost){
-                                                                hidePost(post1.getPostId(),Request.Method.GET, null,
-                                                                        new  VolleyCallback(){
-                                                                            @Override
-                                                                            public void onSuccessResponse(String result) {
-                                                                                try {
-                                                                                    JSONObject response = new JSONObject(result);
-                                                                                    value=response.getString("hide");
-                                                                                    if(value=="true")
-                                                                                    {
-                                                                                        Intent hidePost=new Intent();
-                                                                                        hidePost.putExtra("postpos",post1.getPostId());
-                                                                                        setResult(RESULT_OK,hidePost);
-                                                                                        finish();
-                                                                                    }
-                                                                                    else  Toast.makeText(getApplicationContext(),"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
-
-                                                                                } catch (JSONException e) {
-                                                                                    e.printStackTrace();
-                                                                                }
-                                                                            }
-                                                                        });
-                                                            }
-                      */
-                      /*
-                                                            if(item.getItemId()==R.id.reportpost){
-                                                                final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
-                                                                final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
-                                                                AlertDialog.Builder builder = new AlertDialog.Builder(postsandcomments.this);
-                                                                builder.setTitle("report");
-                                                                builder.setMultiChoiceItems(reason, null, new DialogInterface.OnMultiChoiceClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                                                        if (isChecked) {
-                                                                            if ((mSelected != -1) && (mSelected != which)) {
-                                                                                final int oldVal = mSelected;
-                                                                                final AlertDialog alert = (AlertDialog)dialog;
-                                                                                final ListView list = alert.getListView();
-                                                                                list.setItemChecked(oldVal, false);}
-                                                                            // If the user checked the item, add it to the selected items
-                                                                            mSelected = which;
-                                                                            selectedItems.add(mSelected);
-                                                                        } else if (selectedItems.contains(which)) {
-                                                                            // Else, if the item is already in the array, remove it
-                                                                            selectedItems.remove(Integer.valueOf(which));
-                                                                        }
-                                                                    }
-                                                                });
-                                                                builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int id) {
-                                                                        reportPost(post1.getPostId(),Request.Method.GET, null,
-                                                                                new  VolleyCallback(){
-                                                                                    @Override
-                                                                                    public void onSuccessResponse(String result) {
-                                                                                        try {
-                                                                                            JSONObject response = new JSONObject(result);
-                                                                                            value=response.getString("reported");
-                                                                                            if(value=="true")
-                                                                                                Toast.makeText(postsandcomments.this,"Post Is Reported",Toast.LENGTH_SHORT).show();
-                                                                                            else  Toast.makeText(postsandcomments.this,"error,not reported",Toast.LENGTH_SHORT).show();
-                                                                                        } catch (JSONException e) {
-                                                                                            e.printStackTrace();
-                                                                                        }
-                                                                                    }
-                                                                                },reason[mSelected]);
-                                                                        // User clicked send, we should send the selectedItems results to the server
-
-                                                                    }
-                                                                })
-                                                                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                                                            @Override
-                                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                                //report canceled
-
-                                                                                Toast.makeText(postsandcomments.this,"report is canceled",Toast.LENGTH_SHORT).show();
-
-                                                                            }
-                                                                        });
-
-                                                                builder.show();
-
-                                                            }
-                      */
                       return true;
                     }
                   });
@@ -286,12 +199,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                       }
                       // we can use item name to make intent for the new responces
                       if (item.getItemId() == R.id.hidepost) {
-                        // test,request was working
-                        /* Intent returnIntent = new Intent();
-                        returnIntent.putExtra("id",post1.getPostId());
-                        setResult(Activity.RESULT_OK,returnIntent);
-                        finish();*/
-                        // end test
                         hidePost(
                             currentPost.getPostId(),
                             Request.Method.GET,
@@ -431,10 +338,10 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             (TextView) listItem.findViewById(R.id.apexcomOwnerNameAndTimeCreated);
     postOwnerAndCreatedTime.setText(
             "Posted by " + currentPost.getPostOwner() + "." + currentPost.getPostCreateDate());
-    userProfileToExplore=postOwnerAndCreatedTime.getText().toString();
     postOwnerAndCreatedTime.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            userProfileToExplore="Posted by " + currentPost.getPostOwner() + "." + currentPost.getPostCreateDate();
             Point p=new Point(0,50);
             // Open popup window
             if (p != null) showPopup((Activity) getContext(), p);
@@ -455,12 +362,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final Button down = listItem.findViewById(R.id.downvote);
     final TextView counter = listItem.findViewById(R.id.votecounter);
     counter.setText(String.valueOf(currentPost.getVotesCount()) );
-  /*  if(currentPost.isUpvoted())
-    {up.setTextColor(Color.BLUE);
-    currentPost.setDownvoted(false);}
-    if(currentPost.isDownvoted())
-    { down.setTextColor(Color.RED);
-    currentPost.setUpvoted(false);}*/
     // upvote
     up.setOnClickListener(
             new View.OnClickListener() {

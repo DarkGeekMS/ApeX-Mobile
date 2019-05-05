@@ -67,12 +67,15 @@ public class MainActivity extends AppCompatActivity {
     // finally change the color
     window.setStatusBarColor(ContextCompat.getColor(this, R.color.ic_launcher_background));
 
-    /*// if the token is saved
+    // if the token is saved
     if (SharedPrefmanager.getInstance(this).isLoggedIn()) {
         finish();
-        startActivity(new Intent(this, HomePage.class));
+        Intent i=new Intent(this, HomePage.class);
+        User user=SharedPrefmanager.getInstance(this).getUser();
+        i.putExtra("username",user.getUsername());
+        startActivity(i);
         return;
-    }*/
+    }
 
     /*
      * use either mock service or back end service

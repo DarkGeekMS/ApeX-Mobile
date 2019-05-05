@@ -198,7 +198,7 @@ public class CreatePost extends AppCompatActivity {
                   case "image":
                     {
                       String currentPath = null;
-                      if (galleyFilePath.isEmpty()) {
+                      if (!galleyFilePath.isEmpty()) {
                         currentPath = galleyFilePath;
                       } else {
                         currentPath = cameraFilePath;
