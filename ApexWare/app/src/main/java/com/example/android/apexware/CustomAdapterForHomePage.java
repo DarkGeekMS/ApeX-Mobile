@@ -5,13 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Movie;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -51,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.app.PendingIntent.getActivity;
+import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
 
 public class CustomAdapterForHomePage extends ArrayAdapter {
@@ -101,279 +96,328 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     // button event for this button
     final Button button = (Button) listItem.findViewById(R.id.popupmeu);
     button.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(context, button);
-                if(currentPost.getPostOwner()==user.getUsername())
-                { popup.getMenuInflater().inflate(R.menu.mypostoptions, popup.getMenu());
-                popup.setOnMenuItemClickListener(
-                        new PopupMenu.OnMenuItemClickListener() {
-                          @Override
-                          public boolean onMenuItemClick(MenuItem item) {
-                            if(item.getItemId()==R.id.savepost){savePost(currentPost.getPostId(),Request.Method.GET, null,
-                                    new  VolleyCallback(){
-                                        @Override
-                                        public void onSuccessResponse(String result) {
-                                            try {
-                                                JSONObject response = new JSONObject(result);
-                                                value=response.getString("value");
-                                                if(value=="true")
-                                                Toast.makeText(context,"Post is saved",Toast.LENGTH_SHORT).show();
-                                                else  Toast.makeText(context,"error,not saved",Toast.LENGTH_SHORT).show();
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            PopupMenu popup = new PopupMenu(CustomAdapterForHomePage.this.getContext(), button);
+            User user =
+                SharedPrefmanager.getInstance(CustomAdapterForHomePage.this.getContext()).getUser();
+            final String token = user.getToken();
+            if (user.getUsername().equals(currentPost.getPostOwner())) {
+              popup.getMenuInflater().inflate(R.menu.mypostoptions, popup.getMenu());
+              popup.setOnMenuItemClickListener(
+                  new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                      if (item.getItemId() == R.id.editmypost) {
+                        if (currentPost.getPostType() != 1
+                            || currentPost.getPostType() != 2) // no edit to photos or videos
+                        {
+                          Intent intent =
+                              new Intent(
+                                  CustomAdapterForHomePage.this.getContext(), EditPost.class);
+                          Gson gson = new Gson();
+                          String postAsString = gson.toJson(currentPost);
+                          intent.putExtra(
+                              "postToEdit", postAsString); // sending the post to next activity
+                          context.startActivityForResult(intent, 10);
+                        }
+                      }
+                      if (item.getItemId() == R.id.deletemypost) {
+                        deletePost(
+                            currentPost.getPostId(),
+                            Request.Method.DELETE,
+                            null,
+                            new VolleyCallback() {
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                try {
+                                  JSONObject response = new JSONObject(result);
+                                  value = response.getString("deleted");
+                                  if (value == "true") {
+                                    Toast.makeText(
+                                            CustomAdapterForHomePage.this.getContext(),
+                                            "Post is deleted",
+                                            Toast.LENGTH_SHORT)
+                                        .show();
+                                    context.startActivity(
+                                        new Intent(
+                                            CustomAdapterForHomePage.this.getContext(),
+                                            HomePage.class));
+                                  } else
+                                    Toast.makeText(
+                                            CustomAdapterForHomePage.this.getContext(),
+                                            "error,not deletd",
+                                            Toast.LENGTH_SHORT)
+                                        .show();
 
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });}
-                            if(item.getItemId()==R.id.hidepost){
-                                hidePost(currentPost.getPostId(),Request.Method.GET, null, new  VolleyCallback(){
-                                            @Override
-                                            public void onSuccessResponse(String result) {
-                                                try {
-                                                    JSONObject response = new JSONObject(result);
-                                                    value=response.getString("hide");
-                                                    if(value=="true")
-                                                    {  hiddenPotsList.add(currentPost);
-                                                        remove(currentPost);
-                                                        Toast.makeText(context,"post is hidden",Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    else  Toast.makeText(context,"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
-
-
-                                                       /* post.setVisibility(View.GONE);*/
-                                                    // creating a new user object
-                                                    User user = new User(response.getString("token"));
-                                                    // storing the user in shared preferences
-                                                    SharedPrefmanager.getInstance(context).userLogin(user);
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-
-                            }
-                              if(item.getItemId()==R.id.reportpost){
-                                  final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
-                                  final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
-                                  AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                  builder.setTitle("report");
-                                  builder.setMultiChoiceItems(reason, null, new DialogInterface.OnMultiChoiceClickListener() {
-                                      @Override
-                                      public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                          if (isChecked) {
-                                              if ((mSelected != -1) && (mSelected != which)) {
-                                                  final int oldVal = mSelected;
-                                                  final AlertDialog alert = (AlertDialog)dialog;
-                                                  final ListView list = alert.getListView();
-                                                  list.setItemChecked(oldVal, false);}
-                                              // If the user checked the item, add it to the selected items
-                                              mSelected = which;
-                                              selectedItems.add(mSelected);
-                                          } else if (selectedItems.contains(which)) {
-                                              // Else, if the item is already in the array, remove it
-                                              selectedItems.remove(Integer.valueOf(which));
-                                          }
-                                      }
-                                  });
-                                  builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
-                                      @Override
-                                      public void onClick(DialogInterface dialog, int id) {
-                                          reportPost(currentPost.getPostId(),Request.Method.GET, null,
-                                                  new  VolleyCallback(){
-                                                      @Override
-                                                      public void onSuccessResponse(String result) {
-                                                          try {
-                                                              JSONObject response = new JSONObject(result);
-                                                              value=response.getString("reported");
-                                                              if(value=="true")
-                                                                  Toast.makeText(context,"Post Is Reported",Toast.LENGTH_SHORT).show();
-                                                              else  Toast.makeText(context,"error,not reported",Toast.LENGTH_SHORT).show();
-                                                          } catch (JSONException e) {
-                                                              e.printStackTrace();
-                                                          }
-                                                      }
-                                                  },reason[mSelected]);
-                                          // User clicked send, we should send the selectedItems results to the server
-
-                                      }
-                                  })
-                                          .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                              @Override
-                                              public void onClick(DialogInterface dialog, int id) {
-                                                  //report canceled
-
-                                                  Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
-
-                                              }
-                                          });
-
-                                  builder.show();
-
-                              }
-                              if(item.getItemId()==R.id.deletpost){
-                                  deletePost(currentPost.getPostId(),Request.Method.GET, null,
-                                          new  VolleyCallback(){
-                                              @Override
-                                              public void onSuccessResponse(String result) {
-                                                  try {
-                                                      JSONObject response = new JSONObject(result);
-                                                      value=response.getString("deleted");
-                                                      if(value=="true")
-                                                      {Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
-                                                      notifyDataSetChanged();}
-                                                      else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
-
-                                                  } catch (JSONException e) {
-                                                      e.printStackTrace();
-                                                  }
-                                              }
-                                          },currentPost.getPostId());
-                              }
-                            return true;
-                          }
-                        });
-                popup.show(); // showing popup menu
-              }else { popup.getMenuInflater().inflate(R.menu.mypostoptions, popup.getMenu());
-                    popup.setOnMenuItemClickListener(
-                            new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem item) {
-                                   /* if(item.getItemId()==R.id.savepost){savePost(currentPost.getPostId(),Request.Method.GET, null,
-                                            new  VolleyCallback(){
-                                                @Override
-                                                public void onSuccessResponse(String result) {
-                                                    try {
-                                                        JSONObject response = new JSONObject(result);
-                                                        value=response.getString("value");
-                                                        if(value=="true")
-                                                            Toast.makeText(context,"Post is saved",Toast.LENGTH_SHORT).show();
-                                                        else  Toast.makeText(context,"error,not saved",Toast.LENGTH_SHORT).show();
-
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            });}
-                                    if(item.getItemId()==R.id.hidepost){
-                                        hidePost(currentPost.getPostId(),Request.Method.GET, null, new  VolleyCallback(){
-                                            @Override
-                                            public void onSuccessResponse(String result) {
-                                                try {
-                                                    JSONObject response = new JSONObject(result);
-                                                    value=response.getString("hide");
-                                                    if(value=="true")
-                                                    {  hiddenPotsList.add(currentPost);
-                                                        remove(currentPost);
-                                                        Toast.makeText(context,"post is hidden",Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    else  Toast.makeText(context,"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
-
-
-                                                    *//* post.setVisibility(View.GONE);*//*
-                                                    // creating a new user object
-                                                    User user = new User(response.getString("token"));
-                                                    // storing the user in shared preferences
-                                                    SharedPrefmanager.getInstance(context).userLogin(user);
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-
-                                    }
-                                    if(item.getItemId()==R.id.reportpost){
-                                        final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
-                                        final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setTitle("report");
-                                        builder.setMultiChoiceItems(reason, null, new DialogInterface.OnMultiChoiceClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                                if (isChecked) {
-                                                    if ((mSelected != -1) && (mSelected != which)) {
-                                                        final int oldVal = mSelected;
-                                                        final AlertDialog alert = (AlertDialog)dialog;
-                                                        final ListView list = alert.getListView();
-                                                        list.setItemChecked(oldVal, false);}
-                                                    // If the user checked the item, add it to the selected items
-                                                    mSelected = which;
-                                                    selectedItems.add(mSelected);
-                                                } else if (selectedItems.contains(which)) {
-                                                    // Else, if the item is already in the array, remove it
-                                                    selectedItems.remove(Integer.valueOf(which));
-                                                }
-                                            }
-                                        });
-                                        builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                reportPost(currentPost.getPostId(),Request.Method.GET, null,
-                                                        new  VolleyCallback(){
-                                                            @Override
-                                                            public void onSuccessResponse(String result) {
-                                                                try {
-                                                                    JSONObject response = new JSONObject(result);
-                                                                    value=response.getString("reported");
-                                                                    if(value=="true")
-                                                                        Toast.makeText(context,"Post Is Reported",Toast.LENGTH_SHORT).show();
-                                                                    else  Toast.makeText(context,"error,not reported",Toast.LENGTH_SHORT).show();
-                                                                } catch (JSONException e) {
-                                                                    e.printStackTrace();
-                                                                }
-                                                            }
-                                                        },reason[mSelected]);
-                                                // User clicked send, we should send the selectedItems results to the server
-
-                                            }
-                                        })
-                                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        //report canceled
-
-                                                        Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
-
-                                                    }
-                                                });
-
-                                        builder.show();
-
-                                    }*/
-                                    if(item.getItemId()==R.id.editmypost){
-                                        if(currentPost.getPostType()!=1||currentPost.getPostType()!=2)//no edit to photos or videos
-                                        { Intent intent = new Intent( CustomAdapterForHomePage.this.context,EditPost.class);
-                                            Gson gson = new Gson();
-                                            String postAsString = gson.toJson(currentPost);
-                                            intent.putExtra("postToEdit", postAsString); // sending the post to next activity
-                                            context.startActivityForResult(intent,10);}
-                                    }
-                                    if(item.getItemId()==R.id.deletpost){
-                                        deletePost(currentPost.getPostId(),Request.Method.GET, null,
-                                                new  VolleyCallback(){
-                                                    @Override
-                                                    public void onSuccessResponse(String result) {
-                                                        try {
-                                                            JSONObject response = new JSONObject(result);
-                                                            value=response.getString("deleted");
-                                                            if(value=="true")
-                                                            {Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
-                                                                notifyDataSetChanged();}
-                                                            else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
-
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                },currentPost.getPostId());
-                                    }
-                                    return true;
+                                } catch (JSONException e) {
+                                  e.printStackTrace();
                                 }
+                              }
+                            },
+                            currentPost.getPostId());
+                      }
+
+                      // we can use item name to make intent for the new responces
+                      /*
+                                                            if(item.getItemId()==R.id.hidepost){
+                                                                hidePost(post1.getPostId(),Request.Method.GET, null,
+                                                                        new  VolleyCallback(){
+                                                                            @Override
+                                                                            public void onSuccessResponse(String result) {
+                                                                                try {
+                                                                                    JSONObject response = new JSONObject(result);
+                                                                                    value=response.getString("hide");
+                                                                                    if(value=="true")
+                                                                                    {
+                                                                                        Intent hidePost=new Intent();
+                                                                                        hidePost.putExtra("postpos",post1.getPostId());
+                                                                                        setResult(RESULT_OK,hidePost);
+                                                                                        finish();
+                                                                                    }
+                                                                                    else  Toast.makeText(getApplicationContext(),"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
+
+                                                                                } catch (JSONException e) {
+                                                                                    e.printStackTrace();
+                                                                                }
+                                                                            }
+                                                                        });
+                                                            }
+                      */
+                      /*
+                                                            if(item.getItemId()==R.id.reportpost){
+                                                                final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
+                                                                final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
+                                                                AlertDialog.Builder builder = new AlertDialog.Builder(postsandcomments.this);
+                                                                builder.setTitle("report");
+                                                                builder.setMultiChoiceItems(reason, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                                                        if (isChecked) {
+                                                                            if ((mSelected != -1) && (mSelected != which)) {
+                                                                                final int oldVal = mSelected;
+                                                                                final AlertDialog alert = (AlertDialog)dialog;
+                                                                                final ListView list = alert.getListView();
+                                                                                list.setItemChecked(oldVal, false);}
+                                                                            // If the user checked the item, add it to the selected items
+                                                                            mSelected = which;
+                                                                            selectedItems.add(mSelected);
+                                                                        } else if (selectedItems.contains(which)) {
+                                                                            // Else, if the item is already in the array, remove it
+                                                                            selectedItems.remove(Integer.valueOf(which));
+                                                                        }
+                                                                    }
+                                                                });
+                                                                builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                        reportPost(post1.getPostId(),Request.Method.GET, null,
+                                                                                new  VolleyCallback(){
+                                                                                    @Override
+                                                                                    public void onSuccessResponse(String result) {
+                                                                                        try {
+                                                                                            JSONObject response = new JSONObject(result);
+                                                                                            value=response.getString("reported");
+                                                                                            if(value=="true")
+                                                                                                Toast.makeText(postsandcomments.this,"Post Is Reported",Toast.LENGTH_SHORT).show();
+                                                                                            else  Toast.makeText(postsandcomments.this,"error,not reported",Toast.LENGTH_SHORT).show();
+                                                                                        } catch (JSONException e) {
+                                                                                            e.printStackTrace();
+                                                                                        }
+                                                                                    }
+                                                                                },reason[mSelected]);
+                                                                        // User clicked send, we should send the selectedItems results to the server
+
+                                                                    }
+                                                                })
+                                                                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                                //report canceled
+
+                                                                                Toast.makeText(postsandcomments.this,"report is canceled",Toast.LENGTH_SHORT).show();
+
+                                                                            }
+                                                                        });
+
+                                                                builder.show();
+
+                                                            }
+                      */
+                      return true;
+                    }
+                  });
+              popup.show(); // showing popup menu
+            } else {
+              popup.getMenuInflater().inflate(R.menu.option_menu, popup.getMenu());
+              popup.setOnMenuItemClickListener(
+                  new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                      if (item.getItemId() == R.id.savepost) {
+                        savePost(
+                            currentPost.getPostId(),
+                            Request.Method.GET,
+                            null,
+                            new VolleyCallback() {
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                try {
+                                  JSONObject response = new JSONObject(result);
+                                  value = response.getString("value");
+                                  if (value .equals("the post is saved successfully"))
+                                    Toast.makeText(
+                                            CustomAdapterForHomePage.this.getContext(),
+                                            "Post is saved",
+                                            Toast.LENGTH_SHORT)
+                                        .show();
+                                  else
+                                    Toast.makeText(
+                                            CustomAdapterForHomePage.this.getContext(),
+                                            "error,not saved",
+                                            Toast.LENGTH_SHORT)
+                                        .show();
+                                } catch (JSONException e) {
+                                  e.printStackTrace();
+                                }
+                              }
                             });
-                    popup.show(); // showing popup menu
-                }}
-            });
+                      }
+                      // we can use item name to make intent for the new responces
+                      if (item.getItemId() == R.id.hidepost) {
+                        // test,request was working
+                        /* Intent returnIntent = new Intent();
+                        returnIntent.putExtra("id",post1.getPostId());
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        finish();*/
+                        // end test
+                        hidePost(
+                            currentPost.getPostId(),
+                            Request.Method.GET,
+                            null,
+                            new VolleyCallback() {
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                try {
+                                  JSONObject response = new JSONObject(result);
+                                  value = response.getString("hide");
+                                  if (value .equals("true") ) {
+                                    Intent hidePost = new Intent();
+                                    hidePost.putExtra("postpos", currentPost.getPostId());
+                                    context.setResult(RESULT_OK, hidePost);
+                                    notifyDataSetChanged();
+                                  } else
+                                    Toast.makeText(
+                                            CustomAdapterForHomePage.this.getContext(),
+                                            "Error,post isn`t hidden",
+                                            Toast.LENGTH_SHORT)
+                                        .show();
+
+                                } catch (JSONException e) {
+                                  e.printStackTrace();
+                                }
+                              }
+                            });
+                      }
+                      if (item.getItemId() == R.id.reportpost) {
+                        final String[] reason =
+                            new String[] {
+                              "It's spam or abuse",
+                              "It breaks the rules",
+                              "It's threatening self-harm or suicide"
+                            };
+                        final ArrayList selectedItems =
+                            new ArrayList(); // Where we track the selected items
+                        AlertDialog.Builder builder =
+                            new AlertDialog.Builder(CustomAdapterForHomePage.this.getContext());
+                        builder.setTitle("report");
+                        builder.setMultiChoiceItems(
+                            reason,
+                            null,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                              @Override
+                              public void onClick(
+                                  DialogInterface dialog, int which, boolean isChecked) {
+                                if (isChecked) {
+                                  if ((mSelected != -1) && (mSelected != which)) {
+                                    final int oldVal = mSelected;
+                                    final AlertDialog alert = (AlertDialog) dialog;
+                                    final ListView list = alert.getListView();
+                                    list.setItemChecked(oldVal, false);
+                                  }
+                                  // If the user checked the item, add it to the selected items
+                                  mSelected = which;
+                                  selectedItems.add(mSelected);
+                                } else if (selectedItems.contains(which)) {
+                                  // Else, if the item is already in the array, remove it
+                                  selectedItems.remove(Integer.valueOf(which));
+                                }
+                              }
+                            });
+                        builder
+                            .setPositiveButton(
+                                "send",
+                                new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int id) {
+                                    reportPost(
+                                        currentPost.getPostId(),
+                                        Request.Method.GET,
+                                        null,
+                                        new VolleyCallback() {
+                                          @Override
+                                          public void onSuccessResponse(String result) {
+                                            try {
+                                              JSONObject response = new JSONObject(result);
+                                              value = response.getString("reported");
+                                              if (value.equals("true"))
+                                                Toast.makeText(
+                                                        CustomAdapterForHomePage.this.getContext(),
+                                                        "Post Is Reported",
+                                                        Toast.LENGTH_SHORT)
+                                                    .show();
+                                              else
+                                                Toast.makeText(
+                                                        CustomAdapterForHomePage.this.getContext(),
+                                                        "error,not reported",
+                                                        Toast.LENGTH_SHORT)
+                                                    .show();
+                                            } catch (JSONException e) {
+                                              e.printStackTrace();
+                                            }
+                                          }
+                                        },
+                                        reason[mSelected]);
+                                    // User clicked send, we should send the selectedItems results
+                                    // to the server
+
+                                  }
+                                })
+                            .setNegativeButton(
+                                "cancel",
+                                new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int id) {
+                                    // report canceled
+
+                                    Toast.makeText(
+                                            CustomAdapterForHomePage.this.getContext(),
+                                            "report is canceled",
+                                            Toast.LENGTH_SHORT)
+                                        .show();
+                                  }
+                                });
+
+                        builder.show();
+                      }
+                      return true;
+                    }
+                  });
+              popup.show();
+            } // showing popup menu
+          }
+        });
 
     // set apexcom logo
     ImageView apexcomLogo = (ImageView) listItem.findViewById(R.id.apexcomlogo);
@@ -410,6 +454,12 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
     final Button down = listItem.findViewById(R.id.downvote);
     final TextView counter = listItem.findViewById(R.id.votecounter);
     counter.setText(String.valueOf(currentPost.getVotesCount()) );
+  /*  if(currentPost.isUpvoted())
+    {up.setTextColor(Color.BLUE);
+    currentPost.setDownvoted(false);}
+    if(currentPost.isDownvoted())
+    { down.setTextColor(Color.RED);
+    currentPost.setUpvoted(false);}*/
     // upvote
     up.setOnClickListener(
             new View.OnClickListener() {
@@ -426,19 +476,24 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                               counter.setText(value);
                               int newvotes=Integer.parseInt(value);
                               currentPost.setVotesCount(newvotes);
-                              if(up.getTextColors().getDefaultColor()==-1064793976&&down.getTextColors().getDefaultColor()==-1064793976)//not voted before
-                                  up.setTextColor(Color.BLUE);
+                              if(!currentPost.isDownvoted()&&!currentPost.isUpvoted())//not voted before
+                              { up.setTextColor(Color.BLUE);
+                              currentPost.setUpvoted(true);
+                              notifyDataSetChanged();}
                               else {
-                                if(up.getTextColors().getDefaultColor()==Color.BLUE){
-                                if(down.getTextColors().getDefaultColor()==Color.RED)//was downvoted and upvote clicked
-                                { down.setTextColor(Color.GRAY);
-                                  currentPost.setDownvoted(false);}
+                                if(currentPost.isDownvoted()){
+                                //was downvoted and upvote clicked
+                                 down.setTextColor(Color.GRAY);
+                                  currentPost.setDownvoted(false);
                                 up.setTextColor(Color.BLUE);
-                                currentPost.setUpvoted(true);}
-                              else if (up.getTextColors().getDefaultColor()==Color.BLUE)//was upvoted & upvote clicked
+                                currentPost.setUpvoted(true);
+                                notifyDataSetChanged();}
+                              else //was upvoted & upvote clicked
                               {
                                 up.setTextColor(Color.GRAY);
                                 currentPost.setUpvoted(false);
+                                currentPost.setDownvoted(false);
+                                notifyDataSetChanged();
                               }}
                             } catch (JSONException e) {
                               e.printStackTrace();
@@ -463,19 +518,24 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                       counter.setText(value);
                                       int newvotes=Integer.parseInt(value);
                                       currentPost.setVotesCount(newvotes);
-                                      if(up.getTextColors().getDefaultColor()==-1064793976&&down.getTextColors().getDefaultColor()==-1064793976)//not voted before
-                                          down.setTextColor(Color.RED);
+                                      if(!currentPost.isDownvoted()&&!currentPost.isUpvoted())//not voted before
+                                      { down.setTextColor(Color.RED);
+                                          currentPost.setDownvoted(true);
+                                      notifyDataSetChanged();}
                                       else {
-                                          if(down.getTextColors().getDefaultColor()==Color.RED){
-                                             //was downvoted and down clicked
-                                              { down.setTextColor(Color.GRAY);
-                                                  currentPost.setDownvoted(false);}
-                                              currentPost.setUpvoted(false);}
-                                          else if (up.getTextColors().getDefaultColor()==Color.BLUE)//was upvoted & down clicked
-                                          {
-                                              up.setTextColor(Color.GRAY);
+                                          if(currentPost.isUpvoted()){
+                                              //was up and down clicked
+                                               up.setTextColor(Color.GRAY);
+                                                  currentPost.setUpvoted(false);
                                               down.setTextColor(Color.RED);
+                                              currentPost.setDownvoted(true);
+                                          notifyDataSetChanged();}
+                                          else //was down & down clicked
+                                          {
+                                              down.setTextColor(Color.GRAY);
                                               currentPost.setUpvoted(false);
+                                              currentPost.setDownvoted(false);
+                                              notifyDataSetChanged();
                                           }}
                                   } catch (JSONException e) {
                                       e.printStackTrace();
@@ -786,7 +846,6 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
             };
     VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
   }
-
     public void reportPost(String postID, int method, JSONObject jsonValue, final VolleyCallback callback, final String reason){
         final String postId=postID;
         User user = SharedPrefmanager.getInstance(context).getUser();

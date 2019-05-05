@@ -173,7 +173,7 @@ public class addCommentActivity extends AppCompatActivity {
 
 
     public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final  String token, final String parent,final String content) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest stringRequest = new StringRequest(method, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

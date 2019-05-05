@@ -321,6 +321,27 @@ public class postsandcomments extends AppCompatActivity {
                                           intent.putExtra("postToEdit", postAsString); // sending the post to next activity
                                           startActivityForResult(intent,10);}
                                       }
+                                      if(item.getItemId()==R.id.deletemypost){
+                                          deletePost(post1.getPostId(),Request.Method.DELETE, null,
+                                                  new  VolleyCallback(){
+                                                      @Override
+                                                      public void onSuccessResponse(String result) {
+                                                          try {
+                                                              JSONObject response = new JSONObject(result);
+                                                              value=response.getString("deleted");
+                                                              if(value=="true"){
+                                                                  Toast.makeText(postsandcomments.this,"Post is deleted",Toast.LENGTH_SHORT).show();
+                                                                  startActivity(new Intent(postsandcomments.this,HomePage.class));
+                                                              }
+                                                              else  Toast.makeText(postsandcomments.this,"error,not deletd",Toast.LENGTH_SHORT).show();
+
+                                                          } catch (JSONException e) {
+                                                              e.printStackTrace();
+                                                          }
+                                                      }
+                                                  },post1.getPostId());
+                                      }
+
                                       // we can use item name to make intent for the new responces
 /*
                                       if(item.getItemId()==R.id.hidepost){
@@ -448,11 +469,11 @@ public class postsandcomments extends AppCompatActivity {
                                           try {
                                             JSONObject response = new JSONObject(result);
                                             value=response.getString("hide");
-                                            if(value=="true")
+                                            if(value.equals("true"))
                                             {
                                                 Intent hidePost=new Intent();
                                                 hidePost.putExtra("postpos",post1.getPostId());
-                                                setResult(RESULT_OK,hidePost);
+                                                setResult(20,hidePost);
                                                 finish();
                                             }
                                             else  Toast.makeText(getApplicationContext(),"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
@@ -520,26 +541,6 @@ public class postsandcomments extends AppCompatActivity {
 
                                   builder.show();
 
-                              }
-                              if(item.getItemId()==R.id.deletpost){
-                                  deletePost(post1.getPostId(),Request.Method.DELETE, null,
-                                          new  VolleyCallback(){
-                                              @Override
-                                              public void onSuccessResponse(String result) {
-                                                  try {
-                                                      JSONObject response = new JSONObject(result);
-                                                      value=response.getString("deleted");
-                                                      if(value=="true"){
-                                                          Toast.makeText(postsandcomments.this,"Post is deleted",Toast.LENGTH_SHORT).show();
-                                                          startActivity(new Intent(postsandcomments.this,HomePage.class));
-                                                      }
-                                                      else  Toast.makeText(postsandcomments.this,"error,not deletd",Toast.LENGTH_SHORT).show();
-
-                                                  } catch (JSONException e) {
-                                                      e.printStackTrace();
-                                                  }
-                                              }
-                                          },post1.getPostId());
                               }
                             return true;
                           }

@@ -129,7 +129,11 @@ public class HomeSubscribedCommunities extends Fragment {
                                           temp.setApexcomName("apex_com_name");
                                           temp.setVotesCount(current.getInt("votes"));
                                           temp.setApexcomLogo("https://i.imgur.com/S7USWRb.jpg");
-                                          Date currentTime = Calendar.getInstance().getTime();
+                                          if(current.getString("current_user_vote").equals("1"))
+                                          {temp.setUpvoted(true);}
+                                          if(current.getString("current_user_vote").equals("-1"))
+                                          {temp.setDownvoted(true);}
+                                              Date currentTime = Calendar.getInstance().getTime();
                                           String currendate="20"+Integer.toString(currentTime.getYear()-100);
                                           if(currentTime.getMonth()>9){
                                               currendate+="-"+Integer.toString(currentTime.getMonth());
@@ -217,8 +221,7 @@ public class HomeSubscribedCommunities extends Fragment {
                 Post p1 = (Post) current;
                 Gson gson = new Gson();
                 String postAsString = gson.toJson(p1);
-                intent.putExtra("postToDisplay", postAsString); // sending the post to next activity
-                  intent.putExtra("itemPos",position);
+                intent.putExtra("postToDisplay", postAsString); // sending the post to next activityintent.putExtra("itemPos",position);
                 startActivityForResult(intent,10);
               }
             });
@@ -263,13 +266,14 @@ public class HomeSubscribedCommunities extends Fragment {
 
         }
 
-        if(requestCode==10&&resultCode==RESULT_OK){
-            String id=data.getStringExtra("postid");
+        if(requestCode==10&&resultCode==20){
+            String id=data.getStringExtra("postpos");
             for(int i = 0 ; i < postArrayList.size() ; i++){
                 if(id.equalsIgnoreCase(postArrayList.get(i).getPostId()))
                     postArrayList.get(i).setTextPostcontent(data.getStringExtra("edited"));
                 }
-                adapter.notifyDataSetChanged();}
+                adapter.notifyDataSetChanged();
+           }
 
 
     }//onActivityResult
@@ -310,4 +314,6 @@ public class HomeSubscribedCommunities extends Fragment {
                 };
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
     }
+
+
 }
