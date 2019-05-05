@@ -164,6 +164,7 @@ public class HomePage extends AppCompatActivity {
               if(login_guest){
                 menuItem.setVisible(false);
               }else{
+
                 startActivity(new Intent(getApplicationContext(), Settings.class));
               }
 
@@ -184,6 +185,7 @@ public class HomePage extends AppCompatActivity {
                           try {
                             // converting response to json object
                             JSONObject obj = new JSONObject(response);
+                            SharedPrefmanager.getInstance(HomePage.this).logout();
                             Toast.makeText(HomePage.this,"Logout Successful",Toast.LENGTH_SHORT).show();
                             Intent i=new Intent(HomePage.this,MainActivity.class);
                             startActivity(i);

@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.android.apexware.MainActivity.login_guest;
 import static java.lang.StrictMath.abs;
 
 /**
@@ -43,6 +44,7 @@ import static java.lang.StrictMath.abs;
  * create an instance of this fragment.
  */
 public class PopularUnsubscribedCommunities extends Fragment {
+    MainActivity mainActivity=new MainActivity();
     ListView list;
     CustomAdapterForHomePage adapter;
     ArrayList<Post> postArrayList = new ArrayList();
@@ -262,9 +264,15 @@ public class PopularUnsubscribedCommunities extends Fragment {
             final VolleyCallback callback) {
         User user = SharedPrefmanager.getInstance(getContext()).getUser();
         final String token=user.getToken();
+        int requestType;
+        if(login_guest){
+             requestType=Request.Method.GET;
+        }else{
+            requestType=Request.Method.POST;
+        }
         StringRequest stringRequest =
                 new StringRequest(
-                        Request.Method.POST,
+                        requestType,
                         url,
                         new Response.Listener<String>() {
                             @Override

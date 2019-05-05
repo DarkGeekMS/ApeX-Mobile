@@ -232,6 +232,7 @@ public class ListOfCommunityFragment extends Fragment {
           protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
             params.put("token", token);
+            params.put("general","1");
             return params;
           }
         };

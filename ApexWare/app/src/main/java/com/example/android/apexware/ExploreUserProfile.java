@@ -66,6 +66,7 @@ public class ExploreUserProfile extends AppCompatActivity {
 
         Intent i=getIntent();
         desiredUser=i.getStringExtra("username");
+        desiredUser=desiredUser.substring(10,desiredUser.indexOf('.'));
         tabLayout= (TabLayout) findViewById(R.id.explore_profile_tab_layout);
         appBarLayout=(AppBarLayout) findViewById(R.id.explore_profile_appbar_layout);
         viewPager=(ViewPager) findViewById(R.id.explore_profile_viewpager);

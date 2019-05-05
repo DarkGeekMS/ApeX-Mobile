@@ -39,6 +39,7 @@ import java.util.Map;
 public class addCommentActivity extends AppCompatActivity {
     EditText comment;
     Button postcomment;
+    String ID;
     User user = SharedPrefmanager.getInstance(addCommentActivity.this).getUser();
     final String token=user.getToken();
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -56,7 +57,8 @@ public class addCommentActivity extends AppCompatActivity {
         // finally change the color
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorGray));
         Gson gson = new Gson();
-        final String ID = getIntent().getStringExtra("postID");
+        ID = getIntent().getStringExtra("postID");
+        ID=ID.replace("\"", "");
         //postid will be used in the request
         final String postid = gson.fromJson(ID, String.class);
         comment=findViewById(R.id.addCommenttopost) ;
@@ -140,7 +142,7 @@ public class addCommentActivity extends AppCompatActivity {
                                 }
                             },token,
                             ID,
-                            comment.getText().toString());
+                            comment.getText().toString().trim());
                 }}
             }
         });
@@ -168,10 +170,6 @@ public class addCommentActivity extends AppCompatActivity {
         }
         else finish();
     }
-
-
-
-
     public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback, final  String token, final String parent,final String content) {
         StringRequest stringRequest = new StringRequest(method, url,
                         new Response.Listener<String>() {
