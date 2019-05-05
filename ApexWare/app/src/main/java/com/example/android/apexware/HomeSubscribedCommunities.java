@@ -208,7 +208,7 @@ public class HomeSubscribedCommunities extends Fragment {
             });
       }
     }
-        });
+
     list.setOnScrollListener(
         new EndlessScrollListener() {
           @Override
@@ -243,20 +243,13 @@ public class HomeSubscribedCommunities extends Fragment {
           if (id.equalsIgnoreCase(postArrayList.get(i).getPostId())) {
             postArrayList.remove(i);
             break;
-          }
+          }}
         adapter.notifyDataSetChanged();
         Toast.makeText(getContext(), "post is hidden", Toast.LENGTH_SHORT).show();
-      } else Toast.makeText(getContext(), "what tf", Toast.LENGTH_SHORT).show();
+      } else Toast.makeText(getContext(), "post not found", Toast.LENGTH_SHORT).show();
     }
 
-      String id = data.getStringExtra("postpos");
-      for (int i = 0; i < postArrayList.size(); i++) {
-        if (id.equalsIgnoreCase(postArrayList.get(i).getPostId()))
-          postArrayList.get(i).setTextPostcontent(data.getStringExtra("edited"));
-      }
-      adapter.notifyDataSetChanged();
-    }
-  } // onActivityResult
+
   /**
    * This function handling get response from user
    *
