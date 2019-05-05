@@ -8,7 +8,7 @@ public interface Routes {
     //Server Base Address
     String serverAddress="http://35.232.3.8//api/";
 
-    //Account routes
+    //Account routes.
     String deleteMessage=serverAddress+"DeleteMessage?";//post
     String readMessage=serverAddress+"ReadMessage?";//post
     String me=serverAddress+"Me?";//post

@@ -60,40 +60,44 @@ public class EditPost extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-
-            getResponse(
-                Request.Method.PATCH,
-                Routes.edit,
-                null,
-                new VolleyCallback() {
-                  @Override
-                  public void onSuccessResponse(String result) {
-                    try {
-                      JSONObject response = new JSONObject(result);
-                      String value = response.getString("value");
-                      if (value.equals("true")) {
+if(Routes.active_mock){Intent edit = new Intent();
+    edit.putExtra("edited", body.getText().toString());
+    edit.putExtra("postid", post1.getPostId());
+    setResult(RESULT_OK, edit);
+    finish();}else{getResponse(
+        Request.Method.PATCH,
+        Routes.edit,
+        null,
+        new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String result) {
+                try {
+                    JSONObject response = new JSONObject(result);
+                    String value = response.getString("value");
+                    if (value.equals("true")) {
                         Intent edit = new Intent();
                         edit.putExtra("edited", body.getText().toString());
                         edit.putExtra("postid", post1.getPostId());
                         setResult(RESULT_OK, edit);
                         finish();
-                      } else
+                    } else
                         Toast.makeText(
                                 getApplicationContext(),
                                 "Error,post isn`t hidden",
                                 Toast.LENGTH_SHORT)
-                            .show();
+                                .show();
 
-                    } catch (JSONException e) {
-                      e.printStackTrace();
-                    }
-                  }
-                },
-                token,
-                post1.getPostId(),
-                body.getText().toString());
-          }
-        });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+        token,
+        post1.getPostId(),
+        body.getText().toString());
+}
+          }}
+            );
   }
   /** This function handle cancel edit post */
   public void cancelcomment(View v) {
