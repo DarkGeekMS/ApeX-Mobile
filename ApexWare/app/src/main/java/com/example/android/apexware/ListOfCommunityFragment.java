@@ -60,8 +60,8 @@ public class ListOfCommunityFragment extends Fragment {
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     /*
-     * test request to get apex communities*/
-    /*end test*/
+     * Test request to get apex communities*/
+    /*end Test*/
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_list_of_community, container, false);
     Toolbar toolbar = view.findViewById(R.id.toolbarForCommunity);
@@ -232,7 +232,7 @@ public class ListOfCommunityFragment extends Fragment {
           protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
             params.put("token", token);
-            params.put("general","1");
+            params.put("general", "1");
             return params;
           }
         };

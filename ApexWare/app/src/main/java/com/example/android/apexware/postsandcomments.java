@@ -1,22 +1,15 @@
 package com.example.android.apexware;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -29,8 +22,6 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -456,12 +447,12 @@ public class postsandcomments extends AppCompatActivity {
                                       });}
                             // we can use item name to make intent for the new responces
                             if(item.getItemId()==R.id.hidepost){
-                                //test,request was working
+                                //Test,request was working
                                /* Intent returnIntent = new Intent();
                                 returnIntent.putExtra("id",post1.getPostId());
                                 setResult(Activity.RESULT_OK,returnIntent);
                                 finish();*/
-                                //end test
+                                //end Test
                               hidePost(post1.getPostId(),Request.Method.GET, null,
                                       new  VolleyCallback(){
                                         @Override
@@ -673,7 +664,7 @@ TextView addcomment=findViewById(R.id.addcomment);
 addcomment.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(postsandcomments.this ,addCommentActivity.class);
+        Intent intent = new Intent(postsandcomments.this , AddCommentActivity.class);
         Gson gson = new Gson();
         String ID = gson.toJson(post1.getPostId());
         intent.putExtra("postID", ID); // sending the post to next activity

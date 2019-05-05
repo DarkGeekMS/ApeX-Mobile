@@ -28,7 +28,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * This function handle create message
+ */
 public class WriteMessage extends AppCompatActivity {
     EditText editTextReciever;
     EditText editTextSubject;

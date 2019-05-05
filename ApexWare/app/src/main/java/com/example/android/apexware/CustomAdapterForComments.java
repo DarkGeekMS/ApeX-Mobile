@@ -36,6 +36,7 @@ import java.util.Map;
 
 /**
  * this class is to handle the data of the comments to show it in the list
+ *
  * @author Omar
  */
 public class CustomAdapterForComments extends BaseExpandableListAdapter {
@@ -43,7 +44,8 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
   private List<Comment> replies;
   private HashMap<Comment, List<Comment>> listHashMap;
   private List<Comment> commentList;
-   String value;
+  String value;
+
   public CustomAdapterForComments(
       Activity context,
       List<Comment> replies,
@@ -69,8 +71,8 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
    */
   @Override
   public int getChildrenCount(int groupPosition) {
-    if (listHashMap.get(commentList.get(groupPosition)) !=null)
-    return listHashMap.get(commentList.get(groupPosition)).size();
+    if (listHashMap.get(commentList.get(groupPosition)) != null)
+      return listHashMap.get(commentList.get(groupPosition)).size();
     else return 0;
   }
 
@@ -137,191 +139,225 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
   @Override
   public View getGroupView(
       int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-      // get user token
-      final User user = SharedPrefmanager.getInstance(context).getUser();
-      final String token = user.getToken();
+    // get user token
+    final User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token = user.getToken();
     if (convertView == null)
       convertView = LayoutInflater.from(context).inflate(R.layout.commentview, parent, false);
-   final Comment currentComment = commentList.get(groupPosition);
-    TextView commentOwnerandDte =convertView.findViewById(R.id.commentOwnerNameAndTimeCreated);
-    commentOwnerandDte.setText(currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
+    final Comment currentComment = commentList.get(groupPosition);
+    TextView commentOwnerandDte = convertView.findViewById(R.id.commentOwnerNameAndTimeCreated);
+    commentOwnerandDte.setText(
+        currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
     TextView commentContent = convertView.findViewById(R.id.commentContents);
     commentContent.setText(currentComment.getCommentContent());
     final Button upcomment = convertView.findViewById(R.id.upvotecomment);
     final Button downcomment = convertView.findViewById(R.id.downvotecomment);
     final TextView votecounterforcomment = convertView.findViewById(R.id.votecounterforcomment);
-    upcomment.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-          final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
-          upVote(currentComment.getId(),Request.Method.POST, null,
-                  new  VolleyCallback(){
-                      @Override
-                      public void onSuccessResponse(String result) {
-                          try {
-                              JSONObject response = new JSONObject(result);
-                              value=response.getString("votes");
-                              votecounterforcomment.setText(value);
-                              int newvotes=Integer.parseInt(value);
-                              if(newvotes>currentvotes){
-                                  if(newvotes==currentvotes+2)//was downvoted and upvote clicked
-                                  { downcomment.setTextColor(Color.GRAY);
-                                      currentComment.setDownvoted(false);}
-                                  upcomment.setTextColor(Color.BLUE);
-                                  currentComment.setUpvoted(true);}
-                              else if (newvotes<currentvotes)//was upvoted & upvote clicked
-                              {
-                                  upcomment.setTextColor(Color.GRAY);
-                                  currentComment.setUpvoted(false);
-                              }
-                          } catch (JSONException e) {
-                              e.printStackTrace();
-                          }
-                      }
-                  });
-      }
-    });
-    downcomment.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
-            downVote(currentComment.getId(),Request.Method.GET, null,
-                    new  VolleyCallback(){
-                        @Override
-                        public void onSuccessResponse(String result) {
-                            try {
-                                JSONObject response = new JSONObject(result);
-                                value=response.getString("votes");
-                                votecounterforcomment.setText(value);
-                                int newvotes=Integer.parseInt(value);
-                                if(newvotes<currentvotes){
-                                    if(newvotes==currentvotes-2)//was upvoted and downvote clicked
-                                    { upcomment.setTextColor(Color.GRAY);
-                                        currentComment.setUpvoted(false);}
-                                    downcomment.setTextColor(Color.RED);
-                                    currentComment.setDownvoted(true);}
-                                else if (newvotes>currentvotes)//was downvoted & downvote clicked(cancel downvote)
-                                {
-                                    downcomment.setTextColor(Color.GRAY);
-                                    currentComment.setDownvoted(false);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-        }
-    });
-      final Button commentoptions=convertView.findViewById(R.id.commentoptions);
-      commentoptions.setOnClickListener(
-              new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                      PopupMenu popup = new PopupMenu(context, commentoptions);
-                      if(currentComment.getCommentOwner().equals("hellie"))//if it is my comment
-                      {
-                          popup.getMenuInflater().inflate(R.menu.mycommentoptions, popup.getMenu());
-                          popup.setOnMenuItemClickListener(
-                                  new PopupMenu.OnMenuItemClickListener() {
-                                      @Override
-                                      public boolean onMenuItemClick(MenuItem item) {
-                                          if(item.getItemId()==R.id.EditMyComment){
-                                              Intent intent = new Intent( CustomAdapterForComments.this.context,EditComment.class);
-                                              Gson gson = new Gson();
-                                              String commentAsString = gson.toJson(currentComment);
-                                              intent.putExtra("commentToEdit", commentAsString); // sending the post to next activity
-                                              context.startActivityForResult(intent,11);}
-
-                                          // we can use item name to make intent for the new responces
-                                          if(item.getItemId()==R.id.SaveMyComment){
-
-                                          }
-                                          if(item.getItemId()==R.id.DeleteMyComment){
-                                              deleteComment(currentComment.getPostId(),Request.Method.GET, null,
-                                                      new  VolleyCallback(){
-                                                          @Override
-                                                          public void onSuccessResponse(String result) {
-                                                              try {
-                                                                  JSONObject response = new JSONObject(result);
-                                                                  value=response.getString("deleted");
-                                                                  if(value.equals("true"))
-                                                                      Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
-                                                                  else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
-
-                                                              } catch (JSONException e) {
-                                                                  e.printStackTrace();
-                                                              }
-                                                          }
-                                                      },currentComment.getPostId());
-                                          }
-                                          return true;
-                                      }
-                                  });
-                          popup.show(); // showing popup menu}
-                      }else{//if it`s others comment
-                          popup.getMenuInflater().inflate(R.menu.commentoptions, popup.getMenu());
-                          popup.setOnMenuItemClickListener(
-                                  new PopupMenu.OnMenuItemClickListener() {
-                                      @Override
-                                      public boolean onMenuItemClick(MenuItem item) {
-                                          if(item.getItemId()==R.id.Savecomment){}
-                                          // we can use item name to make intent for the new responces
-                                          if(item.getItemId()==R.id.reportcomment){
-                                              final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
-                                              AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                              builder.setTitle("report");
-                                              builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
-                                                  @Override
-                                                  public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                                      if (isChecked) {
-                                                          // If the user checked the item, add it to the selected items
-                                                          selectedItems.add(which);
-                                                      } else if (selectedItems.contains(which)) {
-                                                          // Else, if the item is already in the array, remove it
-                                                          selectedItems.remove(Integer.valueOf(which));
-                                                      }
-                                                  }
-                                              });
-                                              builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
-                                                  @Override
-                                                  public void onClick(DialogInterface dialog, int id) {
-                                                      // User clicked send, we should send the selectedItems results to the server
-                                                      Toast.makeText(context,"comment is reported",Toast.LENGTH_SHORT).show();
-
-                                                  }
-                                              })
-                                                      .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                                          @Override
-                                                          public void onClick(DialogInterface dialog, int id) {
-                                                              //report canceled
-                                                              Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
-
-                                                          }
-                                                      });
-
-                                              builder.show();
-                                          }
-                                          if(item.getItemId()==R.id.Delete_comment){
-
-                                          }
-                                          return true;
-                                      }
-                                  });
-                          popup.show(); // showing popup menu}
-                      }
-                  }
-              });
-      final Button replytocomment=convertView.findViewById(R.id.commentreply);
-      replytocomment.setOnClickListener(new View.OnClickListener() {
+    upcomment.setOnClickListener(
+        new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              Intent intent = new Intent(context,replytocomment.class);
-              Gson gson = new Gson();
-              String comment = gson.toJson(currentComment);
-              intent.putExtra("Comment", comment); // sending the post to next activity
-              context.startActivity(intent);
+            final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
+            upVote(
+                currentComment.getId(),
+                Request.Method.POST,
+                null,
+                new VolleyCallback() {
+                  @Override
+                  public void onSuccessResponse(String result) {
+                    try {
+                      JSONObject response = new JSONObject(result);
+                      value = response.getString("votes");
+                      votecounterforcomment.setText(value);
+                      int newvotes = Integer.parseInt(value);
+                      if (newvotes > currentvotes) {
+                        if (newvotes == currentvotes + 2) // was downvoted and upvote clicked
+                        {
+                          downcomment.setTextColor(Color.GRAY);
+                          currentComment.setDownvoted(false);
+                        }
+                        upcomment.setTextColor(Color.BLUE);
+                        currentComment.setUpvoted(true);
+                      } else if (newvotes < currentvotes) // was upvoted & upvote clicked
+                      {
+                        upcomment.setTextColor(Color.GRAY);
+                        currentComment.setUpvoted(false);
+                      }
+                    } catch (JSONException e) {
+                      e.printStackTrace();
+                    }
+                  }
+                });
           }
-      });
+        });
+    downcomment.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
+            downVote(
+                currentComment.getId(),
+                Request.Method.GET,
+                null,
+                new VolleyCallback() {
+                  @Override
+                  public void onSuccessResponse(String result) {
+                    try {
+                      JSONObject response = new JSONObject(result);
+                      value = response.getString("votes");
+                      votecounterforcomment.setText(value);
+                      int newvotes = Integer.parseInt(value);
+                      if (newvotes < currentvotes) {
+                        if (newvotes == currentvotes - 2) // was upvoted and downvote clicked
+                        {
+                          upcomment.setTextColor(Color.GRAY);
+                          currentComment.setUpvoted(false);
+                        }
+                        downcomment.setTextColor(Color.RED);
+                        currentComment.setDownvoted(true);
+                      } else if (newvotes
+                          > currentvotes) // was downvoted & downvote clicked(cancel downvote)
+                      {
+                        downcomment.setTextColor(Color.GRAY);
+                        currentComment.setDownvoted(false);
+                      }
+                    } catch (JSONException e) {
+                      e.printStackTrace();
+                    }
+                  }
+                });
+          }
+        });
+    final Button commentoptions = convertView.findViewById(R.id.commentoptions);
+    commentoptions.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            PopupMenu popup = new PopupMenu(context, commentoptions);
+            if (currentComment.getCommentOwner().equals("hellie")) // if it is my comment
+            {
+              popup.getMenuInflater().inflate(R.menu.mycommentoptions, popup.getMenu());
+              popup.setOnMenuItemClickListener(
+                  new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                      if (item.getItemId() == R.id.EditMyComment) {
+                        Intent intent =
+                            new Intent(CustomAdapterForComments.this.context, EditComment.class);
+                        Gson gson = new Gson();
+                        String commentAsString = gson.toJson(currentComment);
+                        intent.putExtra(
+                            "commentToEdit", commentAsString); // sending the post to next activity
+                        context.startActivityForResult(intent, 11);
+                      }
+
+                      // we can use item name to make intent for the new responces
+                      if (item.getItemId() == R.id.SaveMyComment) {}
+
+                      if (item.getItemId() == R.id.DeleteMyComment) {
+                        deleteComment(
+                            currentComment.getPostId(),
+                            Request.Method.GET,
+                            null,
+                            new VolleyCallback() {
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                try {
+                                  JSONObject response = new JSONObject(result);
+                                  value = response.getString("deleted");
+                                  if (value.equals("true"))
+                                    Toast.makeText(context, "Post is delted", Toast.LENGTH_SHORT)
+                                        .show();
+                                  else
+                                    Toast.makeText(context, "error,not deletd", Toast.LENGTH_SHORT)
+                                        .show();
+
+                                } catch (JSONException e) {
+                                  e.printStackTrace();
+                                }
+                              }
+                            },
+                            currentComment.getPostId());
+                      }
+                      return true;
+                    }
+                  });
+              popup.show(); // showing popup menu}
+            } else { // if it`s others comment
+              popup.getMenuInflater().inflate(R.menu.commentoptions, popup.getMenu());
+              popup.setOnMenuItemClickListener(
+                  new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                      if (item.getItemId() == R.id.Savecomment) {}
+                      // we can use item name to make intent for the new responces
+                      if (item.getItemId() == R.id.reportcomment) {
+                        final ArrayList selectedItems =
+                            new ArrayList(); // Where we track the selected items
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("report");
+                        builder.setMultiChoiceItems(
+                            R.array.report_reason,
+                            null,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                              @Override
+                              public void onClick(
+                                  DialogInterface dialog, int which, boolean isChecked) {
+                                if (isChecked) {
+                                  // If the user checked the item, add it to the selected items
+                                  selectedItems.add(which);
+                                } else if (selectedItems.contains(which)) {
+                                  // Else, if the item is already in the array, remove it
+                                  selectedItems.remove(Integer.valueOf(which));
+                                }
+                              }
+                            });
+                        builder
+                            .setPositiveButton(
+                                "send",
+                                new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int id) {
+                                    // User clicked send, we should send the selectedItems results
+                                    // to the server
+                                    Toast.makeText(
+                                            context, "comment is reported", Toast.LENGTH_SHORT)
+                                        .show();
+                                  }
+                                })
+                            .setNegativeButton(
+                                "cancel",
+                                new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int id) {
+                                    // report canceled
+                                    Toast.makeText(
+                                            context, "report is canceled", Toast.LENGTH_SHORT)
+                                        .show();
+                                  }
+                                });
+
+                        builder.show();
+                      }
+                      return true;
+                    }
+                  });
+              popup.show(); // showing popup menu}
+            }
+          }
+        });
+    final Button replytocomment = convertView.findViewById(R.id.commentreply);
+    replytocomment.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Intent intent = new Intent(context, ReplyToComment.class);
+            Gson gson = new Gson();
+            String comment = gson.toJson(currentComment);
+            intent.putExtra("Comment", comment); // sending the post to next activity
+            context.startActivity(intent);
+          }
+        });
 
     return convertView;
   }
@@ -345,355 +381,387 @@ public class CustomAdapterForComments extends BaseExpandableListAdapter {
       ViewGroup parent) {
     if (convertView == null)
       convertView = LayoutInflater.from(context).inflate(R.layout.replyview, parent, false);
-   final Comment currentComment = replies.get(childPosition);
-    TextView commentOwnerandDte =convertView.findViewById(R.id.replyOwnerNameAndTimeCreated);
+    final Comment currentComment = replies.get(childPosition);
+    TextView commentOwnerandDte = convertView.findViewById(R.id.replyOwnerNameAndTimeCreated);
     commentOwnerandDte.setText(
         currentComment.getCommentOwner() + "/" + currentComment.getCommentCreateDate());
     TextView commentContent = convertView.findViewById(R.id.replyContents);
     commentContent.setText(currentComment.getCommentContent());
-      final Button upreply = convertView.findViewById(R.id.upvotereply);
-      final Button downreply = convertView.findViewById(R.id.downvotereply);
-      final TextView votecounterforcomment = convertView.findViewById(R.id.votecounterforreply);
-      upreply.setOnClickListener(new View.OnClickListener() {
+    final Button upreply = convertView.findViewById(R.id.upvotereply);
+    final Button downreply = convertView.findViewById(R.id.downvotereply);
+    final TextView votecounterforcomment = convertView.findViewById(R.id.votecounterforreply);
+    upreply.setOnClickListener(
+        new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
-              upVote(currentComment.getId(),Request.Method.POST, null,
-                      new  VolleyCallback(){
-                          @Override
-                          public void onSuccessResponse(String result) {
-                              try {
-                                  JSONObject response = new JSONObject(result);
-                                  value=response.getString("votes");
-                                  votecounterforcomment.setText(value);
-                                  int newvotes=Integer.parseInt(value);
-                                  if(newvotes>currentvotes){
-                                      if(newvotes==currentvotes+2)//was downvoted and upvote clicked
-                                      { downreply.setTextColor(Color.GRAY);
-                                          currentComment.setDownvoted(false);}
-                                      upreply.setTextColor(Color.BLUE);
-                                      currentComment.setUpvoted(true);}
-                                  else if (newvotes<currentvotes)//was upvoted & upvote clicked
-                                  {
-                                      upreply.setTextColor(Color.GRAY);
-                                      currentComment.setUpvoted(false);
-                                  }
-                              } catch (JSONException e) {
-                                  e.printStackTrace();
-                              }
-                          }
-                      });
-          }
-      });
-      downreply.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
-              downVote(currentComment.getId(),Request.Method.GET, null,
-                      new  VolleyCallback(){
-                          @Override
-                          public void onSuccessResponse(String result) {
-                              try {
-                                  JSONObject response = new JSONObject(result);
-                                  value=response.getString("votes");
-                                  votecounterforcomment.setText(value);
-                                  int newvotes=Integer.parseInt(value);
-                                  if(newvotes<currentvotes){
-                                      if(newvotes==currentvotes-2)//was upvoted and downvote clicked
-                                      { upreply.setTextColor(Color.GRAY);
-                                          currentComment.setUpvoted(false);}
-                                      downreply.setTextColor(Color.RED);
-                                      currentComment.setDownvoted(true);}
-                                  else if (newvotes>currentvotes)//was downvoted & downvote clicked(cancel downvote)
-                                  {
-                                      downreply.setTextColor(Color.GRAY);
-                                      currentComment.setDownvoted(false);
-                                  }
-                              } catch (JSONException e) {
-                                  e.printStackTrace();
-                              }
-                          }
-                      });
-          }
-      });
-      final Button addreply =convertView.findViewById(R.id.commentreplys);
-      addreply.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-
-          }
-      });
-      final User user = SharedPrefmanager.getInstance(context).getUser();
-      final String token = user.getToken();
-      final Button commentoptions=convertView.findViewById(R.id.replyoptions);
-      commentoptions.setOnClickListener(
-              new View.OnClickListener() {
+            final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
+            upVote(
+                currentComment.getId(),
+                Request.Method.POST,
+                null,
+                new VolleyCallback() {
                   @Override
-                  public void onClick(View v) {
-                      PopupMenu popup = new PopupMenu(context, commentoptions);
-                      if(currentComment.getCommentOwner()==user.getUsername())//if it is my comment
+                  public void onSuccessResponse(String result) {
+                    try {
+                      JSONObject response = new JSONObject(result);
+                      value = response.getString("votes");
+                      votecounterforcomment.setText(value);
+                      int newvotes = Integer.parseInt(value);
+                      if (newvotes > currentvotes) {
+                        if (newvotes == currentvotes + 2) // was downvoted and upvote clicked
+                        {
+                          downreply.setTextColor(Color.GRAY);
+                          currentComment.setDownvoted(false);
+                        }
+                        upreply.setTextColor(Color.BLUE);
+                        currentComment.setUpvoted(true);
+                      } else if (newvotes < currentvotes) // was upvoted & upvote clicked
                       {
-                          popup.getMenuInflater().inflate(R.menu.mycommentoptions, popup.getMenu());
-                          popup.setOnMenuItemClickListener(
-                                  new PopupMenu.OnMenuItemClickListener() {
-                                      @Override
-                                      public boolean onMenuItemClick(MenuItem item) {
-                                          if(item.getItemId()==R.id.EditMyComment){
-
-                                          }
-                                          // we can use item name to make intent for the new responces
-                                          if(item.getItemId()==R.id.SaveMyComment){
-
-                                          }
-                                          if(item.getItemId()==R.id.DeleteMyComment){
-
-                                          }
-                                          return true;
-                                      }
-                                  });
-                          popup.show(); // showing popup menu}
-                      }else{//if it`s others comment
-                          popup.getMenuInflater().inflate(R.menu.commentoptions, popup.getMenu());
-                          popup.setOnMenuItemClickListener(
-                                  new PopupMenu.OnMenuItemClickListener() {
-                                      @Override
-                                      public boolean onMenuItemClick(MenuItem item) {
-                                          if(item.getItemId()==R.id.Savecomment){}
-                                          // we can use item name to make intent for the new responces
-                                          if(item.getItemId()==R.id.reportcomment){
-                                              final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
-                                              AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                              builder.setTitle("report");
-                                              builder.setMultiChoiceItems(R.array.report_reason, null, new DialogInterface.OnMultiChoiceClickListener() {
-                                                  @Override
-                                                  public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                                      if (isChecked) {
-                                                          // If the user checked the item, add it to the selected items
-                                                          selectedItems.add(which);
-                                                      } else if (selectedItems.contains(which)) {
-                                                          // Else, if the item is already in the array, remove it
-                                                          selectedItems.remove(Integer.valueOf(which));
-                                                      }
-                                                  }
-                                              });
-                                              builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
-                                                  @Override
-                                                  public void onClick(DialogInterface dialog, int id) {
-                                                      // User clicked send, we should send the selectedItems results to the server
-                                                      Toast.makeText(context,"comment is reported",Toast.LENGTH_SHORT).show();
-
-                                                  }
-                                              })
-                                                      .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                                          @Override
-                                                          public void onClick(DialogInterface dialog, int id) {
-                                                              //report canceled
-                                                              Toast.makeText(context,"report is canceled",Toast.LENGTH_SHORT).show();
-                                                          }
-                                                      });
-                                              builder.show();
-                                          }
-                                          if(item.getItemId()==R.id.Delete_comment){
-                                              deleteComment(currentComment.getPostId(),Request.Method.GET, null,
-                                                      new  VolleyCallback(){
-                                                          @Override
-                                                          public void onSuccessResponse(String result) {
-                                                              try {
-                                                                  JSONObject response = new JSONObject(result);
-                                                                  value=response.getString("deleted");
-                                                                  if(value=="true")
-                                                                      Toast.makeText(context,"Post is delted",Toast.LENGTH_SHORT).show();
-                                                                  else  Toast.makeText(context,"error,not deletd",Toast.LENGTH_SHORT).show();
-
-                                                              } catch (JSONException e) {
-                                                                  e.printStackTrace();
-                                                              }
-                                                          }
-                                                      },currentComment.getPostId());
-                                          }
-                                          return true;
-                                      }
-                                  });
-                          popup.show(); // showing popup menu}
+                        upreply.setTextColor(Color.GRAY);
+                        currentComment.setUpvoted(false);
                       }
+                    } catch (JSONException e) {
+                      e.printStackTrace();
+                    }
                   }
-              });
+                });
+          }
+        });
+    downreply.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            final int currentvotes = Integer.parseInt(votecounterforcomment.getText().toString());
+            downVote(
+                currentComment.getId(),
+                Request.Method.GET,
+                null,
+                new VolleyCallback() {
+                  @Override
+                  public void onSuccessResponse(String result) {
+                    try {
+                      JSONObject response = new JSONObject(result);
+                      value = response.getString("votes");
+                      votecounterforcomment.setText(value);
+                      int newvotes = Integer.parseInt(value);
+                      if (newvotes < currentvotes) {
+                        if (newvotes == currentvotes - 2) // was upvoted and downvote clicked
+                        {
+                          upreply.setTextColor(Color.GRAY);
+                          currentComment.setUpvoted(false);
+                        }
+                        downreply.setTextColor(Color.RED);
+                        currentComment.setDownvoted(true);
+                      } else if (newvotes
+                          > currentvotes) // was downvoted & downvote clicked(cancel downvote)
+                      {
+                        downreply.setTextColor(Color.GRAY);
+                        currentComment.setDownvoted(false);
+                      }
+                    } catch (JSONException e) {
+                      e.printStackTrace();
+                    }
+                  }
+                });
+          }
+        });
+    final Button addreply = convertView.findViewById(R.id.commentreplys);
+    addreply.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {}
+        });
+    final User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token = user.getToken();
+    final Button commentoptions = convertView.findViewById(R.id.replyoptions);
+    commentoptions.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            PopupMenu popup = new PopupMenu(context, commentoptions);
+            if (currentComment.getCommentOwner() == user.getUsername()) // if it is my comment
+            {
+              popup.getMenuInflater().inflate(R.menu.mycommentoptions, popup.getMenu());
+              popup.setOnMenuItemClickListener(
+                  new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                      if (item.getItemId() == R.id.EditMyComment) {}
 
-      return convertView;
+                      // we can use item name to make intent for the new responces
+                      if (item.getItemId() == R.id.SaveMyComment) {}
+
+                      if (item.getItemId() == R.id.DeleteMyComment) {}
+
+                      return true;
+                    }
+                  });
+              popup.show(); // showing popup menu}
+            } else { // if it`s others comment
+              popup.getMenuInflater().inflate(R.menu.commentoptions, popup.getMenu());
+              popup.setOnMenuItemClickListener(
+                  new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                      if (item.getItemId() == R.id.Savecomment) {}
+                      // we can use item name to make intent for the new responces
+                      if (item.getItemId() == R.id.reportcomment) {
+                        final ArrayList selectedItems =
+                            new ArrayList(); // Where we track the selected items
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("report");
+                        builder.setMultiChoiceItems(
+                            R.array.report_reason,
+                            null,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                              @Override
+                              public void onClick(
+                                  DialogInterface dialog, int which, boolean isChecked) {
+                                if (isChecked) {
+                                  // If the user checked the item, add it to the selected items
+                                  selectedItems.add(which);
+                                } else if (selectedItems.contains(which)) {
+                                  // Else, if the item is already in the array, remove it
+                                  selectedItems.remove(Integer.valueOf(which));
+                                }
+                              }
+                            });
+                        builder
+                            .setPositiveButton(
+                                "send",
+                                new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int id) {
+                                    // User clicked send, we should send the selectedItems results
+                                    // to the server
+                                    Toast.makeText(
+                                            context, "comment is reported", Toast.LENGTH_SHORT)
+                                        .show();
+                                  }
+                                })
+                            .setNegativeButton(
+                                "cancel",
+                                new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int id) {
+                                    // report canceled
+                                    Toast.makeText(
+                                            context, "report is canceled", Toast.LENGTH_SHORT)
+                                        .show();
+                                  }
+                                });
+                        builder.show();
+                      }
+                      if (item.getItemId() == R.id.Delete_comments) {
+                        deleteComment(
+                            currentComment.getPostId(),
+                            Request.Method.GET,
+                            null,
+                            new VolleyCallback() {
+                              @Override
+                              public void onSuccessResponse(String result) {
+                                try {
+                                  JSONObject response = new JSONObject(result);
+                                  value = response.getString("deleted");
+                                  if (value == "true")
+                                    Toast.makeText(context, "Post is delted", Toast.LENGTH_SHORT)
+                                        .show();
+                                  else
+                                    Toast.makeText(context, "error,not deletd", Toast.LENGTH_SHORT)
+                                        .show();
+
+                                } catch (JSONException e) {
+                                  e.printStackTrace();
+                                }
+                              }
+                            },
+                            currentComment.getPostId());
+                      }
+                      return true;
+                    }
+                  });
+              popup.show(); // showing popup menu}
+            }
+          }
+        });
+
+    return convertView;
   }
 
   @Override
   public boolean isChildSelectable(int groupPosition, int childPosition) {
     return true;
   }
-    /**
-     * upvote request for comment/reply
-     * @param ID
-     * @param method
-     * @param jsonValue
-     * @param callback
-     */
-    public void upVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback){
-        final String Id=ID;
-        User user = SharedPrefmanager.getInstance(context).getUser();
-        final String token=user.getToken();
-        StringRequest stringRequest =
-                new StringRequest(
-                        Request.Method.POST,
-                        Routes.vote,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    // converting response to json object
-                                    JSONObject obj = new JSONObject(response);
-                                    // if no error in response
-                                    if (response != null) {
-                                        callback.onSuccessResponse(response);
-                                        Toast.makeText(context, "you upvoted the post", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(
-                                                context,
-                                                "something went wrong.. try again",
-                                                Toast.LENGTH_SHORT)
-                                                .show();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(
-                                        context,
-                                        "something went wrong with the connection",
-                                        Toast.LENGTH_SHORT)
-                                        .show();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("name", Id);
-                        params.put("dir", "1");
-                        params.put("token", token);
-                        return params;
-                    }
-                };
-        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
-    }
-    /**
-     * downvote request for comment/reply
-     * @param ID
-     * @param method
-     * @param jsonValue
-     * @param callback
-     */
-    public void downVote(String ID,int method, JSONObject jsonValue, final VolleyCallback callback){
-        final String Id=ID;
-        User user = SharedPrefmanager.getInstance(context).getUser();
-        final String token=user.getToken();
-        StringRequest stringRequest =
-                new StringRequest(
-                        Request.Method.POST,
-                        Routes.vote,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    // converting response to json object
-                                    JSONObject obj = new JSONObject(response);
-                                    // if no error in response
-                                    if (response != null) {
-                                        callback.onSuccessResponse(response);
-                                        Toast.makeText(context, "you downvoted the post", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        Toast.makeText(
-                                                context,
-                                                "something went wrong.. try again",
-                                                Toast.LENGTH_SHORT)
-                                                .show();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(
-                                        context,
-                                        "something went wrong with the connection",
-                                        Toast.LENGTH_SHORT)
-                                        .show();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("name", Id);
-                        params.put("dir", "-1");
-                        params.put("token", token);
-                        return params;
-                    }
-                };
-        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
-    }
-    public void deleteComment(String postID, int method, JSONObject jsonValue, final VolleyCallback callback,final String postname){
-        User user = SharedPrefmanager.getInstance(context).getUser();
-        final String token=user.getToken();
-        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, Routes.delete+"token="+token+"&name="+postname,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        callback.onSuccessResponse(response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        NetworkResponse networkResponse = error.networkResponse;
-                        String errorMessage = "Unknown error";
-                        if (networkResponse == null) {
-                            if (error.getClass().equals(TimeoutError.class)) {
-                                errorMessage = "Request timeout";
-                            } else if (error.getClass().equals(NoConnectionError.class)) {
-                                errorMessage = "Failed to connect server";
-                            }
-                        } else {
-                            String result = new String(networkResponse.data);
-                            try {
-                                JSONObject response = new JSONObject(result);
-                                String status = response.getString("status");
-                                String message = response.getString("message");
+  /**
+   * upvote request for comment/reply
+   *
+   * @param ID
+   * @param method
+   * @param jsonValue
+   * @param callback
+   */
+  public void upVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback) {
+    final String Id = ID;
+    User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token = user.getToken();
+    StringRequest stringRequest =
+        new StringRequest(
+            Request.Method.POST,
+            Routes.vote,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                try {
+                  // converting response to json object
+                  JSONObject obj = new JSONObject(response);
+                  // if no error in response
+                  if (response != null) {
+                    callback.onSuccessResponse(response);
+                    Toast.makeText(context, "you upvoted the post", Toast.LENGTH_SHORT).show();
+                  } else {
+                    Toast.makeText(context, "something went wrong.. try again", Toast.LENGTH_SHORT)
+                        .show();
+                  }
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                Toast.makeText(
+                        context, "something went wrong with the connection", Toast.LENGTH_SHORT)
+                    .show();
+              }
+            }) {
+          @Override
+          protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("name", Id);
+            params.put("dir", "1");
+            params.put("token", token);
+            return params;
+          }
+        };
+    VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+  }
+  /**
+   * downvote request for comment/reply
+   *
+   * @param ID
+   * @param method
+   * @param jsonValue
+   * @param callback
+   */
+  public void downVote(String ID, int method, JSONObject jsonValue, final VolleyCallback callback) {
+    final String Id = ID;
+    User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token = user.getToken();
+    StringRequest stringRequest =
+        new StringRequest(
+            Request.Method.POST,
+            Routes.vote,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                try {
+                  // converting response to json object
+                  JSONObject obj = new JSONObject(response);
+                  // if no error in response
+                  if (response != null) {
+                    callback.onSuccessResponse(response);
+                    Toast.makeText(context, "you downvoted the post", Toast.LENGTH_SHORT).show();
+                  } else {
+                    Toast.makeText(context, "something went wrong.. try again", Toast.LENGTH_SHORT)
+                        .show();
+                  }
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                Toast.makeText(
+                        context, "something went wrong with the connection", Toast.LENGTH_SHORT)
+                    .show();
+              }
+            }) {
+          @Override
+          protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("name", Id);
+            params.put("dir", "-1");
+            params.put("token", token);
+            return params;
+          }
+        };
+    VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+  }
+  /**
+   * This function send delete request to the server
+   *
+   * @param postID t:the post where the comment is deleted in it
+   * @param postname :name of the post
+   */
+  public void deleteComment(
+      String postID,
+      int method,
+      JSONObject jsonValue,
+      final VolleyCallback callback,
+      final String postname) {
+    User user = SharedPrefmanager.getInstance(context).getUser();
+    final String token = user.getToken();
+    StringRequest stringRequest =
+        new StringRequest(
+            Request.Method.DELETE,
+            Routes.delete + "token=" + token + "&name=" + postname,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                callback.onSuccessResponse(response);
+              }
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                  if (error.getClass().equals(TimeoutError.class)) {
+                    errorMessage = "Request timeout";
+                  } else if (error.getClass().equals(NoConnectionError.class)) {
+                    errorMessage = "Failed to connect server";
+                  }
+                } else {
+                  String result = new String(networkResponse.data);
+                  try {
+                    JSONObject response = new JSONObject(result);
+                    String status = response.getString("status");
+                    String message = response.getString("message");
 
-                                Log.e("Error Status", status);
-                                Log.e("Error Message", message);
+                    Log.e("Error Status", status);
+                    Log.e("Error Message", message);
 
-                                if (networkResponse.statusCode == 404) {
-                                    errorMessage = "Resource not found";
-                                } else if (networkResponse.statusCode == 401) {
-                                    errorMessage = message+" Please login again";
-                                } else if (networkResponse.statusCode == 400) {
-                                    errorMessage = message+ " Check your inputs";
-                                } else if (networkResponse.statusCode == 500) {
-                                    errorMessage = message+" Something is getting wrong";
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        Log.i("Error", errorMessage);
-                        error.printStackTrace();
+                    if (networkResponse.statusCode == 404) {
+                      errorMessage = "Resource not found";
+                    } else if (networkResponse.statusCode == 401) {
+                      errorMessage = message + " Please login again";
+                    } else if (networkResponse.statusCode == 400) {
+                      errorMessage = message + " Check your inputs";
+                    } else if (networkResponse.statusCode == 500) {
+                      errorMessage = message + " Something is getting wrong";
                     }
-                });
-        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
-    }
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+                }
+                Log.i("Error", errorMessage);
+                error.printStackTrace();
+              }
+            });
+    VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+  }
 }
-

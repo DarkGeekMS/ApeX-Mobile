@@ -21,78 +21,60 @@ import android.app.SearchManager;
 import android.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.SearchView;
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * create an instance of this fragment.
+ * A simple {@link Fragment} subclass. Activities that contain this fragment must implement the to
+ * handle interaction events. create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    public HomeFragment() {
-        // Required empty public constructor
+  public HomeFragment() {
+    // Required empty public constructor
+  }
+
+  @Override
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    AppCompatActivity activity = (AppCompatActivity) getActivity();
+    // Inflate the layout for this fragment
+    View view = inflater.inflate(R.layout.fragment_home, container, false);
+    Toolbar toolbar = view.findViewById(R.id.toolbar);
+    activity.setSupportActionBar(toolbar);
+    activity.getSupportActionBar().setTitle("");
+
+    ActionBar actionbar = activity.getSupportActionBar();
+    actionbar.setDisplayHomeAsUpEnabled(true);
+    actionbar.setHomeAsUpIndicator(R.drawable.list_white);
+
+    TabLayout tabLayout = (TabLayout) view.findViewById(R.id.viewMode_tablayout);
+    ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewMode_viewpager);
+
+    ViewPagerAdapter viewPagerAdapter =
+        new ViewPagerAdapter(getChildFragmentManager()); // activity.getSupportFragmentManager()
+    viewPagerAdapter.addFragment(new HomeSubscribedCommunities(), "Home");
+    viewPagerAdapter.addFragment(new PopularUnsubscribedCommunities(), "Popular");
+
+    viewPager.setAdapter(viewPagerAdapter);
+    tabLayout.setupWithViewPager(viewPager);
+    setHasOptionsMenu(true);
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    try {
+      final AppCompatActivity activity = (AppCompatActivity) getActivity();
+      activity.getMenuInflater().inflate(R.menu.options_menu, menu);
+      MenuItem mSearch = menu.findItem(R.id.action_search);
+      SearchView mSearchView = (SearchView) mSearch.getActionView();
+      mSearchView.setOnSearchClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              Intent i = new Intent(getContext(), SerachList.class);
+              startActivity(i);
+            }
+          });
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_home, container, false);
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setTitle("");
-
-        ActionBar actionbar =activity.getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.list_white);
-
-        TabLayout tabLayout= (TabLayout)view.findViewById(R.id.viewMode_tablayout);
-        ViewPager viewPager=(ViewPager)view.findViewById(R.id.viewMode_viewpager);
-
-
-        ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getChildFragmentManager());//activity.getSupportFragmentManager()
-        viewPagerAdapter.addFragment(new HomeSubscribedCommunities(),"Home");
-        viewPagerAdapter.addFragment(new PopularUnsubscribedCommunities(),"Popular");
-
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        setHasOptionsMenu(true);
-        return view;
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        try {
-            final AppCompatActivity activity = (AppCompatActivity) getActivity();
-            activity.getMenuInflater().inflate(R.menu.options_menu, menu);
-            MenuItem mSearch = menu.findItem(R.id.action_search);
-            SearchView mSearchView = (SearchView) mSearch.getActionView();
-            mSearchView.setOnSearchClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i=new Intent(getContext(),SerachList.class);
-                            startActivity(i);
-                        }
-                    });
-            /*mSearchView.setOnQueryTextListener(
-                    new SearchView.OnQueryTextListener() {
-                        @Override
-                        public boolean onQueryTextSubmit(String query) {
-                            Toast.makeText(activity.getApplicationContext(), "you type" + query, Toast.LENGTH_LONG).show();
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onQueryTextChange(String newText) {
-                            if(newText.length()>2){
-                                //Todo send request to get data
-                            }
-                            Toast.makeText(activity.getApplicationContext(), "you type" + newText, Toast.LENGTH_LONG)
-                                    .show();AppCompatActivity activity = (AppCompatActivity) getActivity();
-                            return false;
-                        }
-                    });*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-         super.onCreateOptionsMenu(menu,inflater);
-    }
+    super.onCreateOptionsMenu(menu, inflater);
+  }
 }

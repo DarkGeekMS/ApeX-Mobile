@@ -42,7 +42,9 @@ import java.util.Map;
 import javax.security.auth.Subject;
 
 import static java.lang.StrictMath.abs;
-
+/**
+ * This class handle read inbox message
+ */
 public class ReadMessage extends AppCompatActivity {
     String messageSubject;
     String messageId;
