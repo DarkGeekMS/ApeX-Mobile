@@ -287,8 +287,7 @@ public class postsandcomments extends AppCompatActivity {
                       }
                   }
               },token,post1.getPostId());
-      /*adapter = new CustomAdapterForComments(postsandcomments.this, repliesArrayList, listHashMap, commentArrayList);
-      commentsList.setAdapter(adapter);*/
+
 
       /**
        * here we send the comments and their replys to the adapter which assigns the to the proper
@@ -341,93 +340,7 @@ public class postsandcomments extends AppCompatActivity {
                                                       }
                                                   },post1.getPostId());
                                       }
-
                                       // we can use item name to make intent for the new responces
-/*
-                                      if(item.getItemId()==R.id.hidepost){
-                                          hidePost(post1.getPostId(),Request.Method.GET, null,
-                                                  new  VolleyCallback(){
-                                                      @Override
-                                                      public void onSuccessResponse(String result) {
-                                                          try {
-                                                              JSONObject response = new JSONObject(result);
-                                                              value=response.getString("hide");
-                                                              if(value=="true")
-                                                              {
-                                                                  Intent hidePost=new Intent();
-                                                                  hidePost.putExtra("postpos",post1.getPostId());
-                                                                  setResult(RESULT_OK,hidePost);
-                                                                  finish();
-                                                              }
-                                                              else  Toast.makeText(getApplicationContext(),"Error,post isn`t hidden",Toast.LENGTH_SHORT).show();
-
-                                                          } catch (JSONException e) {
-                                                              e.printStackTrace();
-                                                          }
-                                                      }
-                                                  });
-                                      }
-*/
-/*
-                                      if(item.getItemId()==R.id.reportpost){
-                                          final String[] reason = new String[]{"It's spam or abuse", "It breaks the rules", "It's threatening self-harm or suicide"};
-                                          final ArrayList selectedItems = new ArrayList();  // Where we track the selected items
-                                          AlertDialog.Builder builder = new AlertDialog.Builder(postsandcomments.this);
-                                          builder.setTitle("report");
-                                          builder.setMultiChoiceItems(reason, null, new DialogInterface.OnMultiChoiceClickListener() {
-                                              @Override
-                                              public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                                  if (isChecked) {
-                                                      if ((mSelected != -1) && (mSelected != which)) {
-                                                          final int oldVal = mSelected;
-                                                          final AlertDialog alert = (AlertDialog)dialog;
-                                                          final ListView list = alert.getListView();
-                                                          list.setItemChecked(oldVal, false);}
-                                                      // If the user checked the item, add it to the selected items
-                                                      mSelected = which;
-                                                      selectedItems.add(mSelected);
-                                                  } else if (selectedItems.contains(which)) {
-                                                      // Else, if the item is already in the array, remove it
-                                                      selectedItems.remove(Integer.valueOf(which));
-                                                  }
-                                              }
-                                          });
-                                          builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
-                                              @Override
-                                              public void onClick(DialogInterface dialog, int id) {
-                                                  reportPost(post1.getPostId(),Request.Method.GET, null,
-                                                          new  VolleyCallback(){
-                                                              @Override
-                                                              public void onSuccessResponse(String result) {
-                                                                  try {
-                                                                      JSONObject response = new JSONObject(result);
-                                                                      value=response.getString("reported");
-                                                                      if(value=="true")
-                                                                          Toast.makeText(postsandcomments.this,"Post Is Reported",Toast.LENGTH_SHORT).show();
-                                                                      else  Toast.makeText(postsandcomments.this,"error,not reported",Toast.LENGTH_SHORT).show();
-                                                                  } catch (JSONException e) {
-                                                                      e.printStackTrace();
-                                                                  }
-                                                              }
-                                                          },reason[mSelected]);
-                                                  // User clicked send, we should send the selectedItems results to the server
-
-                                              }
-                                          })
-                                                  .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                                      @Override
-                                                      public void onClick(DialogInterface dialog, int id) {
-                                                          //report canceled
-
-                                                          Toast.makeText(postsandcomments.this,"report is canceled",Toast.LENGTH_SHORT).show();
-
-                                                      }
-                                                  });
-
-                                          builder.show();
-
-                                      }
-*/
                                       return true;
                                   }
                               });
@@ -456,12 +369,6 @@ public class postsandcomments extends AppCompatActivity {
                                       });}
                             // we can use item name to make intent for the new responces
                             if(item.getItemId()==R.id.hidepost){
-                                //test,request was working
-                               /* Intent returnIntent = new Intent();
-                                returnIntent.putExtra("id",post1.getPostId());
-                                setResult(Activity.RESULT_OK,returnIntent);
-                                finish();*/
-                                //end test
                               hidePost(post1.getPostId(),Request.Method.GET, null,
                                       new  VolleyCallback(){
                                         @Override

@@ -134,7 +134,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                 try {
                                   JSONObject response = new JSONObject(result);
                                   value = response.getString("deleted");
-                                  if (value == "true") {
+                                  if (value .equals("true") ) {
                                     Toast.makeText(
                                             CustomAdapterForHomePage.this.getContext(),
                                             "Post is deleted",
@@ -306,6 +306,7 @@ public class CustomAdapterForHomePage extends ArrayAdapter {
                                     Intent hidePost = new Intent();
                                     hidePost.putExtra("postpos", currentPost.getPostId());
                                     context.setResult(RESULT_OK, hidePost);
+                                    potsList.remove(currentPost);
                                     notifyDataSetChanged();
                                   } else
                                     Toast.makeText(

@@ -1,5 +1,4 @@
 package com.example.android.apexware;
-
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,10 +26,8 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -134,7 +131,8 @@ public class addCommentActivity extends AppCompatActivity {
                                             finish();
                                         }
                                         else  Toast.makeText(getApplicationContext(),"Error,fuck this shit am out!",Toast.LENGTH_SHORT).show();
-                                    } catch (JSONException e) {
+                                    }
+                                    catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
@@ -225,7 +223,7 @@ public class addCommentActivity extends AppCompatActivity {
                         return params;
                     }
                 };
-        VolleySingleton.getInstance(addCommentActivity.this).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(addCommentActivity.this.getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
 }

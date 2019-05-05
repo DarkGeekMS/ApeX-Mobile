@@ -249,20 +249,17 @@ public class HomeSubscribedCommunities extends Fragment {
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if(requestCode==10&&resultCode==RESULT_OK)
+    if(requestCode==10&&resultCode==20)
         {
             String id=data.getStringExtra("postpos");
-            if(id!="300000")
-            {
                 for(int i = 0 ; i < postArrayList.size() ; i++){
                     if(id.equalsIgnoreCase(postArrayList.get(i).getPostId())){
                         postArrayList.remove(i);
+                        break;
                     }
                 }
                 adapter.notifyDataSetChanged();
                 Toast.makeText(getContext(),"post is hidden",Toast.LENGTH_SHORT).show();
-            }
-            else  Toast.makeText(getContext(),"what tf",Toast.LENGTH_SHORT).show();
 
         }
 
