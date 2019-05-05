@@ -10,9 +10,9 @@
     <item android:id="@+id/reportpost"
         android:title="@string/report"
         android:icon="@mipmap/ic_launcher_foregound"/>
-    <item
+   <!-- <item
         android:id="@+id/deletpost"
         android:title="Delete"
-        />
+        />-->
 
 </menu>

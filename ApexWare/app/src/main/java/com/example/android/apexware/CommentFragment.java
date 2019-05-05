@@ -7,16 +7,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+/** This fragment that hold comments by user N.B : Come in next version */
 public class CommentFragment extends Fragment {
-    View view;
-    public CommentFragment() {
-    }
+  View view;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.comment_fragment,container,false);
-        return view;
-    }
+  public CommentFragment() {}
+
+  @Nullable
+  @Override
+  /** Constructor to handle comments */
+  public View onCreateView(
+      @NonNull LayoutInflater inflater,
+      @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    view = inflater.inflate(R.layout.comment_fragment, container, false);
+    return view;
+  }
 }

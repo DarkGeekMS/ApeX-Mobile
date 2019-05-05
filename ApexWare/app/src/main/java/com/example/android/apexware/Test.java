@@ -38,7 +38,7 @@ import java.util.Map;
 
 import static android.view.View.GONE;
 
-public class test extends AppCompatActivity {
+public class Test extends AppCompatActivity {
     TreeNode root;
     String value;
     int position;
@@ -197,7 +197,7 @@ public class test extends AppCompatActivity {
         addcomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(test.this ,addCommentActivity.class);
+                Intent intent = new Intent(Test.this , AddCommentActivity.class);
                 Gson gson = new Gson();
                 String ID = gson.toJson(post1.getPostId());
                 intent.putExtra("postID", ID); // sending the post to next activity
@@ -635,7 +635,7 @@ public class test extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 int x=0;
                                 Toast.makeText(
-                                        test.this, "Server Error", Toast.LENGTH_SHORT)
+                                        Test.this, "Server Error", Toast.LENGTH_SHORT)
                                         .show();
                                 error.getMessage();
                             }
@@ -648,7 +648,7 @@ public class test extends AppCompatActivity {
                         return params;
                     }
                 };
-        VolleySingleton.getInstance(test.this).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(Test.this).addToRequestQueue(stringRequest);
     }
 
     @Override

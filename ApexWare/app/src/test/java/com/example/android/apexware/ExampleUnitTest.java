@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 //@RunWith(RobolectricTestRunner.class)
 
 /**
- * Example local unit test, which will execute on the development machine (host).
+ * Example local unit Test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */

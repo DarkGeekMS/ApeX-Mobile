@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.android.apexware.MainActivity.login_guest;
 import static java.lang.StrictMath.abs;
 
 public class SerachList extends AppCompatActivity {
@@ -47,6 +48,7 @@ public class SerachList extends AppCompatActivity {
     private ArrayList<Post> postArrayList=new ArrayList<>();
     ListView list;
     ArrayList<String> names;
+    MainActivity mainActivity=new MainActivity();
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,9 +238,16 @@ public class SerachList extends AppCompatActivity {
             final String searchResult) {
         User user = SharedPrefmanager.getInstance(this).getUser();
         final String token=user.getToken();
+        int requestType;
+        if(login_guest){
+             requestType=Request.Method.GET;
+        }
+        else{
+            requestType=Request.Method.POST;
+        }
         StringRequest stringRequest =
                 new StringRequest(
-                        Request.Method.POST,
+                        requestType,
                         url,
                         new Response.Listener<String>() {
                             @Override

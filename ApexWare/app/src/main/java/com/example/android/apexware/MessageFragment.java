@@ -87,7 +87,7 @@ public class MessageFragment extends Fragment {
             messages.setRead(0);
             messages.setSender("Mazen");
             messages.setFormat("2019-12-26");
-            messages.setSubject("test message");
+            messages.setSubject("Test message");
             messagesArrayList.add(messages);
             SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yy-mm-dd hh:mm:ss", Locale.UK);
             Messages messages2=new Messages();

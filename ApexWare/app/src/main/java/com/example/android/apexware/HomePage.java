@@ -74,6 +74,7 @@ import static java.lang.StrictMath.abs;
 
 /**
  * main page of the whole application
+ *
  * @author mazen
  */
 public class HomePage extends AppCompatActivity {
@@ -82,21 +83,22 @@ public class HomePage extends AppCompatActivity {
   // The "x" and "y" position of the "Show Button" on screen.
   Point p;
   CustomAdapterForHomePage adapter;
-  MainActivity loginAsGuestobj=new MainActivity();
+  MainActivity loginAsGuestobj = new MainActivity();
+
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
-    Intent i=getIntent();
-    String username=i.getStringExtra("username");
-    if(login_guest){
+    Intent i = getIntent();
+    String username = i.getStringExtra("username");
+    if (login_guest) {
       // OneSignal Initialization
       OneSignal.startInit(this)
-              .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-              .unsubscribeWhenNotificationsAreDisabled(true)
-              .init();
-      //OneSignal.setSubscription(allow_all); //turn notifications on and off
+          .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+          .unsubscribeWhenNotificationsAreDisabled(true)
+          .init();
+      // OneSignal.setSubscription(allow_all); //turn notifications on and off
     }
     Window window = this.getWindow();
     // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -111,9 +113,11 @@ public class HomePage extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View arg0) {
-            if(login_guest){
-              Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
-            }else{
+            if (login_guest) {
+              Toast.makeText(
+                      HomePage.this, "Signin/login to enable this feature", Toast.LENGTH_SHORT)
+                  .show();
+            } else {
               // Open popup window
               if (p != null) showPopup(HomePage.this, p);
             }
@@ -124,8 +128,8 @@ public class HomePage extends AppCompatActivity {
     drawerLayout = findViewById(R.id.drawer_layout);
     // Enable Navigation bar
     NavigationView navigationView = findViewById(R.id.nav_view);
-    View headView=navigationView.getHeaderView(0);
-    TextView userNameView=headView.findViewById(R.id.username_text_input);
+    View headView = navigationView.getHeaderView(0);
+    TextView userNameView = headView.findViewById(R.id.username_text_input);
     userNameView.setText(username);
 
     navigationView.setNavigationItemSelectedListener(
@@ -133,67 +137,67 @@ public class HomePage extends AppCompatActivity {
           @Override
           public boolean onNavigationItemSelected(MenuItem menuItem) {
             // set item as selected to persist highlight
-            if(login_guest)
-              menuItem.setChecked(false);
-            else
-              menuItem.setChecked(false);
-            if (menuItem.getItemId() == R.id.history){
-              if(login_guest){
+            if (login_guest) menuItem.setChecked(false);
+            else menuItem.setChecked(false);
+            if (menuItem.getItemId() == R.id.history) {
+              if (login_guest) {
                 menuItem.setVisible(false);
-              }else{
-                Toast.makeText(getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
-                        .show();
+              } else {
+                Toast.makeText(
+                        getApplicationContext(), "History has been choosed", Toast.LENGTH_LONG)
+                    .show();
               }
             }
-            if (menuItem.getItemId() == R.id.save){
-              if(login_guest){
+            if (menuItem.getItemId() == R.id.save) {
+              if (login_guest) {
                 menuItem.setVisible(false);
-              }else{
+              } else {
                 Toast.makeText(getApplicationContext(), "Save has been choosed", Toast.LENGTH_LONG)
-                        .show();
+                    .show();
               }
             }
-            if (menuItem.getItemId() == R.id.myProfile){
-              if(login_guest){
+            if (menuItem.getItemId() == R.id.myProfile) {
+              if (login_guest) {
                 menuItem.setVisible(false);
-              }else{
+              } else {
                 startActivity(new Intent(getApplicationContext(), Profile.class));
               }
             }
-            if (menuItem.getItemId() == R.id.setting){
-              if(login_guest){
+            if (menuItem.getItemId() == R.id.setting) {
+              if (login_guest) {
                 menuItem.setVisible(false);
-              }else{
+              } else {
+
                 startActivity(new Intent(getApplicationContext(), Settings.class));
               }
-
             }
-            if(menuItem.getItemId() == R.id.logout){
-              if(login_guest){
+            if (menuItem.getItemId() == R.id.logout) {
+              if (login_guest) {
                 menuItem.setVisible(false);
                 return true;
-              }
-              else{
-              getResponse(
-                      Request.Method.POST,
-                      Routes.information,
-                      null,
-                      new VolleyCallback() {
-                        @Override
-                        public void onSuccessResponse(String response) {
-                          try {
-                            // converting response to json object
-                            JSONObject obj = new JSONObject(response);
-                            Toast.makeText(HomePage.this,"Logout Successful",Toast.LENGTH_SHORT).show();
-                            Intent i=new Intent(HomePage.this,MainActivity.class);
-                            startActivity(i);
-                          } catch (JSONException e) {
-                            e.printStackTrace();
-                          }
+              } else {
+                getResponse(
+                    Request.Method.POST,
+                    Routes.information,
+                    null,
+                    new VolleyCallback() {
+                      @Override
+                      public void onSuccessResponse(String response) {
+                        try {
+                          // converting response to json object
+                          JSONObject obj = new JSONObject(response);
+                          SharedPrefmanager.getInstance(HomePage.this).logout();
+                          Toast.makeText(HomePage.this, "Logout Successful", Toast.LENGTH_SHORT)
+                              .show();
+                          Intent i = new Intent(HomePage.this, MainActivity.class);
+                          startActivity(i);
+                        } catch (JSONException e) {
+                          e.printStackTrace();
                         }
-                      });
+                      }
+                    });
+              }
             }
-          }
             // close drawer when item is tapped
             drawerLayout.closeDrawers();
 
@@ -203,7 +207,7 @@ public class HomePage extends AppCompatActivity {
           }
         });
 
-    Fragment fragment=new HomeFragment();
+    Fragment fragment = new HomeFragment();
     loadFragment(fragment);
   }
 
@@ -222,32 +226,40 @@ public class HomePage extends AppCompatActivity {
           new BottomNavigationViewEx.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
+              Fragment fragment;
 
               switch (item.getItemId()) {
                 case R.id.i_home:
-                  fragment=new HomeFragment();
+                  fragment = new HomeFragment();
                   loadFragment(fragment);
                   return true;
                 case R.id.i_apexLists:
-                  fragment=new ListOfCommunityFragment();
+                  fragment = new ListOfCommunityFragment();
                   loadFragment(fragment);
                   return true;
                 case R.id.i_notifications:
-                  if(login_guest){
-                    Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+                  if (login_guest) {
+                    Toast.makeText(
+                            HomePage.this,
+                            "Signin/login to enable this feature",
+                            Toast.LENGTH_SHORT)
+                        .show();
                     return true;
                   }
-                    fragment = new NotificationFragment();
-                    loadFragment(fragment);
+                  fragment = new NotificationFragment();
+                  loadFragment(fragment);
                   return true;
                 case R.id.i_inbox:
-                  if(login_guest){
-                    Toast.makeText(HomePage.this,"Signin/login to enable this feature",Toast.LENGTH_SHORT).show();
+                  if (login_guest) {
+                    Toast.makeText(
+                            HomePage.this,
+                            "Signin/login to enable this feature",
+                            Toast.LENGTH_SHORT)
+                        .show();
                     return true;
                   }
-                    fragment=new MessageFragment();
-                    loadFragment(fragment);
+                  fragment = new MessageFragment();
+                  loadFragment(fragment);
                   return true;
                 case R.id.i_empty:
                   Toast.makeText(getApplicationContext(), "empty is selected", Toast.LENGTH_SHORT)
@@ -335,12 +347,12 @@ public class HomePage extends AppCompatActivity {
     startActivity(intent);
   }
 
-
   public void linkClick(View view) {
     Intent intent = new Intent(HomePage.this, CreatePost.class);
     intent.putExtra("type", "link");
     startActivity(intent);
   }
+
   private void loadFragment(Fragment fragment) {
     // load fragment
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -349,85 +361,83 @@ public class HomePage extends AppCompatActivity {
     transaction.commit();
   }
 
-  /** overrride the back button to do nothing instead of returning to login activity*/
+  /** overrride the back button to do nothing instead of returning to login activity */
   @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event)  {
-    if (keyCode == KeyEvent.KEYCODE_BACK
-            && event.getRepeatCount() == 0) {
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
       Log.d("CDA", "onKeyDown Called");
       onBackPressed();
       return true;
     }
     return super.onKeyDown(keyCode, event);
   }
+
   @Override
   public void onBackPressed() {
     Log.d("CDA", "onBackPressed Called");
     // do nothing
   }
+
   public void getResponse(
-          int method,
-          String url,
-          JSONObject jsonValue,
-          final VolleyCallback callback) {
+      int method, String url, JSONObject jsonValue, final VolleyCallback callback) {
     final User user = SharedPrefmanager.getInstance(this).getUser();
-    final String token=user.getToken();
+    final String token = user.getToken();
     StringRequest stringRequest =
-            new StringRequest(
-                    Request.Method.POST,
-                    url,
-                    new Response.Listener<String>() {
-                      @Override
-                      public void onResponse(String response) {
-                        int x=0;
-                        callback.onSuccessResponse(response);
-                      }
-                    },
-                    new Response.ErrorListener() {
-                      @Override
-                      public void onErrorResponse(VolleyError error) {
-                        NetworkResponse networkResponse = error.networkResponse;
-                        String errorMessage = "Unknown error";
-                        if (networkResponse == null) {
-                          if (error.getClass().equals(TimeoutError.class)) {
-                            errorMessage = "Request timeout";
-                          } else if (error.getClass().equals(NoConnectionError.class)) {
-                            errorMessage = "Failed to connect server";
-                          }
-                        } else {
-                          String result = new String(networkResponse.data);
-                          try {
-                            JSONObject response = new JSONObject(result);
-                            String status = response.getString("status");
-                            String message = response.getString("message");
-
-                            Log.e("Error Status", status);
-                            Log.e("Error Message", message);
-
-                            if (networkResponse.statusCode == 404) {
-                              errorMessage = "Resource not found";
-                            } else if (networkResponse.statusCode == 401) {
-                              errorMessage = message+" Please login again";
-                            } else if (networkResponse.statusCode == 400) {
-                              errorMessage = message+ " Check your inputs";
-                            } else if (networkResponse.statusCode == 500) {
-                              errorMessage = message+" Something is getting wrong";
-                            }
-                          } catch (JSONException e) {
-                            e.printStackTrace();
-                          }
-                        }
-                        Log.i("Error", errorMessage);
-                        error.printStackTrace();
-                      }
-                    }){
+        new StringRequest(
+            Request.Method.POST,
+            url,
+            new Response.Listener<String>() {
               @Override
-              protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("token",token);
-                return params;
+              public void onResponse(String response) {
+                int x = 0;
+                callback.onSuccessResponse(response);
               }
-            };
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                  if (error.getClass().equals(TimeoutError.class)) {
+                    errorMessage = "Request timeout";
+                  } else if (error.getClass().equals(NoConnectionError.class)) {
+                    errorMessage = "Failed to connect server";
+                  }
+                } else {
+                  String result = new String(networkResponse.data);
+                  try {
+                    JSONObject response = new JSONObject(result);
+                    String status = response.getString("status");
+                    String message = response.getString("message");
+
+                    Log.e("Error Status", status);
+                    Log.e("Error Message", message);
+
+                    if (networkResponse.statusCode == 404) {
+                      errorMessage = "Resource not found";
+                    } else if (networkResponse.statusCode == 401) {
+                      errorMessage = message + " Please login again";
+                    } else if (networkResponse.statusCode == 400) {
+                      errorMessage = message + " Check your inputs";
+                    } else if (networkResponse.statusCode == 500) {
+                      errorMessage = message + " Something is getting wrong";
+                    }
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+                }
+                Log.i("Error", errorMessage);
+                error.printStackTrace();
+              }
+            }) {
+          @Override
+          protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("token", token);
+            return params;
+          }
+        };
     VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
   }
 }

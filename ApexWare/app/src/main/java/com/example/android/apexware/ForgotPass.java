@@ -51,10 +51,8 @@ public class ForgotPass extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_forgot_pass);
 
-
-      StrictMode.ThreadPolicy policy =
-              new StrictMode.ThreadPolicy.Builder().permitAll().build();
-      StrictMode.setThreadPolicy(policy);
+    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(policy);
 
     // Get the transferred data from source activity.
     Intent intent = getIntent();
@@ -242,7 +240,11 @@ public class ForgotPass extends AppCompatActivity {
 
               // if no error in response
               if (response != null) {
-                Toast.makeText(getApplicationContext(),"check your mail .. a code was sent successfully",Toast.LENGTH_LONG).show();
+                Toast.makeText(
+                        getApplicationContext(),
+                        "check your mail .. a code was sent successfully",
+                        Toast.LENGTH_LONG)
+                    .show();
                 Log.d(TAG, "onSuccessResponse: a");
               } else {
                 Log.d(TAG, "onFailResponse: ");
@@ -338,11 +340,11 @@ public class ForgotPass extends AppCompatActivity {
                     if (networkResponse.statusCode == 404) {
                       errorMessage = "Resource not found";
                     } else if (networkResponse.statusCode == 401) {
-                      errorMessage = message+" Please login again";
+                      errorMessage = message + " Please login again";
                     } else if (networkResponse.statusCode == 400) {
-                      errorMessage = message+ " Check your inputs";
+                      errorMessage = message + " Check your inputs";
                     } else if (networkResponse.statusCode == 500) {
-                      errorMessage = message+" Something is getting wrong";
+                      errorMessage = message + " Something is getting wrong";
                     }
                   } catch (JSONException e) {
                     e.printStackTrace();
@@ -410,11 +412,11 @@ public class ForgotPass extends AppCompatActivity {
                     if (networkResponse.statusCode == 404) {
                       errorMessage = "Resource not found";
                     } else if (networkResponse.statusCode == 401) {
-                      errorMessage = message+" Please login again";
+                      errorMessage = message + " Please login again";
                     } else if (networkResponse.statusCode == 400) {
-                      errorMessage = message+ " Check your inputs";
+                      errorMessage = message + " Check your inputs";
                     } else if (networkResponse.statusCode == 500) {
-                      errorMessage = message+" Something is getting wrong";
+                      errorMessage = message + " Something is getting wrong";
                     }
                   } catch (JSONException e) {
                     e.printStackTrace();
