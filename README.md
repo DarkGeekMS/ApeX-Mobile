@@ -1,9 +1,11 @@
 # ApeX-Mobile
+
+### Note: Apex is no longer maintained or deployed!
 [![Build Status](https://travis-ci.com/DarkGeekMS/ApeX-Mobile.svg?token=kEyZRKsdTeESZQ8KMgx8&branch=master)](https://travis-ci.com/DarkGeekMS/ApeX-Mobile)
 
 ## Brief Description
 
-This is the repository for android code of ApeX, an application mimicking reddit.
+Android application source code of ApeX, a social media application that mimicks reddit.
 
 
 ## Utilized Technologies 
@@ -16,8 +18,6 @@ This is the repository for android code of ApeX, an application mimicking reddit
 
 Needless to mention, Android studio will do for you :)
 
-## Host IP
-http://35.232.3.8/
 
 ## Application Samples
 

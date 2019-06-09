@@ -31,12 +31,3 @@ before_script:
   - ./gradlew --version --console=plain
 script:
   - ./gradlew test --console=plain
-
-# TODO: uncomment when google play account is available
-# before_deploy:
-# deploy:
-#   skip_cleanup: true
-#   provider: script
-#   script: bash scripts/deploy.sh
-#   on:
-#     tags: true
