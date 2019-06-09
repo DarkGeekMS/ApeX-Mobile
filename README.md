@@ -5,7 +5,7 @@
 
 ## Brief Description
 
-Android application source code of ApeX, a social media application that mimicks reddit.
+Android application source code of ApeX, a social media application that mimics reddit.
 
 
 ## Utilized Technologies 
